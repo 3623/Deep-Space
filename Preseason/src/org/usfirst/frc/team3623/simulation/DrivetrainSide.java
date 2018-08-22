@@ -45,8 +45,7 @@ public class DrivetrainSide{
 	 */
 	public double wheelAcceleration(double voltage, double speed) {
 		double totalTorque = CIMMotor.outputTorque(voltage, speed) * GEAR_RATIO * CIMS_PER_SIDE;
-//		System.out.println("speed" + speed + " " + totalTorque);
-		double wheelForce = totalTorque / WHEEL_RADIUS;
+		double wheelForce = (totalTorque / WHEEL_RADIUS);
 		double wheelAcceleration = wheelForce / psuedoMass;
 		return wheelAcceleration;
 	}

@@ -18,11 +18,24 @@ public class DrivetrainModel {
 	private static final double DRIVETRAIN_MASS = 63.5; // kg
 	private static final double WHEEL_BASE = 0.762; // meters
 	private static final double CENTER_MASS = 0.381; // from left wheel
-	CartesianCoordinate center = new CartesianCoordinate(0.0, 0.0, 0.0); // Initial robot position
-	private DrivetrainSide left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
-			DRIVETRAIN_MASS/2);
-	private DrivetrainSide right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
-			DRIVETRAIN_MASS/2);	
+	public CartesianCoordinate center;
+	private DrivetrainSide left, right;
+	
+	public DrivetrainModel(double x, double y, double heading) {
+		center = new CartesianCoordinate(x, y, heading); // Initial robot position
+		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
+				DRIVETRAIN_MASS/2);
+		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
+				DRIVETRAIN_MASS/2);	
+	}
+	
+	public DrivetrainModel() {
+		center = new CartesianCoordinate(0.0, 0.0, 0.0); // Initial robot position
+		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
+				DRIVETRAIN_MASS/2);
+		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
+				DRIVETRAIN_MASS/2);	
+	}
 
 	
 	public void update(double lVoltage, double rVoltage, double time) {
@@ -44,18 +57,19 @@ public class DrivetrainModel {
 			leftMovement = -left.velocity * time;
 			rightMovement = -right.velocity * time;
 		}
-
-		double leftMovementX = -leftMovement*Math.sin(movementAngle);
-		double leftMovementY = -leftMovement*Math.cos(movementAngle);
+		double sine = Math.sin(movementAngle);
+		double cosine = Math.cos(movementAngle);
+		double leftMovementX = -leftMovement*sine;
+		double leftMovementY = -leftMovement*cosine;
 		left.position.update(leftMovementX, leftMovementY);
-		double rightMovementX = -rightMovement*Math.sin(movementAngle);
-		double rightMovementY = -rightMovement*Math.cos(movementAngle);
+		double rightMovementX = -rightMovement*sine;
+		double rightMovementY = -rightMovement*cosine;
 		right.position.update(rightMovementX, rightMovementY);
 		center = Geometry.center(left.position, right.position);
 		
 		// Debug statements
 //		System.out.println(center.x + ", " + center.y + ", " + center.heading);
-//		System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
+		System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
 //		System.out.println("LP: " + left.position.x + ", " + left.position.y);
 //		System.out.println("RP: " + right.position.x + ", " + right.position.y);
 //		System.out.println("MA: " + movementAngle + "Rad ICC: " + radius);
@@ -66,9 +80,9 @@ public class DrivetrainModel {
 	
 	// Testing
 	public static void main ( String[] args) {
-		DrivetrainModel model = new DrivetrainModel();
+		DrivetrainModel model = new DrivetrainModel(0.0, 0.0, 0.0);
 		for (int i = 0; i < 300; i++) {
-			model.update(-12.0, -12.0, 10.0/1000.0);
+			model.update(12.0, 12.0, 10.0/1000.0);
 		}
 	}
 }
