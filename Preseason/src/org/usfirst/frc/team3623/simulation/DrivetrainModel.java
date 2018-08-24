@@ -5,6 +5,7 @@ import org.usfirst.frc.team3623.simulation.motors.Motor;
 import org.usfirst.frc.team3623.simulation.Kinematics;
 import org.usfirst.frc.team3623.robot.util.CartesianCoordinate;
 import org.usfirst.frc.team3623.robot.util.Geometry;
+import org.usfirst.frc.team3623.robot.util.Utils;
 import org.usfirst.frc.team3623.simulation.DrivetrainSide;
 
 /**
@@ -16,9 +17,10 @@ import org.usfirst.frc.team3623.simulation.DrivetrainSide;
  */
 public class DrivetrainModel {
 
-	private static final double DRIVETRAIN_MASS = 63.5; // kg
-	private static final double WHEEL_BASE = 0.762; // meters
-	private static final double CENTER_MASS = 0.381; // from left wheel
+	private final double DRIVETRAIN_MASS = 63.5; // kg
+	private final double WHEEL_BASE = 0.762; // meters
+	private final double CENTER_MASS = 0.381; // from left wheel
+	private Boolean COAST_MODE = true; 
 	public CartesianCoordinate center;
 	private DrivetrainSide left, right;
 	
@@ -28,15 +30,23 @@ public class DrivetrainModel {
 				DRIVETRAIN_MASS/2);
 		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
 				DRIVETRAIN_MASS/2);	
+		
+		if (COAST_MODE) {
+			left.setCoast();
+			right.setCoast();
+		} else {
+			left.setBrake();
+			right.setBrake();
+		}
 	}
 	
-	public DrivetrainModel() {
-		center = new CartesianCoordinate(0.0, 0.0, 0.0); // Initial robot position
-		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
-				DRIVETRAIN_MASS/2);
-		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
-				DRIVETRAIN_MASS/2);	
-	}
+//	public DrivetrainModel() {
+//		center = new CartesianCoordinate(0.0, 0.0, 0.0); // Initial robot position
+//		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
+//				DRIVETRAIN_MASS/2);
+//		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
+//				DRIVETRAIN_MASS/2);	
+//	}
 
 	
 	public void update(double lVoltage, double rVoltage, double time) {
@@ -87,8 +97,9 @@ public class DrivetrainModel {
 	private static class DrivetrainSide{
 		CartesianCoordinate position;
 		double velocity;
-		double acceleration;
-		double psuedoMass;
+		private double acceleration;
+		private double psuedoMass;
+		private Boolean coast; 
 		
 		private static final double WHEEL_RADIUS = 0.0508; // meters
 		private static final double CIMS_PER_SIDE = 2.0; // Minicim is 0.58
@@ -105,6 +116,7 @@ public class DrivetrainModel {
 			velocity = 0.0;
 			acceleration = 0.0;
 			psuedoMass = mass;
+			coast = false;
 		}
 		
 		public void update(double voltage, double time) {
@@ -112,6 +124,7 @@ public class DrivetrainModel {
 //			double newAcceleration = this.wheelAcceleration(voltage, motorSpeed);
 			
 			double totalTorque = CIMMotor.outputTorque(voltage, motorSpeed) * GEAR_RATIO * CIMS_PER_SIDE;
+			if (coast && voltage == 0.0) totalTorque = 0.0;
 			double wheelForce = (totalTorque / WHEEL_RADIUS);
 			double wheelnetForce = frictionModel(wheelForce, this.velocity);
 //			System.out.println(wheelForce + " " + wheelnetForce);
@@ -136,7 +149,7 @@ public class DrivetrainModel {
 		
 		private double frictionModel(double force, double speed) {
 			double netForce;
-			if (Math.abs(speed) < 0.025) {
+			if (Utils.threshold(speed, 0.0, 0.025)) {
 				netForce = force;
 			} else if (speed < 0.0) {
 				netForce = force + FRICTION;
@@ -147,19 +160,14 @@ public class DrivetrainModel {
 			}
 			return netForce;
 		}
+
 		
-		private double clipForce(double force, double friction) {
-			double netForce = 0;
-			if (Math.abs(friction) > Math.abs(force)) {
-				netForce = 0.0;
-			} else {
-				netForce = force + friction;
-			}
-			return netForce;
+		public void setBrake() {
+			if (coast) coast = false;
 		}
 		
-		private Boolean isSlowing(double a, double b) {
-		    return a*b <= 0.0f;
+		public void setCoast() {
+			if (!coast) coast = true;
 		}
 	}
 	
