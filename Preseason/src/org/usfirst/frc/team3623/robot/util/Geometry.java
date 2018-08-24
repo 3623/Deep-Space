@@ -2,8 +2,8 @@ package org.usfirst.frc.team3623.robot.util;
 
 public class Geometry {
 	
-	public static CartesianCoordinate center(CartesianCoordinate left, CartesianCoordinate right) {
-		CartesianCoordinate coordinate = new CartesianCoordinate();
+	public static CoordinateVector center(CoordinateVector left, CoordinateVector right) {
+		CoordinateVector coordinate = new CoordinateVector();
 		coordinate.x = (left.x + right.x)/2;
 		coordinate.y = (left.y + right.y)/2;
 		
@@ -15,17 +15,17 @@ public class Geometry {
 		return coordinate;
 	}
 	
-	public static CartesianCoordinate inverseCenterLeft(CartesianCoordinate center, double drivebase) {
+	public static CoordinateVector inverseCenterLeft(CoordinateVector center, double drivebase) {
 		double x = center.x - drivebase/2.0 * Math.cos(center.heading);
 		double y = center.y + drivebase/2.0 * Math.sin(center.heading);
-		CartesianCoordinate left = new CartesianCoordinate(x, y);
+		CoordinateVector left = new CoordinateVector(x, y);
 		return left;
 	}
 	
-	public static CartesianCoordinate inverseCenterRight(CartesianCoordinate center, double drivebase) {
+	public static CoordinateVector inverseCenterRight(CoordinateVector center, double drivebase) {
 		double x = center.x + drivebase/2.0 * Math.cos(center.heading);
 		double y = center.y - drivebase/2.0 * Math.sin(center.heading);
-		CartesianCoordinate right = new CartesianCoordinate(x, y);
+		CoordinateVector right = new CoordinateVector(x, y);
 		return right;
 	}
 	
@@ -40,7 +40,7 @@ public class Geometry {
 		return (a * sinB / sinA);
 	}
 	
-	public static double distance(CartesianCoordinate a, CartesianCoordinate b) {
+	public static double distance(CoordinateVector a, CoordinateVector b) {
 		double distance = distance(a.x, b.x, a.y, b.y);
 		return distance;
 	}
@@ -57,8 +57,8 @@ public class Geometry {
 	public static void main ( String[] args )
 	  {
 	      Geometry test = new Geometry();
-	      CartesianCoordinate left = new CartesianCoordinate(6, 5);
-	      CartesianCoordinate right = new CartesianCoordinate(5, 4);
+	      CoordinateVector left = new CoordinateVector(6, 5);
+	      CoordinateVector right = new CoordinateVector(5, 4);
 
 	      System.out.println(Geometry.distance(left,  right));
 	  }

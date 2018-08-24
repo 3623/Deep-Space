@@ -4,8 +4,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import org.usfirst.frc.team3623.robot.subsystems.Drivetrain;
-import org.usfirst.frc.team3623.robot.util.CartesianCoordinate;
+import org.usfirst.frc.team3623.robot.util.CoordinateVector;
 import org.usfirst.frc.team3623.robot.util.Tuple;
+import org.usfirst.frc.team3623.simulation.controls.Waypoint;
 import org.usfirst.frc.team3623.simulation.controls.WaypointNavigator;
 
 import java.awt.*;
@@ -61,9 +62,12 @@ public class Animation extends JPanel implements Runnable
 
 		model = new DrivetrainModel(x/scale, 80.0/scale/2, 0.0);
 		waypointNav = new WaypointNavigator();
-		waypointNav.addWaypoint(new CartesianCoordinate(4.0, 0.0, -90.0));
-		waypointNav.addWaypoint(new CartesianCoordinate(4.0, 5.0, -90.0));
-		waypointNav.addWaypoint(new CartesianCoordinate(1.0, 5.0, -90.0));
+		waypointNav.addWaypoint(new Waypoint(4.0, 0.0, -90.0));
+		waypointNav.addWaypoint(new Waypoint(4.0, 5.0, -90.0, 0.8, 0.6));
+		waypointNav.addWaypoint(new Waypoint(4.0, 0.0, -90.0));
+		waypointNav.addWaypoint(new Waypoint(1.0, 5.0, -90.0, 0.8, 0.6));
+		waypointNav.addWaypoint(new Waypoint(1.0, 1.0, -90.0));
+
 
 		// Create and start the thread
 		sim = new Thread ( this );
@@ -73,19 +77,19 @@ public class Animation extends JPanel implements Runnable
 
 	// Update function
 	public void paintComponent (Graphics g) {  
-		double simTime = dt*1.0/4.0/1000.0;
+		double simTime = dt*1.0/1.0/1000.0;
 		time += simTime;
 
 
 		Tuple out;
-		CartesianCoordinate goal = waypointNav.updatePursuit(model.center);
+		CoordinateVector goal = waypointNav.updatePursuit(model.center);
 		out = Drivetrain.driveToPoint(goal, model.center);
 
 //		out = Drivetrain.driveToPoint(goal, model.center);
 //		out = Drivetrain.deadReckoningCurveLeft(time);
 //		out = Drivetrain.deadReckoningStraight(time);
-		double leftVoltage = out.left*12;
-		double rightVoltage = out.right*12;
+		double leftVoltage = out.left*10;
+		double rightVoltage = out.right*10;
 
 		model.update(leftVoltage, rightVoltage, simTime);
 
@@ -109,7 +113,7 @@ public class Animation extends JPanel implements Runnable
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 
-//		goal = new CartesianCoordinate(4.0, 4.0, -135.0);
+//		goal = new CoordinateVector(4.0, 4.0, -135.0);
 
 		xPixels = goal.x * scale;
 		yPixels = goal.y * scale;

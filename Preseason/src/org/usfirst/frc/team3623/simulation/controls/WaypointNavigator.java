@@ -2,52 +2,72 @@ package org.usfirst.frc.team3623.simulation.controls;
 
 import java.util.ArrayList;
 
-import org.usfirst.frc.team3623.robot.util.CartesianCoordinate;
+import org.usfirst.frc.team3623.robot.util.CoordinateVector;
+
 
 public class WaypointNavigator { 
-	private ArrayList<CartesianCoordinate> waypoints = new ArrayList<CartesianCoordinate>();
+	private ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
 	private int index = 1;
-	private double kLookAhead = 0.9;
+	private Waypoint curWaypoint;
+	private Waypoint prevWaypoint;
+	private final double kLookAheadDefault = 0.6;
+	private double kLookAhead = kLookAheadDefault;
+	private final double kRadiusDefault = 0.6;
+	private double kRadius = kRadiusDefault;
+
 	
-	public void addWaypoint(CartesianCoordinate waypoint) {
-		waypoints.add(waypoint);
+	public void addWaypoint(Waypoint curWaypoint) {
+		waypoints.add(curWaypoint);
 	}
 	
-	public CartesianCoordinate updatePursuit(CartesianCoordinate current) {
-		if (atWaypoint(waypoints.get(index), current)) {
+	public void updateWaypoint() {
+		prevWaypoint = waypoints.get(index-1);
+		curWaypoint = waypoints.get(index);
+		if (curWaypoint.kRadius!=0.0) kRadius = curWaypoint.kRadius;
+		else kRadius = kRadiusDefault;
+		if (curWaypoint.kLookAhead!=0.0) kLookAhead = curWaypoint.kLookAhead;
+		else kLookAhead = kLookAheadDefault;
+	}
+	
+	public CoordinateVector updatePursuit(CoordinateVector position) {
+		updateWaypoint();
+		if (atWaypoint(curWaypoint, position, kRadius) && index != waypoints.size()-1) {
 			index++;
+//			updateWaypoint();
 		}
 		
-		CartesianCoordinate prevWaypoint = waypoints.get(index-1);
-		CartesianCoordinate waypoint = waypoints.get(index);
-		double dist = Math.sqrt(Math.pow(waypoint.x - current.x, 2) + Math.pow(waypoint.y - current.y, 2));
+
+		double dist = Math.sqrt(Math.pow(curWaypoint.x - position.x, 2) + Math.pow(curWaypoint.y - position.y, 2));
 		
 		
-		double lineAngle = Math.atan2(-prevWaypoint.x+waypoint.x, -prevWaypoint.y+waypoint.y);
-		double stateAngle = Math.atan2(-waypoint.x+current.x, -waypoint.y+current.y);
+		double lineAngle = Math.atan2(-prevWaypoint.x+curWaypoint.x, -prevWaypoint.y+curWaypoint.y);
+		double stateAngle = Math.atan2(-curWaypoint.x+position.x, -curWaypoint.y+position.y);
 		double relativeAngle = Math.PI + stateAngle - lineAngle;
 		double lineDist = dist*Math.cos(relativeAngle);
-		double anglePursuit = lineAngle - Math.PI;
+		double anglePursuit = lineAngle + lineAngle + (relativeAngle) - position.heading;
+//		anglePursuit = relativeAngle - position.heading;
 		if (lineDist > kLookAhead) {
 			lineDist -= kLookAhead;
 		} else {
 			lineDist = 0;
 //			anglePursuit -= Math.PI;
 		}
-		double xPursuit = waypoint.x - (lineDist * Math.sin(lineAngle));
-		double yPursuit = waypoint.y - (lineDist * Math.cos(lineAngle));
-		CartesianCoordinate pursuit = new CartesianCoordinate(xPursuit,
+		double xPursuit = curWaypoint.x - (lineDist * Math.sin(lineAngle));
+		double yPursuit = curWaypoint.y - (lineDist * Math.cos(lineAngle));
+		CoordinateVector pursuit = new CoordinateVector(xPursuit,
 																yPursuit,
 																Math.toDegrees(anglePursuit));
+		System.out.println(Math.toDegrees(relativeAngle));
+
 		System.out.println(Math.toDegrees(anglePursuit));
 
 		
 		return pursuit;
 	}
 	
-	private Boolean atWaypoint(CartesianCoordinate waypoint, CartesianCoordinate position) {
-		double dist = Math.sqrt(Math.pow(waypoint.x - position.x, 2) + Math.pow(waypoint.y - position.y, 2));
-		return dist < kLookAhead;
+	private Boolean atWaypoint(Waypoint curWaypoint, CoordinateVector position, double radius) {
+		double dist = Math.sqrt(Math.pow(curWaypoint.x - position.x, 2) + Math.pow(curWaypoint.y - position.y, 2));
+		return dist < radius;
 	}
 	
 //	 ============== Main Navigation Controller =================
@@ -56,23 +76,23 @@ public class WaypointNavigator {
 //		        # print 'Position: x: %.1f y: %.1f yaw %.1f' %(state.x, state.y, state.yaw)
 //		        if (self.goal_index == (len(self.goal_list)-1)) and self.lock == 0:
 //					self.goal_index = self.goal_index
-//					print "Goal Posistion Last:  X %.2f   Y %.2f   Z %.2f   Yaw %.2f" %(self.current_goal[0], self.current_goal[1], self.current_goal[2], self.current_goal[3])
+//					print "Goal Posistion Last:  X %.2f   Y %.2f   Z %.2f   Yaw %.2f" %(self.position_goal[0], self.position_goal[1], self.position_goal[2], self.position_goal[3])
 //					self.lock = 1
-//		        elif self.at_goal(self.current_goal) and self.lock == 0:
+//		        elif self.at_goal(self.position_goal) and self.lock == 0:
 //					self.goal_index += 1
-//					self.current_goal = self.goal_list[self.goal_index][0]
-//					self.current_gain = self.goal_list[self.goal_index][1]
-//					print "Goal Posistion %.0f:  X %.2f   Y %.2f   Z %.2f   Yaw %.2f" %(self.goal_index, self.current_goal[0], self.current_goal[1], self.current_goal[2], self.current_goal[3])
+//					self.position_goal = self.goal_list[self.goal_index][0]
+//					self.position_gain = self.goal_list[self.goal_index][1]
+//					print "Goal Posistion %.0f:  X %.2f   Y %.2f   Z %.2f   Yaw %.2f" %(self.goal_index, self.position_goal[0], self.position_goal[1], self.position_goal[2], self.position_goal[3])
 //		        
 //				#print self.goal_index-1, len(self.goal_list)
 //		        
 //
 //				self.publish_goal.publish(self.make_twist_msg(x_goal,y_goal,z,yaw))
-//				self.publish_gain.publish(np.array(self.current_gain, dtype=np.float32))
+//				self.publish_gain.publish(np.array(self.position_gain, dtype=np.float32))
 //
 //
 //		    def at_goal(self, goal):
-//		        # Calculate the error between where you are and the current goal
+//		        # Calculate the error between where you are and the position goal
 //		        goal = goal  # Twist Message
 //		        state = self.state
 //		        # print dist_to_goal(goal)
