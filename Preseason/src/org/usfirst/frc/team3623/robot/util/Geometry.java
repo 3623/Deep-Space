@@ -2,8 +2,8 @@ package org.usfirst.frc.team3623.robot.util;
 
 public class Geometry {
 	
-	public static CoordinateVector center(CoordinateVector left, CoordinateVector right) {
-		CoordinateVector coordinate = new CoordinateVector();
+	public static Pose center(Pose left, Pose right) {
+		Pose coordinate = new Pose();
 		coordinate.x = (left.x + right.x)/2;
 		coordinate.y = (left.y + right.y)/2;
 		
@@ -15,17 +15,17 @@ public class Geometry {
 		return coordinate;
 	}
 	
-	public static CoordinateVector inverseCenterLeft(CoordinateVector center, double drivebase) {
+	public static Pose inverseCenterLeft(Pose center, double drivebase) {
 		double x = center.x - drivebase/2.0 * Math.cos(center.heading);
 		double y = center.y + drivebase/2.0 * Math.sin(center.heading);
-		CoordinateVector left = new CoordinateVector(x, y);
+		Pose left = new Pose(x, y);
 		return left;
 	}
 	
-	public static CoordinateVector inverseCenterRight(CoordinateVector center, double drivebase) {
+	public static Pose inverseCenterRight(Pose center, double drivebase) {
 		double x = center.x + drivebase/2.0 * Math.cos(center.heading);
 		double y = center.y - drivebase/2.0 * Math.sin(center.heading);
-		CoordinateVector right = new CoordinateVector(x, y);
+		Pose right = new Pose(x, y);
 		return right;
 	}
 	
@@ -40,7 +40,7 @@ public class Geometry {
 		return (a * sinB / sinA);
 	}
 	
-	public static double distance(CoordinateVector a, CoordinateVector b) {
+	public static double distance(Pose a, Pose b) {
 		double distance = distance(a.x, b.x, a.y, b.y);
 		return distance;
 	}
@@ -57,8 +57,8 @@ public class Geometry {
 	public static void main ( String[] args )
 	  {
 	      Geometry test = new Geometry();
-	      CoordinateVector left = new CoordinateVector(6, 5);
-	      CoordinateVector right = new CoordinateVector(5, 4);
+	      Pose left = new Pose(6, 5);
+	      Pose right = new Pose(5, 4);
 
 	      System.out.println(Geometry.distance(left,  right));
 	  }

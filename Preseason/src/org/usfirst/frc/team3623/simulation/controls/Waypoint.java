@@ -1,14 +1,14 @@
 package org.usfirst.frc.team3623.simulation.controls;
 
-import org.usfirst.frc.team3623.robot.util.CoordinateVector;
+import org.usfirst.frc.team3623.robot.util.Pose;
 
 public class Waypoint {
-//	public final CoordinateVector point;
+//	public final Pose point;
 	public final double kRadius;
 	public final double kLookAhead;
 	public final double x, y, heading;
 	
-	public Waypoint(CoordinateVector point) {
+	public Waypoint(Pose point) {
 		this.x = point.x;
 		this.y = point.y;
 		this.heading = point.heading;
@@ -16,7 +16,7 @@ public class Waypoint {
 		this.kLookAhead = 0.0;
 	}
 	
-	public Waypoint(CoordinateVector point, double radius, double lookAhead) {
+	public Waypoint(Pose point, double radius, double lookAhead) {
 		this.x = point.x;
 		this.y = point.y;
 		this.heading = point.heading;

@@ -4,7 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import org.usfirst.frc.team3623.robot.subsystems.Drivetrain;
-import org.usfirst.frc.team3623.robot.util.CoordinateVector;
+import org.usfirst.frc.team3623.robot.util.Pose;
 import org.usfirst.frc.team3623.robot.util.Tuple;
 import org.usfirst.frc.team3623.simulation.controls.Waypoint;
 import org.usfirst.frc.team3623.simulation.controls.WaypointNavigator;
@@ -38,8 +38,8 @@ public class Animation extends JPanel implements Runnable
 
 	public Animation() throws IOException {
 		//    field = Toolkit.getDefaultToolkit().getImage("field.png");
-		field = ImageIO.read(new File("field-red.png"));
-		robot = ImageIO.read(new File("robot-red.png"));
+		field = ImageIO.read(new File("field-blue.png"));
+		robot = ImageIO.read(new File("robot-blue.png"));
 
 
 		// Set the width and heigth and size
@@ -61,12 +61,15 @@ public class Animation extends JPanel implements Runnable
 		x = width / 2;
 		y = height;
 
-		model = new DrivetrainModel(x/scale, 80.0/scale/2, 0.0);
+		model = new DrivetrainModel(2.2, 0.4, 0.0);
 		waypointNav = new WaypointNavigator();
-		waypointNav.addWaypoint(new Waypoint(4.0, 0.0, -90.0));
-		waypointNav.addWaypoint(new Waypoint(4.0, 5.0, -90.0, 0.7, 0.6));
-		waypointNav.addWaypoint(new Waypoint(1.0, 5.0, -90.0, 0.7, 0.6));
-		waypointNav.addWaypoint(new Waypoint(1.0, 1.0, -90.0));
+		waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
+		waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.6));
+		waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.5));
+		waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.6));
+		waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
+
+
 
 
 		// Create and start the thread
@@ -82,7 +85,7 @@ public class Animation extends JPanel implements Runnable
 
 
 		Tuple out;
-		CoordinateVector goal = waypointNav.updatePursuit(model.center);
+		Pose goal = waypointNav.updatePursuit(model.center);
 		out = Drivetrain.driveToPoint(goal, model.center);
 
 //		out = Drivetrain.driveToPoint(goal, model.center);
@@ -113,7 +116,7 @@ public class Animation extends JPanel implements Runnable
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 
-//		goal = new CoordinateVector(4.0, 4.0, -135.0);
+//		goal = new Pose(4.0, 4.0, -135.0);
 
 		xPixels = goal.x * scale + offset;
 		yPixels = goal.y * scale + offset;

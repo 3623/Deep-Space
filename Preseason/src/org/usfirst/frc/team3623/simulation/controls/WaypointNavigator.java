@@ -2,7 +2,7 @@ package org.usfirst.frc.team3623.simulation.controls;
 
 import java.util.ArrayList;
 
-import org.usfirst.frc.team3623.robot.util.CoordinateVector;
+import org.usfirst.frc.team3623.robot.util.Pose;
 
 
 public class WaypointNavigator { 
@@ -29,7 +29,7 @@ public class WaypointNavigator {
 		else kLookAhead = kLookAheadDefault;
 	}
 	
-	public CoordinateVector updatePursuit(CoordinateVector position) {
+	public Pose updatePursuit(Pose position) {
 		updateWaypoint();
 		if (atWaypoint(curWaypoint, position, kRadius) && index != waypoints.size()-1) {
 			index++;
@@ -54,13 +54,13 @@ public class WaypointNavigator {
 		}
 		double xPursuit = curWaypoint.x - (lineDist * Math.sin(lineAngle));
 		double yPursuit = curWaypoint.y - (lineDist * Math.cos(lineAngle));
-		CoordinateVector pursuit = new CoordinateVector(xPursuit,
+		Pose pursuit = new Pose(xPursuit,
 																yPursuit,
 																Math.toDegrees(anglePursuit));
 		return pursuit;
 	}
 	
-	private Boolean atWaypoint(Waypoint curWaypoint, CoordinateVector position, double radius) {
+	private Boolean atWaypoint(Waypoint curWaypoint, Pose position, double radius) {
 		double dist = Math.sqrt(Math.pow(curWaypoint.x - position.x, 2) + Math.pow(curWaypoint.y - position.y, 2));
 		return dist < radius;
 	}

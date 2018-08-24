@@ -6,7 +6,7 @@ package org.usfirst.frc.team3623.robot.util;
  * @author eric
  *
  */
-public class CoordinateVector {
+public class Pose {
 	public double x;
 	public double y;
 	public double heading;
@@ -17,18 +17,18 @@ public class CoordinateVector {
 	 * @param y the y location in meters
 	 * @param heading the heading angle in degress, is converted into radians
 	 */
-	public CoordinateVector(double x, double y, double heading) {
+	public Pose(double x, double y, double heading) {
 		this.x = x;
 		this.y = y;
 		this.heading = Math.toRadians(heading);
 	}
 	
-	public CoordinateVector(double x, double y) {
+	public Pose(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
 	
-	public CoordinateVector() {
+	public Pose() {
 		this.x = 0.0;
 		this.y = 0.0;
 		this.heading = 0.0;

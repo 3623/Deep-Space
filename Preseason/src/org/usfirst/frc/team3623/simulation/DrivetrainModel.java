@@ -3,7 +3,7 @@ package org.usfirst.frc.team3623.simulation;
 import org.usfirst.frc.team3623.simulation.motors.CIMMotor;
 import org.usfirst.frc.team3623.simulation.motors.Motor;
 import org.usfirst.frc.team3623.simulation.Kinematics;
-import org.usfirst.frc.team3623.robot.util.CoordinateVector;
+import org.usfirst.frc.team3623.robot.util.Pose;
 import org.usfirst.frc.team3623.robot.util.Geometry;
 import org.usfirst.frc.team3623.robot.util.Utils;
 
@@ -20,11 +20,11 @@ public class DrivetrainModel {
 	private final double WHEEL_BASE = 0.762; // meters
 	private final double CENTER_MASS = 0.381; // from left wheel
 	private Boolean COAST_MODE = false; 
-	public CoordinateVector center;
+	public Pose center;
 	private DrivetrainSide left, right;
 	
 	public DrivetrainModel(double x, double y, double heading) {
-		center = new CoordinateVector(x, y, heading); // Initial robot position
+		center = new Pose(x, y, heading); // Initial robot position
 		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
 				DRIVETRAIN_MASS/2);
 		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
@@ -40,7 +40,7 @@ public class DrivetrainModel {
 	}
 	
 //	public DrivetrainModel() {
-//		center = new CoordinateVector(0.0, 0.0, 0.0); // Initial robot position
+//		center = new Pose(0.0, 0.0, 0.0); // Initial robot position
 //		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
 //				DRIVETRAIN_MASS/2);
 //		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
@@ -95,7 +95,7 @@ public class DrivetrainModel {
 	 *
 	 */
 	private static class DrivetrainSide{
-		CoordinateVector position;
+		Pose position;
 		double velocity;
 		private double acceleration;
 		private double psuedoMass;
@@ -111,7 +111,7 @@ public class DrivetrainModel {
 		
 		static CIMMotor cim = new CIMMotor();
 		
-		public DrivetrainSide(CoordinateVector position, double mass) {
+		public DrivetrainSide(Pose position, double mass) {
 			this.position = position;
 			velocity = 0.0;
 			acceleration = 0.0;
