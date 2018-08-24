@@ -1,6 +1,6 @@
 package org.usfirst.frc.team3623.robot.subsystems;
 
-import org.usfirst.frc.team3623.robot.util.CoordinateVector;
+import org.usfirst.frc.team3623.robot.util.Pose;
 import org.usfirst.frc.team3623.robot.util.Geometry;
 import org.usfirst.frc.team3623.robot.util.Tuple;
 
@@ -9,11 +9,11 @@ public class Drivetrain {
 
 	
 	
-	public static Tuple driveToPoint(CoordinateVector goal, CoordinateVector current) {
-		CoordinateVector leftGoal = Geometry.inverseCenterLeft(goal, WHEEL_BASE);
-		CoordinateVector rightGoal = Geometry.inverseCenterRight(goal, WHEEL_BASE);
-		CoordinateVector left = Geometry.inverseCenterLeft(current, WHEEL_BASE);
-		CoordinateVector right = Geometry.inverseCenterRight(current, WHEEL_BASE);
+	public static Tuple driveToPoint(Pose goal, Pose current) {
+		Pose leftGoal = Geometry.inverseCenterLeft(goal, WHEEL_BASE);
+		Pose rightGoal = Geometry.inverseCenterRight(goal, WHEEL_BASE);
+		Pose left = Geometry.inverseCenterLeft(current, WHEEL_BASE);
+		Pose right = Geometry.inverseCenterRight(current, WHEEL_BASE);
 		double distLeft = Geometry.distance(leftGoal, left);
 		double distRight = Geometry.distance(rightGoal, right);
 //		System.out.println(distLeft + " " + distRight);
@@ -21,9 +21,9 @@ public class Drivetrain {
 		return out;
 	}
 	
-	public static Tuple driveToPoint2(CoordinateVector goal, CoordinateVector current) {
-		CoordinateVector left = Geometry.inverseCenterLeft(current, WHEEL_BASE);
-		CoordinateVector right = Geometry.inverseCenterRight(current, WHEEL_BASE);
+	public static Tuple driveToPoint2(Pose goal, Pose current) {
+		Pose left = Geometry.inverseCenterLeft(current, WHEEL_BASE);
+		Pose right = Geometry.inverseCenterRight(current, WHEEL_BASE);
 		double distLeft = Geometry.distance(goal, left);
 		double distRight = Geometry.distance(goal, right);
 		System.out.println(distLeft + " " + distRight);
