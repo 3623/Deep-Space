@@ -137,15 +137,7 @@ public class DrivetrainModel {
 		private double frictionModel(double force, double speed) {
 			double netForce;
 			if (Math.abs(speed) < 0.025) {
-				if (isSlowing(force, speed) && Math.abs(force) < Math.abs(FRICTION)) {
-					netForce = force;
-				} else if (force > 0.0) {
-					netForce = force - FRICTION;
-				} else if (force < 0.0) {
-					netForce = force + FRICTION;
-				} else {
-					netForce = 0.0;
-				}
+				netForce = force;
 			} else if (speed < 0.0) {
 				netForce = force + FRICTION;
 			} else if (speed > 0.0) {
