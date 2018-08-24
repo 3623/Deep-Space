@@ -1,11 +1,6 @@
 package org.usfirst.frc.team3623.simulation;
 
 public class Kinematics {
-
-	public double torqueToForce(double torque, double radius) {
-		double force = torque / radius;
-		return force;
-	}
 	
 	/**
 	 * The radius of the robot about the Instantaneous Center of Curvature (ICC)

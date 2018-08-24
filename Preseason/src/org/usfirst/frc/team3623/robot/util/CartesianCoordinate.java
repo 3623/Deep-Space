@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3623.simulation;
+package org.usfirst.frc.team3623.robot.util;
 
 /**
  * Simple Cartesian coordinate class
@@ -7,14 +7,20 @@ package org.usfirst.frc.team3623.simulation;
  *
  */
 public class CartesianCoordinate {
-	double x;
-	double y;
-	double heading;
+	public double x;
+	public double y;
+	public double heading;
 	
+	/**
+	 * Constructor for CartesianCoordinate class
+	 * @param x the x location in meters
+	 * @param y the y location in meters
+	 * @param heading the heading angle in degress, is converted into radians
+	 */
 	public CartesianCoordinate(double x, double y, double heading) {
 		this.x = x;
 		this.y = y;
-		this.heading = heading;
+		this.heading = Math.toRadians(heading);
 	}
 	
 	public CartesianCoordinate(double x, double y) {

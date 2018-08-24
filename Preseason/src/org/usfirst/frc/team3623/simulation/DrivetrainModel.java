@@ -2,8 +2,9 @@ package org.usfirst.frc.team3623.simulation;
 
 import org.usfirst.frc.team3623.simulation.motors.CIMMotor;
 import org.usfirst.frc.team3623.simulation.motors.Motor;
-import org.usfirst.frc.team3623.simulation.CartesianCoordinate;
 import org.usfirst.frc.team3623.simulation.Kinematics;
+import org.usfirst.frc.team3623.robot.util.CartesianCoordinate;
+import org.usfirst.frc.team3623.robot.util.Geometry;
 import org.usfirst.frc.team3623.simulation.DrivetrainSide;
 
 /**
@@ -68,7 +69,7 @@ public class DrivetrainModel {
 		center = Geometry.center(left.position, right.position);
 		
 		// Debug statements
-//		System.out.println(center.x + ", " + center.y + ", " + center.heading);
+		System.out.println(center.x + ", " + center.y + ", " + center.heading);
 		System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
 //		System.out.println("LP: " + left.position.x + ", " + left.position.y);
 //		System.out.println("RP: " + right.position.x + ", " + right.position.y);
@@ -76,6 +77,98 @@ public class DrivetrainModel {
 //		System.out.println("RM: " + rightMovement + " LM: " + leftMovement);
 //		System.out.println(leftMovementX + "====" + leftMovementY);
 //		System.out.println(rightMovementX + "====" + rightMovementY);
+	}
+	
+	/**
+	 * 
+	 * @author eric
+	 *
+	 */
+	private static class DrivetrainSide{
+		CartesianCoordinate position;
+		double velocity;
+		double acceleration;
+		double psuedoMass;
+		
+		private static final double WHEEL_RADIUS = 0.0508; // meters
+		private static final double CIMS_PER_SIDE = 2.0; // Minicim is 0.58
+		private static final double GEAR_RATIO = 10.7/1.0; // Reduction
+		// Future can make motors a list of motors rather than coefficient
+//		private static final CIMMotor cimL1, cimL2, cimR1, cimR2 = new CIMMotor();
+//		private static final Motor[] motorsL = {cimL1, cimL2};
+		private static final double FRICTION = 115;
+		
+		static CIMMotor cim = new CIMMotor();
+		
+		public DrivetrainSide(CartesianCoordinate position, double mass) {
+			this.position = position;
+			velocity = 0.0;
+			acceleration = 0.0;
+			psuedoMass = mass;
+		}
+		
+		public void update(double voltage, double time) {
+			double motorSpeed = this.wheelSpeedToMotorSpeed(this.velocity);
+//			double newAcceleration = this.wheelAcceleration(voltage, motorSpeed);
+			
+			double totalTorque = CIMMotor.outputTorque(voltage, motorSpeed) * GEAR_RATIO * CIMS_PER_SIDE;
+			double wheelForce = (totalTorque / WHEEL_RADIUS);
+			double wheelnetForce = frictionModel(wheelForce, this.velocity);
+//			System.out.println(wheelForce + " " + wheelnetForce);
+			double newAcceleration = wheelnetForce / psuedoMass;
+			
+			this.velocity += (newAcceleration + this.acceleration) / 2 * time; // Trapezoidal integration
+			this.acceleration = newAcceleration;
+
+		}
+		
+		/**
+		 * Converts linear wheel speed back to motor angular speed
+		 * @param speed meters/sec
+		 * @return angular speed, revolutions per minute
+		 */
+		private double wheelSpeedToMotorSpeed(double speed) {
+			double wheelCircum = WHEEL_RADIUS * 2 * Math.PI;
+			double wheelRevs = speed / wheelCircum * 60.0;
+			double motorRevs = wheelRevs * GEAR_RATIO;
+			return motorRevs;
+		}
+		
+		private double frictionModel(double force, double speed) {
+			double netForce;
+			if (Math.abs(speed) < 0.025) {
+				if (isSlowing(force, speed) && Math.abs(force) < Math.abs(FRICTION)) {
+					netForce = force;
+				} else if (force > 0.0) {
+					netForce = force - FRICTION;
+				} else if (force < 0.0) {
+					netForce = force + FRICTION;
+				} else {
+					netForce = 0.0;
+				}
+			} else if (speed < 0.0) {
+				netForce = force + FRICTION;
+			} else if (speed > 0.0) {
+				netForce = force - FRICTION;
+			} else {
+				netForce = 0.0;
+			}
+			return netForce;
+		}
+		
+		private double clipForce(double force, double friction) {
+			double netForce = 0;
+			if (Math.abs(friction) > Math.abs(force)) {
+				netForce = 0.0;
+			} else {
+				netForce = force + friction;
+			}
+			return netForce;
+		}
+		
+		private Boolean isSlowing(double a, double b) {
+		    return a*b <= 0.0f;
+		}
 	}
 	
 	// Testing

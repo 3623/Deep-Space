@@ -1,79 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry path="bin/default" kind="output"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2018.4.1/b71b340c616d5c841deef19c9721044f57477788/wpilibj-java-2018.4.1-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2018.4.1/897367c0a37b2ec4dcb6aeb578be84f066c46f4a/wpilibj-java-2018.4.1.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2018.4.1/897367c0a37b2ec4dcb6aeb578be84f066c46f4a/wpilibj-java-2018.4.1.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2018.4.1/b71b340c616d5c841deef19c9721044f57477788/wpilibj-java-2018.4.1-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/4.1.0/af2f67e3ca637328b5d87a2ca66f3cc7eed0bb9/ntcore-java-4.1.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/4.1.0/52e7d8449aacb56e104020f10b39f33549177078/ntcore-java-4.1.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/4.1.0/52e7d8449aacb56e104020f10b39f33549177078/ntcore-java-4.1.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/4.1.0/af2f67e3ca637328b5d87a2ca66f3cc7eed0bb9/ntcore-java-4.1.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/3.2.0/c2f13b5007365c2b972c3d37e6104e4213c70c53/wpiutil-java-3.2.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/3.2.0/40b6832a84296f9146b27584e22c8507dab874dd/wpiutil-java-3.2.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/3.2.0/40b6832a84296f9146b27584e22c8507dab874dd/wpiutil-java-3.2.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/3.2.0/c2f13b5007365c2b972c3d37e6104e4213c70c53/wpiutil-java-3.2.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/org.opencv/opencv-java/3.2.0/da5215ba2c023701a644802a1fcd93749061f90d/opencv-java-3.2.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/org.opencv/opencv-java/3.2.0/c65e242eaf6ff4b086d45b0254f4511b6a072a65/opencv-java-3.2.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/org.opencv/opencv-java/3.2.0/c65e242eaf6ff4b086d45b0254f4511b6a072a65/opencv-java-3.2.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/org.opencv/opencv-java/3.2.0/da5215ba2c023701a644802a1fcd93749061f90d/opencv-java-3.2.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/1.3.0/2f60952b33c41e708cbd3efec5402d29aab472ca/cscore-java-1.3.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/1.3.0/af0c62cf7e9903d052e67008105e014357917e13/cscore-java-1.3.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/1.3.0/af0c62cf7e9903d052e67008105e014357917e13/cscore-java-1.3.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/1.3.0/2f60952b33c41e708cbd3efec5402d29aab472ca/cscore-java-1.3.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.ctre/CTRE-phoenix-java/5.2.2.0/6ef53967acb57f11e0be1e3d825d8a013945bc27/CTRE-phoenix-java-5.2.2.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.ctre/CTRE-phoenix-java/5.2.2.0/469f4905ff49fe297be19c0c6724e27b444fbb5c/CTRE-phoenix-java-5.2.2.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.ctre/CTRE-phoenix-java/5.2.2.0/469f4905ff49fe297be19c0c6724e27b444fbb5c/CTRE-phoenix-java-5.2.2.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.ctre/CTRE-phoenix-java/5.2.2.0/6ef53967acb57f11e0be1e3d825d8a013945bc27/CTRE-phoenix-java-5.2.2.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.kauailabs/navx-java/3.0.346/bf97f8511e36c87629248aa073f92660a413547d/navx-java-3.0.346-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.kauailabs/navx-java/3.0.346/b29a636918ae632c90be1b0e4161ac7bd0853731/navx-java-3.0.346.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.kauailabs/navx-java/3.0.346/b29a636918ae632c90be1b0e4161ac7bd0853731/navx-java-3.0.346.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.kauailabs/navx-java/3.0.346/bf97f8511e36c87629248aa073f92660a413547d/navx-java-3.0.346-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.powerup/MatchData/2018.01.07/5621fbfada81352fb32981607a0ae4310163e9e9/MatchData-2018.01.07-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.powerup/MatchData/2018.01.07/30351a05ab4661f0ee307e782747fe4ba8bfe866/MatchData-2018.01.07.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.powerup/MatchData/2018.01.07/30351a05ab4661f0ee307e782747fe4ba8bfe866/MatchData-2018.01.07.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/openrio.powerup/MatchData/2018.01.07/5621fbfada81352fb32981607a0ae4310163e9e9/MatchData-2018.01.07-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_gui/2018-1.0.0/fa15142d8768dc857252704a53354778d3e098a5/snobot_sim_gui-2018-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_gui/2018-1.0.0/ff523e86c44a59e07821dfcd38a14817f438dd47/snobot_sim_gui-2018-1.0.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_gui/2018-1.0.0/ff523e86c44a59e07821dfcd38a14817f438dd47/snobot_sim_gui-2018-1.0.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_gui/2018-1.0.0/fa15142d8768dc857252704a53354778d3e098a5/snobot_sim_gui-2018-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_java/2018-1.0.0/c4d86beeea651e4cb6a860f54634ceacbc9cb500/snobot_sim_java-2018-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_java/2018-1.0.0/b966e9310553e02694a8ac0818f83dd4d444cddf/snobot_sim_java-2018-1.0.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_java/2018-1.0.0/b966e9310553e02694a8ac0818f83dd4d444cddf/snobot_sim_java-2018-1.0.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_java/2018-1.0.0/c4d86beeea651e4cb6a860f54634ceacbc9cb500/snobot_sim_java-2018-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_utilities/2018-1.0.0/2b82599350a4da0bacd629cfa8085b140d71c9a2/snobot_sim_utilities-2018-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_utilities/2018-1.0.0/715c36b73f4ebc120ad1a8baee5aac2ac3f202d1/snobot_sim_utilities-2018-1.0.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_utilities/2018-1.0.0/715c36b73f4ebc120ad1a8baee5aac2ac3f202d1/snobot_sim_utilities-2018-1.0.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/snobot_sim_utilities/2018-1.0.0/2b82599350a4da0bacd629cfa8085b140d71c9a2/snobot_sim_utilities-2018-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/adx_family/2018-1.0.0/465983815962d7d5e5123a0fe6958864f2e7a3af/adx_family-2018-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/adx_family/2018-1.0.0/9d49d8f5ace8570fadf900dbc4b35674b0a850a9/adx_family-2018-1.0.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/adx_family/2018-1.0.0/9d49d8f5ace8570fadf900dbc4b35674b0a850a9/adx_family-2018-1.0.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/adx_family/2018-1.0.0/465983815962d7d5e5123a0fe6958864f2e7a3af/adx_family-2018-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/adx_family/2018-1.0.0/465983815962d7d5e5123a0fe6958864f2e7a3af/adx_family-2018-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/adx_family/2018-1.0.0/a081e5931e07eb4a8640455a4bc418e60aaea7f8/adx_family-2018-1.0.0-all.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/adx_family/2018-1.0.0/a081e5931e07eb4a8640455a4bc418e60aaea7f8/adx_family-2018-1.0.0-all.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/adx_family/2018-1.0.0/465983815962d7d5e5123a0fe6958864f2e7a3af/adx_family-2018-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/navx_simulator/2018-1.0.0/462e83365a2839e7c838dd3789fa71c6019bfcb8/navx_simulator-2018-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/navx_simulator/2018-1.0.0/8dd69c7a3e439a8ab9280bd2265510514a2c8b17/navx_simulator-2018-1.0.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/navx_simulator/2018-1.0.0/8dd69c7a3e439a8ab9280bd2265510514a2c8b17/navx_simulator-2018-1.0.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/navx_simulator/2018-1.0.0/462e83365a2839e7c838dd3789fa71c6019bfcb8/navx_simulator-2018-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/navx_simulator/2018-1.0.0/462e83365a2839e7c838dd3789fa71c6019bfcb8/navx_simulator-2018-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/navx_simulator/2018-1.0.0/c0596dacb97df275b3f0d03817e4b0e73ed208dd/navx_simulator-2018-1.0.0-all.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/navx_simulator/2018-1.0.0/c0596dacb97df275b3f0d03817e4b0e73ed208dd/navx_simulator-2018-1.0.0-all.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/navx_simulator/2018-1.0.0/462e83365a2839e7c838dd3789fa71c6019bfcb8/navx_simulator-2018-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
@@ -83,22 +82,22 @@
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/V0_5.1.2.1/e656f7b9e5af500b36bc756ad79e20cb4c3cde4f/ctre_sim_override-V0_5.1.2.1-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/V0_5.1.2.1/32ec18fffa90ca94e7b5b1ffe1dd8128ed7b7db1/ctre_sim_override-V0_5.1.2.1.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/V0_5.1.2.1/32ec18fffa90ca94e7b5b1ffe1dd8128ed7b7db1/ctre_sim_override-V0_5.1.2.1.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/V0_5.1.2.1/e656f7b9e5af500b36bc756ad79e20cb4c3cde4f/ctre_sim_override-V0_5.1.2.1-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/V0_5.1.2.1/e656f7b9e5af500b36bc756ad79e20cb4c3cde4f/ctre_sim_override-V0_5.1.2.1-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/V0_5.1.2.1/f04198c16091010cb4ef170e74565a4fd6f8f54e/ctre_sim_override-V0_5.1.2.1-native-all.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/V0_5.1.2.1/f04198c16091010cb4ef170e74565a4fd6f8f54e/ctre_sim_override-V0_5.1.2.1-native-all.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/V0_5.1.2.1/e656f7b9e5af500b36bc756ad79e20cb4c3cde4f/ctre_sim_override-V0_5.1.2.1-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/temp_hal_interface/2018-1.0.0/23df986f57e53215678bc4c07cce98b726aa7c43/temp_hal_interface-2018-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/temp_hal_interface/2018-1.0.0/b1597c5bd14560292459b5186249b899fa4c757/temp_hal_interface-2018-1.0.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/temp_hal_interface/2018-1.0.0/b1597c5bd14560292459b5186249b899fa4c757/temp_hal_interface-2018-1.0.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/temp_hal_interface/2018-1.0.0/23df986f57e53215678bc4c07cce98b726aa7c43/temp_hal_interface-2018-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/temp_hal_interface/2018-1.0.0/23df986f57e53215678bc4c07cce98b726aa7c43/temp_hal_interface-2018-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/temp_hal_interface/2018-1.0.0/96363834a3a24b37e599ffc84b9bcc12afd4acc/temp_hal_interface-2018-1.0.0-all.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/temp_hal_interface/2018-1.0.0/96363834a3a24b37e599ffc84b9bcc12afd4acc/temp_hal_interface-2018-1.0.0-all.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/temp_hal_interface/2018-1.0.0/23df986f57e53215678bc4c07cce98b726aa7c43/temp_hal_interface-2018-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
@@ -108,32 +107,32 @@
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/jfree/jcommon/1.0.16/4e9db93cbb47f8a7ed7da1ce9d50dacd561d2616/jcommon-1.0.16-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/jfree/jcommon/1.0.16/376f19a7c317509a57dfc684cdfd4081db7c082c/jcommon-1.0.16.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/jfree/jcommon/1.0.16/376f19a7c317509a57dfc684cdfd4081db7c082c/jcommon-1.0.16.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/jfree/jcommon/1.0.16/4e9db93cbb47f8a7ed7da1ce9d50dacd561d2616/jcommon-1.0.16-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.11.0/932392dc515dae4e750ac4a96c39ba69d5e81db3/log4j-core-2.11.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.11.0/e6b751e02120c08702d98750f6a80bc25343b7f5/log4j-core-2.11.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.11.0/e6b751e02120c08702d98750f6a80bc25343b7f5/log4j-core-2.11.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.11.0/932392dc515dae4e750ac4a96c39ba69d5e81db3/log4j-core-2.11.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.0/97f6fb29d69b48fe4bdb47cc21c834b4536cf752/log4j-api-2.11.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.0/bede79a3f150711634a3047985517431bf6499f2/log4j-api-2.11.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.0/bede79a3f150711634a3047985517431bf6499f2/log4j-api-2.11.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.11.0/97f6fb29d69b48fe4bdb47cc21c834b4536cf752/log4j-api-2.11.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.18/17af1c263c33176842715cbfa677e14a5ad862dd/snakeyaml-1.18-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.18/e4a441249ade301985cb8d009d4e4a72b85bf68e/snakeyaml-1.18.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.18/e4a441249ade301985cb8d009d4e4a72b85bf68e/snakeyaml-1.18.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.18/17af1c263c33176842715cbfa677e14a5ad862dd/snakeyaml-1.18-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.miglayout/miglayout-swing/4.2/3d0273d83f46f87a2b0adc76ff13cd550da6e463/miglayout-swing-4.2-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.miglayout/miglayout-swing/4.2/ca85067488e79a2078ba4eb8e2617653e9172388/miglayout-swing-4.2.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.miglayout/miglayout-swing/4.2/ca85067488e79a2078ba4eb8e2617653e9172388/miglayout-swing-4.2.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.miglayout/miglayout-swing/4.2/3d0273d83f46f87a2b0adc76ff13cd550da6e463/miglayout-swing-4.2-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.miglayout/miglayout-core/4.2/4e5b8b17d6c2921d400faa89d33b769adeb222a4/miglayout-core-4.2-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.miglayout/miglayout-core/4.2/70f2bfa2a077ee1632cc8229deffa1d942825c78/miglayout-core-4.2.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/com.miglayout/miglayout-core/4.2/70f2bfa2a077ee1632cc8229deffa1d942825c78/miglayout-core-4.2.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/com.miglayout/miglayout-core/4.2/4e5b8b17d6c2921d400faa89d33b769adeb222a4/miglayout-core-4.2-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
@@ -143,12 +142,12 @@
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput/2.0.7/7c2d3234e992788eebf6c230f6abc5683c5cd420/jinput-2.0.7-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput/2.0.7/7795d3dbbcfecd03e3d2bf964b04c0cd042415f7/jinput-2.0.7.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput/2.0.7/7795d3dbbcfecd03e3d2bf964b04c0cd042415f7/jinput-2.0.7.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput/2.0.7/7c2d3234e992788eebf6c230f6abc5683c5cd420/jinput-2.0.7-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/net.java.jutils/jutils/1.0.0/d18678a00b216863206a1bb6190507e02a32971b/jutils-1.0.0-sources.jar" kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/net.java.jutils/jutils/1.0.0/e12fe1fda814bd348c1579329c86943d2cd3c6a6/jutils-1.0.0.jar">
+	<classpathentry kind="lib" path="/home/eric/.gradle/caches/modules-2/files-2.1/net.java.jutils/jutils/1.0.0/e12fe1fda814bd348c1579329c86943d2cd3c6a6/jutils-1.0.0.jar" sourcepath="/home/eric/.gradle/caches/modules-2/files-2.1/net.java.jutils/jutils/1.0.0/d18678a00b216863206a1bb6190507e02a32971b/jutils-1.0.0-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
@@ -178,4 +177,12 @@
 			<attribute name="gradle_used_by_scope" value="test"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="var" path="wpilib" sourcepath="wpilib.sources"/>
+	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
+	<classpathentry kind="var" path="opencv" sourcepath="opencv.sources"/>
+	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
+	<classpathentry kind="var" path="wpiutil" sourcepath="wpiutil.sources"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
+	<classpathentry kind="output" path="bin/default"/>
 </classpath>

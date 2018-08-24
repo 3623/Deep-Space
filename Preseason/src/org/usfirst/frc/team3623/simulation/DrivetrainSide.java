@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3623.simulation;
 
+import org.usfirst.frc.team3623.robot.util.CartesianCoordinate;
 import org.usfirst.frc.team3623.simulation.motors.CIMMotor;
 
 /**

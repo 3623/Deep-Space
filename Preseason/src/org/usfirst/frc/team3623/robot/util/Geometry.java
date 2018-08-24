@@ -1,6 +1,4 @@
-package org.usfirst.frc.team3623.simulation;
-
-import org.usfirst.frc.team3623.simulation.motors.CIMMotor;
+package org.usfirst.frc.team3623.robot.util;
 
 public class Geometry {
 	
@@ -42,6 +40,18 @@ public class Geometry {
 		return (a * sinB / sinA);
 	}
 	
+	public static double distance(CartesianCoordinate a, CartesianCoordinate b) {
+		double distance = distance(a.x, b.x, a.y, b.y);
+		return distance;
+	}
+	
+	public static double distance(double x1, double x2, double y1, double y2) {
+		double deltaX = x1 - x2;
+		double deltaY = y1 - y2;
+		double dist = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
+		return dist;
+	}
+
 
 	// Testing calculations
 	public static void main ( String[] args )
@@ -50,6 +60,6 @@ public class Geometry {
 	      CartesianCoordinate left = new CartesianCoordinate(6, 5);
 	      CartesianCoordinate right = new CartesianCoordinate(5, 4);
 
-//	      System.out.println(Math.toDegrees(test.heading(left, right)));
+	      System.out.println(Geometry.distance(left,  right));
 	  }
 }
