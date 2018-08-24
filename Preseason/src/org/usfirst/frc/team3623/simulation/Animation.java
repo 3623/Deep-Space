@@ -6,6 +6,7 @@ import javax.swing.*;
 import org.usfirst.frc.team3623.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team3623.robot.util.CartesianCoordinate;
 import org.usfirst.frc.team3623.robot.util.Tuple;
+import org.usfirst.frc.team3623.simulation.controls.WaypointNavigator;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -30,18 +31,19 @@ public class Animation extends JPanel implements Runnable
 
 	protected int dt;          // interval between frames in millisec
 	private DrivetrainModel model;
+	private WaypointNavigator waypointNav;
 
 	protected double time;
 
 	public Animation() throws IOException {
 		//    field = Toolkit.getDefaultToolkit().getImage("field.png");
-		field = ImageIO.read(new File("field.png"));
+		field = ImageIO.read(new File("field-red.png"));
 		robot = ImageIO.read(new File("robot-red.png"));
 
 
 		// Set the width and heigth and size
 		width = field.getWidth(this);
-		height = field.getHeight(this)/2;
+		height = field.getHeight(this);
 		robotWidth = robot.getWidth(this);
 		robotHeight = robot.getHeight(this);
 
@@ -55,11 +57,13 @@ public class Animation extends JPanel implements Runnable
 
 		// Set the initial values for x and y
 		x = width / 2;
-		y = height / 2;
 		y = height;
 
 		model = new DrivetrainModel(x/scale, 80.0/scale/2, 0.0);
-
+		waypointNav = new WaypointNavigator();
+		waypointNav.addWaypoint(new CartesianCoordinate(4.0, 0.0, -90.0));
+		waypointNav.addWaypoint(new CartesianCoordinate(4.0, 5.0, -90.0));
+		waypointNav.addWaypoint(new CartesianCoordinate(1.0, 5.0, -90.0));
 
 		// Create and start the thread
 		sim = new Thread ( this );
@@ -69,44 +73,19 @@ public class Animation extends JPanel implements Runnable
 
 	// Update function
 	public void paintComponent (Graphics g) {  
-		double simTime = dt*1.0/1.0/1000.0;
+		double simTime = dt*1.0/4.0/1000.0;
 		time += simTime;
-		//	  System.out.println(time);
 
-		double leftVoltage;
-		double rightVoltage;
-		if (time < 0.3) {
-			rightVoltage = 0.0;
-			leftVoltage = 0.0;
-		} else if (time < 0.6) {
-			rightVoltage = 12.0;
-			leftVoltage = 5.0;
-		} else if (time < 1.2) {
-			rightVoltage = 6.0;
-			leftVoltage = 6.0;
-		} else if (time < 1.9) {
-			rightVoltage = 3.35;
-			leftVoltage = 9.65;
-		} else {
-			rightVoltage = 0.0;
-			leftVoltage = 0.0;
-		}
-//		
-//		if (time < 2.0) {
-//			rightVoltage = 12.0;
-//			leftVoltage = 12.0;
-//		} else {
-//			rightVoltage = 0.0;
-//			leftVoltage = 0.0;
-//		}
 
-		//	  leftVoltage = 12.0;
-		//	  rightVoltage = 12.0;
+		Tuple out;
+		CartesianCoordinate goal = waypointNav.updatePursuit(model.center);
+		out = Drivetrain.driveToPoint(goal, model.center);
 
-		//		CartesianCoordinate goal = new CartesianCoordinate((x/scale) + 4.0, (80.0/scale/2) + 4.0, -135.0);
-		//		Tuple out = Drivetrain.driveToPoint(goal, model.center);
-		//		leftVoltage = out.left*2;
-		//		rightVoltage = out.right*2;
+//		out = Drivetrain.driveToPoint(goal, model.center);
+//		out = Drivetrain.deadReckoningCurveLeft(time);
+//		out = Drivetrain.deadReckoningStraight(time);
+		double leftVoltage = out.left*12;
+		double rightVoltage = out.right*12;
 
 		model.update(leftVoltage, rightVoltage, simTime);
 
@@ -114,12 +93,12 @@ public class Animation extends JPanel implements Runnable
 		size = this.getSize();
 		// Create the off-screen image buffer if it is the first time
 		if ( image == null ) {
-			image = createImage ( size.width, size.height );
+			image = createImage ( size.width, size.height);
 			offScreen = image.getGraphics();
 		}
 
 		// Draw background field
-		offScreen.drawImage(field, 0, -height, this);
+		offScreen.drawImage(field, 0, 0, this);
 
 		// Draw robot
 		double xPixels = model.center.x * scale;
@@ -130,12 +109,14 @@ public class Animation extends JPanel implements Runnable
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 
-		//		xPixels = goal.x * scale;
-		//		yPixels = goal.y * scale;
-		//		xCoord = (int) Math.round(xPixels);
-		//		yCoord = y-(int) Math.round(yPixels);
-		//		offScreen.setColor ( Color.yellow );
-		//		offScreen.drawOval(xCoord, yCoord, 2, 2);
+//		goal = new CartesianCoordinate(4.0, 4.0, -135.0);
+
+		xPixels = goal.x * scale;
+		yPixels = goal.y * scale;
+		xCoord = (int) Math.round(xPixels);
+		yCoord = y-(int) Math.round(yPixels);
+		offScreen.setColor ( Color.yellow );
+		offScreen.drawOval(xCoord, yCoord, 4, 4);
 
 		// Copy the off-screen image to the screen
 		g.drawImage ( image, 0, 0, this );     
@@ -163,7 +144,7 @@ public class Animation extends JPanel implements Runnable
 		JFrame frame = new JFrame ( "Drivetrain Simulation" );
 		Animation panel = new Animation ();
 		frame.getContentPane().add ( panel );
-		frame.setSize ( panel.width, panel.height );
+		frame.setSize ( panel.width, panel.height  + 35);
 		frame.setVisible ( true );
 		frame.addWindowListener (new WindowAdapter() {
 			public void windowClosing ( WindowEvent evt ) {

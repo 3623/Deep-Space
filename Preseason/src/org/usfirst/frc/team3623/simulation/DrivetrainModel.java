@@ -20,7 +20,7 @@ public class DrivetrainModel {
 	private final double DRIVETRAIN_MASS = 63.5; // kg
 	private final double WHEEL_BASE = 0.762; // meters
 	private final double CENTER_MASS = 0.381; // from left wheel
-	private Boolean COAST_MODE = true; 
+	private Boolean COAST_MODE = false; 
 	public CartesianCoordinate center;
 	private DrivetrainSide left, right;
 	
@@ -80,7 +80,7 @@ public class DrivetrainModel {
 		
 		// Debug statements
 		System.out.println(center.x + ", " + center.y + ", " + center.heading);
-		System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
+//		System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
 //		System.out.println("LP: " + left.position.x + ", " + left.position.y);
 //		System.out.println("RP: " + right.position.x + ", " + right.position.y);
 //		System.out.println("MA: " + movementAngle + "Rad ICC: " + radius);
