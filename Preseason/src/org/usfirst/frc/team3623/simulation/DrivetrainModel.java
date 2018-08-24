@@ -78,8 +78,9 @@ public class DrivetrainModel {
 		center = Geometry.center(left.position, right.position);
 		
 		// Debug statements
-		System.out.println(center.x + ", " + center.y + ", " + center.heading);
+//		System.out.println(center.x + ", " + center.y + ", " + center.heading);
 //		System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
+		System.out.println(left.velocity + ", " + right.velocity);
 //		System.out.println("LP: " + left.position.x + ", " + left.position.y);
 //		System.out.println("RP: " + right.position.x + ", " + right.position.y);
 //		System.out.println("MA: " + movementAngle + "Rad ICC: " + radius);

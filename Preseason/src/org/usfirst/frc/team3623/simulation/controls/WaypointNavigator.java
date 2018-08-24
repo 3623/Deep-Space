@@ -57,11 +57,6 @@ public class WaypointNavigator {
 		CoordinateVector pursuit = new CoordinateVector(xPursuit,
 																yPursuit,
 																Math.toDegrees(anglePursuit));
-		System.out.println(Math.toDegrees(relativeAngle));
-
-		System.out.println(Math.toDegrees(anglePursuit));
-
-		
 		return pursuit;
 	}
 	

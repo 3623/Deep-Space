@@ -27,7 +27,7 @@ public class Animation extends JPanel implements Runnable
 	protected Image image;        // off-screen image
 	protected Graphics offScreen; // off-screen graphics
 	protected Image field, robot;
-	protected double scale; // pixels per meter
+	protected double scale, offset; // pixels per meter
 	protected int robotWidth, robotHeight;
 
 	protected int dt;          // interval between frames in millisec
@@ -49,7 +49,8 @@ public class Animation extends JPanel implements Runnable
 		robotHeight = robot.getHeight(this);
 
 		setSize ( width, height );
-		scale = 1685.0/16.46;
+		scale = 101;
+		offset = 10.0;
 
 		time = 0;
 
@@ -63,9 +64,8 @@ public class Animation extends JPanel implements Runnable
 		model = new DrivetrainModel(x/scale, 80.0/scale/2, 0.0);
 		waypointNav = new WaypointNavigator();
 		waypointNav.addWaypoint(new Waypoint(4.0, 0.0, -90.0));
-		waypointNav.addWaypoint(new Waypoint(4.0, 5.0, -90.0, 0.8, 0.6));
-		waypointNav.addWaypoint(new Waypoint(4.0, 0.0, -90.0));
-		waypointNav.addWaypoint(new Waypoint(1.0, 5.0, -90.0, 0.8, 0.6));
+		waypointNav.addWaypoint(new Waypoint(4.0, 5.0, -90.0, 0.7, 0.6));
+		waypointNav.addWaypoint(new Waypoint(1.0, 5.0, -90.0, 0.7, 0.6));
 		waypointNav.addWaypoint(new Waypoint(1.0, 1.0, -90.0));
 
 
@@ -105,8 +105,8 @@ public class Animation extends JPanel implements Runnable
 		offScreen.drawImage(field, 0, 0, this);
 
 		// Draw robot
-		double xPixels = model.center.x * scale;
-		double yPixels = model.center.y * scale;
+		double xPixels = model.center.x * scale + offset;
+		double yPixels = model.center.y * scale + offset;
 		int xCoord = (int) Math.round(xPixels)-(robotWidth/2);
 		int yCoord = y-(int) Math.round(yPixels)-(robotHeight/2);
 		AffineTransform tx = AffineTransform.getRotateInstance(model.center.heading, robotWidth/2, robotHeight/2);
@@ -115,8 +115,8 @@ public class Animation extends JPanel implements Runnable
 
 //		goal = new CoordinateVector(4.0, 4.0, -135.0);
 
-		xPixels = goal.x * scale;
-		yPixels = goal.y * scale;
+		xPixels = goal.x * scale + offset;
+		yPixels = goal.y * scale + offset;
 		xCoord = (int) Math.round(xPixels);
 		yCoord = y-(int) Math.round(yPixels);
 		offScreen.setColor ( Color.yellow );
