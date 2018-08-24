@@ -124,7 +124,7 @@ public class DrivetrainModel {
 //			double newAcceleration = this.wheelAcceleration(voltage, motorSpeed);
 			
 			double totalTorque = CIMMotor.outputTorque(voltage, motorSpeed) * GEAR_RATIO * CIMS_PER_SIDE;
-			if (coast && voltage == 0.0) totalTorque = 0.0;
+			if (coast && Utils.threshold(voltage, 0.0, 0.05)) totalTorque = 0.0;
 			double wheelForce = (totalTorque / WHEEL_RADIUS);
 			double wheelnetForce = frictionModel(wheelForce, this.velocity);
 //			System.out.println(wheelForce + " " + wheelnetForce);

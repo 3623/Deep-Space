@@ -75,30 +75,30 @@ public class Animation extends JPanel implements Runnable
 
 		double leftVoltage;
 		double rightVoltage;
-//		if (time < 0.3) {
-//			rightVoltage = 0.0;
-//			leftVoltage = 0.0;
-//		} else if (time < 0.6) {
-//			rightVoltage = 12.0;
-//			leftVoltage = 5.0;
-//		} else if (time < 1.2) {
-//			rightVoltage = 6.0;
-//			leftVoltage = 6.0;
-//		} else if (time < 1.9) {
-//			rightVoltage = 3.35;
-//			leftVoltage = 9.65;
-//		} else {
-//			rightVoltage = 0.0;
-//			leftVoltage = 0.0;
-//		}
-		
-		if (time < 2.0) {
+		if (time < 0.3) {
+			rightVoltage = 0.0;
+			leftVoltage = 0.0;
+		} else if (time < 0.6) {
 			rightVoltage = 12.0;
-			leftVoltage = 12.0;
+			leftVoltage = 5.0;
+		} else if (time < 1.2) {
+			rightVoltage = 6.0;
+			leftVoltage = 6.0;
+		} else if (time < 1.9) {
+			rightVoltage = 3.35;
+			leftVoltage = 9.65;
 		} else {
 			rightVoltage = 0.0;
 			leftVoltage = 0.0;
 		}
+//		
+//		if (time < 2.0) {
+//			rightVoltage = 12.0;
+//			leftVoltage = 12.0;
+//		} else {
+//			rightVoltage = 0.0;
+//			leftVoltage = 0.0;
+//		}
 
 		//	  leftVoltage = 12.0;
 		//	  rightVoltage = 12.0;
