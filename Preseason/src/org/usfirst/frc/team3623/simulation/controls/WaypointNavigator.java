@@ -44,7 +44,6 @@ public class WaypointNavigator {
 		double stateAngle = Math.atan2(-curWaypoint.x+position.x, -curWaypoint.y+position.y);
 		double relativeAngle = Math.PI + stateAngle - lineAngle;
 		double lineDist = dist*Math.cos(relativeAngle);
-		double anglePursuit = lineAngle + lineAngle + (relativeAngle) - position.heading;
 //		anglePursuit = relativeAngle - position.heading;
 		if (lineDist > kLookAhead) {
 			lineDist -= kLookAhead;
@@ -54,9 +53,15 @@ public class WaypointNavigator {
 		}
 		double xPursuit = curWaypoint.x - (lineDist * Math.sin(lineAngle));
 		double yPursuit = curWaypoint.y - (lineDist * Math.cos(lineAngle));
+		double pursuitRelativeAngle = Math.atan2(xPursuit-position.x, yPursuit-position.y);
+		double anglePursuit = lineAngle + (pursuitRelativeAngle) - position.heading;
 		Pose pursuit = new Pose(xPursuit,
 																yPursuit,
 																Math.toDegrees(anglePursuit));
+//		System.out.println(Math.toDegrees());
+		System.out.println(Math.toDegrees(anglePursuit) + " = " + 
+											Math.toDegrees(pursuitRelativeAngle) + " - " + 
+											Math.toDegrees(position.heading) );
 		return pursuit;
 	}
 	

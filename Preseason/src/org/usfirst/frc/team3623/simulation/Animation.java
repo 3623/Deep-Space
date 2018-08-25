@@ -27,6 +27,7 @@ public class Animation extends JPanel implements Runnable
 	protected Image image;        // off-screen image
 	protected Graphics offScreen; // off-screen graphics
 	protected Image field, robot;
+	protected double speed;
 	protected double scale, offset; // pixels per meter
 	protected int robotWidth, robotHeight;
 
@@ -47,6 +48,8 @@ public class Animation extends JPanel implements Runnable
 		height = field.getHeight(this);
 		robotWidth = robot.getWidth(this);
 		robotHeight = robot.getHeight(this);
+		
+		speed = 1.0;
 
 		setSize ( width, height );
 		scale = 101;
@@ -60,14 +63,32 @@ public class Animation extends JPanel implements Runnable
 		// Set the initial values for x and y
 		x = width / 2;
 		y = height;
+		
+////		 Poofs Iconic Gear then Shoot
+//		model = new DrivetrainModel(2.2, 0.4, 180.0);
+//		waypointNav = new WaypointNavigator();
+//		waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
+//		waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.6));
+//		waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.5));
+//		waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.6));
+//		waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
 
-		model = new DrivetrainModel(2.2, 0.4, 0.0);
+		
+//		// S Curve that we would have used if we had an actual drivetrain in 2018
+//		model = new DrivetrainModel(4.2, 0.4, 180.0);
+//		waypointNav = new WaypointNavigator();
+//		waypointNav.addWaypoint(new Waypoint(4.2, 0.4, 0.0));
+//		waypointNav.addWaypoint(new Waypoint(6.7, 3.1, 0.0, 0.15, 0.7));
+//		waypointNav.addWaypoint(new Waypoint(6.7, 3.4, 0.0, 0.3, 0.3));
+		
+		// Square with initial correction
+		model = new DrivetrainModel(6.0, 0.4, 0.0);
 		waypointNav = new WaypointNavigator();
-		waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
-		waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.6));
-		waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.5));
-		waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.6));
-		waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
+		waypointNav.addWaypoint(new Waypoint(7.0, 0.4, 0.0));
+		waypointNav.addWaypoint(new Waypoint(7.0, 5.0, 0.0, 0.6, 0.7));
+		waypointNav.addWaypoint(new Waypoint(1.0, 5.4, 0.0, 0.6, 0.7));
+		waypointNav.addWaypoint(new Waypoint(1.0, 0.4, 0.0, 0.6, 0.7));
+		waypointNav.addWaypoint(new Waypoint(6.0, 0.4, 0.0, 0.6, 0.7));
 
 
 
@@ -80,7 +101,7 @@ public class Animation extends JPanel implements Runnable
 
 	// Update function
 	public void paintComponent (Graphics g) {  
-		double simTime = dt*1.0/1.0/1000.0;
+		double simTime = dt*1.0/1000.0/speed;
 		time += simTime;
 
 
