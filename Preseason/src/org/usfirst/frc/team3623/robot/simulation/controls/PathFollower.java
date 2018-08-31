@@ -1,8 +1,8 @@
 package org.usfirst.frc.team3623.robot.simulation.controls;
 
-import org.usfirst.frc.team3623.robot.util.Pose;
-import org.usfirst.frc.team3623.robot.util.Geometry;
-import org.usfirst.frc.team3623.robot.util.Tuple;
+import org.usfirst.frc.team3623.util.Geometry;
+import org.usfirst.frc.team3623.util.Pose;
+import org.usfirst.frc.team3623.util.Tuple;
 
 public class PathFollower {
 	private static final double WHEEL_BASE = 0.762; // meters

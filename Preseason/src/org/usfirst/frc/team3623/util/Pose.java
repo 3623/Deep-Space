@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3623.robot.util;
+package org.usfirst.frc.team3623.util;
 
 /**
  * Simple Cartesian coordinate class

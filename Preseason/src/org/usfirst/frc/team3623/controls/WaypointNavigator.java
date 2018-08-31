@@ -2,7 +2,7 @@ package org.usfirst.frc.team3623.controls;
 
 import java.util.ArrayList;
 
-import org.usfirst.frc.team3623.robot.util.Pose;
+import org.usfirst.frc.team3623.util.Pose;
 
 
 public class WaypointNavigator { 

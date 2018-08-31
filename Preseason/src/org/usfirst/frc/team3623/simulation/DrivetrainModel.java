@@ -2,10 +2,10 @@ package org.usfirst.frc.team3623.simulation;
 
 import org.usfirst.frc.team3623.simulation.motors.CIMMotor;
 import org.usfirst.frc.team3623.simulation.motors.Motor;
+import org.usfirst.frc.team3623.util.Geometry;
+import org.usfirst.frc.team3623.util.Pose;
+import org.usfirst.frc.team3623.util.Utils;
 import org.usfirst.frc.team3623.simulation.Kinematics;
-import org.usfirst.frc.team3623.robot.util.Pose;
-import org.usfirst.frc.team3623.robot.util.Geometry;
-import org.usfirst.frc.team3623.robot.util.Utils;
 
 /**
  * Model for a differential drivetrain, simulates mass and motor performance
