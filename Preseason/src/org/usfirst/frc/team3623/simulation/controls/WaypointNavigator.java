@@ -39,29 +39,28 @@ public class WaypointNavigator {
 
 		double dist = Math.sqrt(Math.pow(curWaypoint.x - position.x, 2) + Math.pow(curWaypoint.y - position.y, 2));
 		
-		
-		double lineAngle = Math.atan2(-prevWaypoint.x+curWaypoint.x, -prevWaypoint.y+curWaypoint.y);
-		double stateAngle = Math.atan2(-curWaypoint.x+position.x, -curWaypoint.y+position.y);
-		double relativeAngle = Math.PI + stateAngle - lineAngle;
+		double pathAngle = Math.atan2(curWaypoint.x-prevWaypoint.x, curWaypoint.y-prevWaypoint.y);
+		double stateAngle = Math.atan2(curWaypoint.x-position.x, curWaypoint.y-position.y);
+		double relativeAngle = stateAngle - pathAngle;
 		double lineDist = dist*Math.cos(relativeAngle);
-//		anglePursuit = relativeAngle - position.heading;
 		if (lineDist > kLookAhead) {
 			lineDist -= kLookAhead;
 		} else {
 			lineDist = 0;
-//			anglePursuit -= Math.PI;
 		}
-		double xPursuit = curWaypoint.x - (lineDist * Math.sin(lineAngle));
-		double yPursuit = curWaypoint.y - (lineDist * Math.cos(lineAngle));
-		double pursuitRelativeAngle = Math.atan2(xPursuit-position.x, yPursuit-position.y);
-		double anglePursuit = lineAngle + (pursuitRelativeAngle) - position.heading;
-		Pose pursuit = new Pose(xPursuit,
-																yPursuit,
-																Math.toDegrees(anglePursuit));
+		
+		double xChase = curWaypoint.x - (lineDist * Math.sin(pathAngle));
+		double yChase = curWaypoint.y - (lineDist * Math.cos(pathAngle));
+		double chaseRelativeAngle = Math.atan2(xChase-position.x, yChase-position.y);
+		double chaseAngle = pathAngle + (chaseRelativeAngle) - position.heading;
+		Pose pursuit = new Pose(xChase,
+								yChase,
+								Math.toDegrees(chaseAngle));
+		
 //		System.out.println(Math.toDegrees());
-		System.out.println(Math.toDegrees(anglePursuit) + " = " + 
-											Math.toDegrees(pursuitRelativeAngle) + " - " + 
-											Math.toDegrees(position.heading) );
+//		System.out.println(Math.toDegrees(chaseAngle) + " = " + 
+//											Math.toDegrees(chaseRelativeAngle) + " - " + 
+//											Math.toDegrees(position.heading) );
 		return pursuit;
 	}
 	
@@ -69,43 +68,4 @@ public class WaypointNavigator {
 		double dist = Math.sqrt(Math.pow(curWaypoint.x - position.x, 2) + Math.pow(curWaypoint.y - position.y, 2));
 		return dist < radius;
 	}
-	
-//	 ============== Main Navigation Controller =================
-
-//		        state = self.state
-//		        # print 'Position: x: %.1f y: %.1f yaw %.1f' %(state.x, state.y, state.yaw)
-//		        if (self.goal_index == (len(self.goal_list)-1)) and self.lock == 0:
-//					self.goal_index = self.goal_index
-//					print "Goal Posistion Last:  X %.2f   Y %.2f   Z %.2f   Yaw %.2f" %(self.position_goal[0], self.position_goal[1], self.position_goal[2], self.position_goal[3])
-//					self.lock = 1
-//		        elif self.at_goal(self.position_goal) and self.lock == 0:
-//					self.goal_index += 1
-//					self.position_goal = self.goal_list[self.goal_index][0]
-//					self.position_gain = self.goal_list[self.goal_index][1]
-//					print "Goal Posistion %.0f:  X %.2f   Y %.2f   Z %.2f   Yaw %.2f" %(self.goal_index, self.position_goal[0], self.position_goal[1], self.position_goal[2], self.position_goal[3])
-//		        
-//				#print self.goal_index-1, len(self.goal_list)
-//		        
-//
-//				self.publish_goal.publish(self.make_twist_msg(x_goal,y_goal,z,yaw))
-//				self.publish_gain.publish(np.array(self.position_gain, dtype=np.float32))
-//
-//
-//		    def at_goal(self, goal):
-//		        # Calculate the error between where you are and the position goal
-//		        goal = goal  # Twist Message
-//		        state = self.state
-//		        # print dist_to_goal(goal)
-//		        angle = state.yaw * 3.1415 / 180.0
-//		        err_xy = math.sqrt((goal[0] - state.x) ** 2 + (goal[1] - state.y) ** 2)
-//		        err_z = abs(goal[2] - state.z)
-//		        err_yaw = abs(goal[3] - state.yaw)
-//
-//		        # Determine if you are closer than self.XY_WP_THRES
-//		        if (err_xy < self.XY_GOAL_THRES and err_z < self.Z_GOAL_THRES):
-//		            return True
-//		        else:
-//		            return False
-	 
-
 }
