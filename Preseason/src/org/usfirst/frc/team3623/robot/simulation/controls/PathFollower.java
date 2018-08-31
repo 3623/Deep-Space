@@ -1,10 +1,10 @@
-package org.usfirst.frc.team3623.robot.subsystems;
+package org.usfirst.frc.team3623.robot.simulation.controls;
 
 import org.usfirst.frc.team3623.robot.util.Pose;
 import org.usfirst.frc.team3623.robot.util.Geometry;
 import org.usfirst.frc.team3623.robot.util.Tuple;
 
-public class Drivetrain {
+public class PathFollower {
 	private static final double WHEEL_BASE = 0.762; // meters
 
 	

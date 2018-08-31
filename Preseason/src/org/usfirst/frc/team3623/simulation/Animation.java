@@ -3,7 +3,7 @@ package org.usfirst.frc.team3623.simulation;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import org.usfirst.frc.team3623.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team3623.robot.simulation.controls.PathFollower;
 import org.usfirst.frc.team3623.robot.util.Pose;
 import org.usfirst.frc.team3623.robot.util.Tuple;
 import org.usfirst.frc.team3623.simulation.controls.Waypoint;
@@ -64,14 +64,14 @@ public class Animation extends JPanel implements Runnable
 		x = width / 2;
 		y = height;
 		
-////		 Poofs Iconic Gear then Shoot
-//		model = new DrivetrainModel(2.2, 0.4, 180.0);
-//		waypointNav = new WaypointNavigator();
-//		waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
-//		waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.6));
-//		waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.5));
-//		waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.6));
-//		waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
+//		 Poofs Iconic Gear then Shoot
+		model = new DrivetrainModel(2.2, 0.4, 0.0);
+		waypointNav = new WaypointNavigator();
+		waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
+		waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.6));
+		waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.5));
+		waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.6));
+		waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
 
 		
 //		// S Curve that we would have used if we had an actual drivetrain in 2018
@@ -81,14 +81,14 @@ public class Animation extends JPanel implements Runnable
 //		waypointNav.addWaypoint(new Waypoint(6.7, 3.1, 0.0, 0.15, 0.7));
 //		waypointNav.addWaypoint(new Waypoint(6.7, 3.4, 0.0, 0.3, 0.3));
 		
-		// Square with initial correction
-		model = new DrivetrainModel(6.0, 0.4, 0.0);
-		waypointNav = new WaypointNavigator();
-		waypointNav.addWaypoint(new Waypoint(7.0, 0.4, 0.0));
-		waypointNav.addWaypoint(new Waypoint(7.0, 5.0, 0.0, 0.6, 0.7));
-		waypointNav.addWaypoint(new Waypoint(1.0, 5.4, 0.0, 0.6, 0.7));
-		waypointNav.addWaypoint(new Waypoint(1.0, 0.4, 0.0, 0.6, 0.7));
-		waypointNav.addWaypoint(new Waypoint(6.0, 0.4, 0.0, 0.6, 0.7));
+//		// Square with initial correction
+//		model = new DrivetrainModel(6.5, 0.4, 0.0);
+//		waypointNav = new WaypointNavigator();
+//		waypointNav.addWaypoint(new Waypoint(7.0, 0.4, 0.0));
+//		waypointNav.addWaypoint(new Waypoint(7.0, 5.4, 0.0, 0.6, 0.7));
+//		waypointNav.addWaypoint(new Waypoint(1.0, 5.4, 0.0, 0.1, 0.7));
+//		waypointNav.addWaypoint(new Waypoint(1.0, 0.45, 0.0, 0.6, 0.7));
+//		waypointNav.addWaypoint(new Waypoint(6.0, 0.45, 0.0, 0.6, 0.7));
 
 
 
@@ -107,7 +107,7 @@ public class Animation extends JPanel implements Runnable
 
 		Tuple out;
 		Pose goal = waypointNav.updatePursuit(model.center);
-		out = Drivetrain.driveToPoint(goal, model.center);
+		out = PathFollower.driveToPoint(goal, model.center);
 
 //		out = Drivetrain.driveToPoint(goal, model.center);
 //		out = Drivetrain.deadReckoningCurveLeft(time);
