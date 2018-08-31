@@ -3,12 +3,11 @@ package org.usfirst.frc.team3623.simulation;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import org.usfirst.frc.team3623.controls.Waypoint;
+import org.usfirst.frc.team3623.controls.WaypointNavigator;
 import org.usfirst.frc.team3623.robot.simulation.controls.PathFollower;
 import org.usfirst.frc.team3623.robot.util.Pose;
 import org.usfirst.frc.team3623.robot.util.Tuple;
-import org.usfirst.frc.team3623.simulation.controls.Waypoint;
-import org.usfirst.frc.team3623.simulation.controls.WaypointNavigator;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
@@ -33,7 +32,7 @@ public class Animation extends JPanel implements Runnable
 
 	protected int dt;          // interval between frames in millisec
 	private DrivetrainModel model;
-	private WaypointNavigator waypointNav;
+	private org.usfirst.frc.team3623.controls.WaypointNavigator waypointNav;
 
 	protected double time;
 
