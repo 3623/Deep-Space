@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3623.robot.simulation.controls;
+package org.usfirst.frc.team3623.controls;
 
 import org.usfirst.frc.team3623.util.Geometry;
 import org.usfirst.frc.team3623.util.Pose;

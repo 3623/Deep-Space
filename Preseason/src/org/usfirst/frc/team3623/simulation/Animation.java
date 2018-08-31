@@ -3,9 +3,9 @@ package org.usfirst.frc.team3623.simulation;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import org.usfirst.frc.team3623.controls.PathFollower;
 import org.usfirst.frc.team3623.controls.Waypoint;
 import org.usfirst.frc.team3623.controls.WaypointNavigator;
-import org.usfirst.frc.team3623.robot.simulation.controls.PathFollower;
 import org.usfirst.frc.team3623.util.Pose;
 import org.usfirst.frc.team3623.util.Tuple;
 
