@@ -53,9 +53,7 @@ public class WaypointNavigator {
 		double yChase = curWaypoint.y - (lineDist * Math.cos(pathAngle));
 		double chaseRelativeAngle = Math.atan2(xChase-position.x, yChase-position.y);
 		double chaseAngle = pathAngle + (chaseRelativeAngle) - position.heading;
-		Pose pursuit = new Pose(xChase,
-								yChase,
-								Math.toDegrees(chaseAngle));
+		Pose pursuit = new Pose(xChase, yChase, Math.toDegrees(chaseAngle));
 		
 //		System.out.println(Math.toDegrees());
 //		System.out.println(Math.toDegrees(chaseAngle) + " = " + 
