@@ -26,9 +26,9 @@ public class DrivetrainModel {
 	public DrivetrainModel(double x, double y, double heading) {
 		center = new Pose(x, y, heading); // Initial robot position
 		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
-				DRIVETRAIN_MASS/2);
+									DRIVETRAIN_MASS/2);
 		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
-				DRIVETRAIN_MASS/2);	
+									DRIVETRAIN_MASS/2);	
 		
 		if (COAST_MODE) {
 			left.setCoast();
@@ -126,6 +126,9 @@ public class DrivetrainModel {
 			double totalTorque = CIMMotor.outputTorque(voltage, motorSpeed) * GEAR_RATIO * CIMS_PER_SIDE;
 			if (coast && Utils.threshold(voltage, 0.0, 0.05)) totalTorque = 0.0;
 			double wheelForce = (totalTorque / WHEEL_RADIUS);
+			if (wheelForce > 300) wheelForce = 300;
+			else if (wheelForce < -300) wheelForce = -300;
+
 			double wheelnetForce = frictionModel(wheelForce, this.velocity);
 //			System.out.println(wheelForce + " " + wheelnetForce);
 			double newAcceleration = wheelnetForce / psuedoMass;
