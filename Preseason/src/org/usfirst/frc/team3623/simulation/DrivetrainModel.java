@@ -155,9 +155,7 @@ public class DrivetrainModel {
 		
 		private double frictionModel(double force, double speed) {
 			double netForce;
-			if (Utils.threshold(speed, 0.0, 0.0)) {
-				netForce = force;
-			} else if (speed < 0.0) {
+			if (speed < 0.0) {
 				netForce = force + FRICTION;
 			} else if (speed > 0.0) {
 				netForce = force - FRICTION;
