@@ -126,10 +126,13 @@ public class DrivetrainModel {
 			double totalTorque = CIMMotor.outputTorque(voltage, motorSpeed) * GEAR_RATIO * CIMS_PER_SIDE;
 			if (coast && Utils.threshold(voltage, 0.0, 0.05)) totalTorque = 0.0;
 			double wheelForce = (totalTorque / WHEEL_RADIUS);
-			if (wheelForce > 300) wheelForce = 300;
-			else if (wheelForce < -300) wheelForce = -300;
+			
 
 			double wheelnetForce = frictionModel(wheelForce, this.velocity);
+			
+			if (wheelnetForce < -150.0) wheelnetForce = -150.0;
+			else if (wheelnetForce > 150.0) wheelnetForce = 150.0;
+			
 //			System.out.println(wheelForce + " " + wheelnetForce);
 			double newAcceleration = wheelnetForce / psuedoMass;
 			
@@ -152,7 +155,7 @@ public class DrivetrainModel {
 		
 		private double frictionModel(double force, double speed) {
 			double netForce;
-			if (Utils.threshold(speed, 0.0, 0.025)) {
+			if (Utils.threshold(speed, 0.0, 0.0)) {
 				netForce = force;
 			} else if (speed < 0.0) {
 				netForce = force + FRICTION;
