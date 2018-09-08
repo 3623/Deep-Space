@@ -64,22 +64,22 @@ public class Animation extends JPanel implements Runnable
 		x = width / 2;
 		y = height;
 		
-//		// Poofs Iconic Gear then Shoot
-//		model = new DrivetrainModel(2.2, 0.4, 0.0);
-//		waypointNav = new WaypointNavigator();
-//		waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
-//		waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.7));
-//		waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.6));
-//		waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.7));
-//		waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
-		
-//		 Poofs Iconic 2018 auto
-		model = new DrivetrainModel(1.9, 0.4, 0.0);
+		// Poofs Iconic Gear then Shoot
+		model = new DrivetrainModel(2.2, 0.4, 0.0);
 		waypointNav = new WaypointNavigator();
-		waypointNav.addWaypoint(new Waypoint(1.3, 0.0, -90.0));
-		waypointNav.addWaypoint(new Waypoint(1.3, 5.3, -90.0, 0.7, 0.7));
-		waypointNav.addWaypoint(new Waypoint(7, 5.3, -90.0, 0.6, 0.7));
-		waypointNav.addWaypoint(new Waypoint(7, 5.9, -90.0, 0.6, 0.4));
+		waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
+		waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.7));
+		waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.6));
+		waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.7));
+		waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
+		
+////		 Poofs Iconic 2018 auto
+//		model = new DrivetrainModel(1.9, 0.4, 0.0);
+//		waypointNav = new WaypointNavigator();
+//		waypointNav.addWaypoint(new Waypoint(1.3, 0.0, -90.0));
+//		waypointNav.addWaypoint(new Waypoint(1.3, 5.3, -90.0, 0.7, 0.7));
+//		waypointNav.addWaypoint(new Waypoint(7, 5.3, -90.0, 0.6, 0.7));
+//		waypointNav.addWaypoint(new Waypoint(7, 5.9, -90.0, 0.6, 0.4));
 
 
 		
