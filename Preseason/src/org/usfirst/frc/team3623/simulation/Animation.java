@@ -100,8 +100,6 @@ public class Animation extends JPanel implements Runnable
 //		waypointNav.addWaypoint(new Waypoint(6.0, 0.45, 0.0, 0.6, 0.7));
 
 
-
-
 		// Create and start the thread
 		sim = new Thread ( this );
 		sim.start();
