@@ -121,7 +121,8 @@ public class Animation extends JPanel implements Runnable
 //		out = Drivetrain.deadReckoningStraight(time);
 		double leftVoltage = out.left*10;
 		double rightVoltage = out.right*10;
-
+//		leftVoltage = 12.0;
+//		rightVoltage = 0.0;
 		model.update(leftVoltage, rightVoltage, simTime);
 
 		// Get the size of the viewing area
