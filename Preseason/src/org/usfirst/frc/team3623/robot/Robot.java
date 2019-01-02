@@ -8,10 +8,13 @@
 package org.usfirst.frc.team3623.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.usfirst.frc.team3623.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team3623.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -26,7 +29,9 @@ public class Robot extends TimedRobot {
 
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
-
+	
+	DriveTrain drivetrain = new DriveTrain();	 
+	XboxController driverController = new XboxController(0);
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -105,6 +110,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		drivetrain.openLoopControl(driverController.getRawAxis(1), driverController.getRawAxis(4));
 	}
 
 	/**
