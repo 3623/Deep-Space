@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class DriveTrain {
-	Spark frontLeft = new Spark(0);
-	Spark frontRight = new Spark(1);
-	Spark backLeft = new Spark(2);
-	Spark backRight = new Spark(3);
+	Spark frontRight = new Spark(0);
+	Spark backRight = new Spark(1);
+	Spark frontLeft = new Spark(2);
+	Spark backLeft = new Spark(3);
 	
 	SpeedControllerGroup leftMotors = new SpeedControllerGroup(frontLeft, backLeft);
 	SpeedControllerGroup  rightMotors = new SpeedControllerGroup(frontRight, backRight);

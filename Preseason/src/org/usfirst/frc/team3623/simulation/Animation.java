@@ -73,22 +73,22 @@ public class Animation extends JPanel implements Runnable
 //		waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.7));
 //		waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
 		
-////		 Poofs Iconic 2018 auto
-//		model = new DrivetrainModel(1.9, 0.4, 0.0);
-//		waypointNav = new WaypointNavigator();
-//		waypointNav.addWaypoint(new Waypoint(1.3, 0.0, -90.0));
-//		waypointNav.addWaypoint(new Waypoint(1.3, 5.3, -90.0, 0.7, 0.7));
-//		waypointNav.addWaypoint(new Waypoint(7, 5.3, -90.0, 0.6, 0.7));
-//		waypointNav.addWaypoint(new Waypoint(7, 5.9, -90.0, 0.6, 0.4));
+//		 Poofs Iconic 2018 auto
+		model = new DrivetrainModel(1.9, 0.4, 0.0);
+		waypointNav = new WaypointNavigator();
+		waypointNav.addWaypoint(new Waypoint(1.3, 0.0, -90.0));
+		waypointNav.addWaypoint(new Waypoint(1.3, 5.3, -90.0, 0.7, 0.7));
+		waypointNav.addWaypoint(new Waypoint(7, 5.3, -90.0, 0.6, 0.7));
+		waypointNav.addWaypoint(new Waypoint(7, 5.9, -90.0, 0.6, 0.4));
 
 
 		
-		// S Curve that we would have used if we had an actual drivetrain in 2018
-		model = new DrivetrainModel(4.2, 0.4, 0.0);
-		waypointNav = new WaypointNavigator();
-		waypointNav.addWaypoint(new Waypoint(4.2, 0.4, 0.0));
-		waypointNav.addWaypoint(new Waypoint(6., 2.3, 0.0, 0.4, 0.6));
-		waypointNav.addWaypoint(new Waypoint(5.94, 2.6, 0.0, 0.3, 0.6));
+//		// S Curve that we would have used if we had an actual drivetrain in 2018
+//		model = new DrivetrainModel(4.2, 0.4, 0.0);
+//		waypointNav = new WaypointNavigator();
+//		waypointNav.addWaypoint(new Waypoint(4.2, 0.4, 0.0));
+//		waypointNav.addWaypoint(new Waypoint(6., 2.3, 0.0, 0.4, 0.6));
+//		waypointNav.addWaypoint(new Waypoint(5.94, 2.6, 0.0, 0.3, 0.6));
 		
 //		// Square with initial correction
 //		model = new DrivetrainModel(6.5, 0.4, 0.0);
