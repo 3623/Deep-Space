@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team3623.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -32,6 +33,7 @@ public class Robot extends TimedRobot {
 	
 	DriveTrain drivetrain = new DriveTrain();	 
 	XboxController driverController = new XboxController(0);
+	Joystick steeringWheel = new Joystick(1);
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -110,7 +112,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		drivetrain.openLoopControl(driverController.getRawAxis(1), driverController.getRawAxis(4));
+		drivetrain.openLoopControl(driverController.getRawAxis(1), steeringWheel.getRawAxis(0));
 	}
 
 	/**
