@@ -112,7 +112,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		drivetrain.openLoopControl(driverController.getRawAxis(1), steeringWheel.getRawAxis(0));
+		drivetrain.openLoopControl(-driverController.getRawAxis(1), steeringWheel.getRawAxis(0));
 	}
 
 	/**

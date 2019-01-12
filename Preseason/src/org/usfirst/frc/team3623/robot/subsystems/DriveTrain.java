@@ -16,9 +16,9 @@ public class DriveTrain {
 	SpeedControllerGroup leftMotors = new SpeedControllerGroup(frontLeft, backLeft);
 	SpeedControllerGroup  rightMotors = new SpeedControllerGroup(frontRight, backRight);
 	
-	Encoder encLeft = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
-	Encoder encRight = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
-	
+//	Encoder encLeft = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+//	Encoder encRight = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+//	
 	DifferentialDrive drivetrain = new DifferentialDrive(leftMotors, rightMotors);
 	public void writeToLog() {
     };
@@ -30,11 +30,10 @@ public class DriveTrain {
     	rightMotors.disable();
 	}
 
-    public void zeroSensors() {
-    	encLeft.reset();
-    	encRight.reset();
-    	
-	}
+//    public void zeroSensors() {
+//    	encLeft.reset();
+//    	encRight.reset();	
+//	}
     
    public void openLoopControl(double xSpeed, double rSpeed) {
 	   drivetrain.curvatureDrive(xSpeed, rSpeed, false);
