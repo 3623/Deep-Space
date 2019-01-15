@@ -16,10 +16,11 @@ public class DriveTrain {
 	SpeedControllerGroup leftMotors = new SpeedControllerGroup(frontLeft, backLeft);
 	SpeedControllerGroup  rightMotors = new SpeedControllerGroup(frontRight, backRight);
 	
-//	Encoder encLeft = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
-//	Encoder encRight = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
-//	
+	Encoder encLeft = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+	Encoder encRight = new Encoder(1, 2, false, Encoder.EncodingType.k4X);
+	
 	DifferentialDrive drivetrain = new DifferentialDrive(leftMotors, rightMotors);
+	
 	public void writeToLog() {
     };
 
