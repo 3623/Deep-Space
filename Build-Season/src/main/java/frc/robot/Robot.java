@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Grabber;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,9 +32,13 @@ public class Robot extends TimedRobot {
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 	
-	DriveTrain drivetrain = new DriveTrain();	 
+  DriveTrain drivetrain = new DriveTrain();	 
+  Grabber grabber = new Grabber();
+
 	XboxController driverController = new XboxController(0);
-	Joystick steeringWheel = new Joystick(1);
+  Joystick steeringWheel = new Joystick(1);
+  XboxController operatorController = new XboxController(2);
+  
 
   /**
    * This function is run when the robot is first started up and should be
@@ -95,6 +100,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drivetrain.openLoopControl(-driverController.getRawAxis(1), steeringWheel.getRawAxis(0));
+    if (operatorController.getAButton()) grabber.openClaw();
+    else if (operatorController.getBButton()) grabber.halfClaw();
+    else grabber.closeClaw();
 
   }
 
