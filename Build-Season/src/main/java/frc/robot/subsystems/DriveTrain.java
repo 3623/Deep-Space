@@ -8,18 +8,13 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class DriveTrain {
-	Spark frontRight = new Spark(0);
-	Spark backRight = new Spark(1);
-	Spark frontLeft = new Spark(2);
-	Spark backLeft = new Spark(3);
-	
-	SpeedControllerGroup leftMotors = new SpeedControllerGroup(frontLeft, backLeft);
-	SpeedControllerGroup  rightMotors = new SpeedControllerGroup(frontRight, backRight);
-	
+	Spark rightMotors = new Spark(0);
+	Spark leftMotors = new Spark(1);
+	DifferentialDrive drivetrain = new DifferentialDrive(leftMotors, rightMotors);
+
 	Encoder encLeft = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
 	Encoder encRight = new Encoder(1, 2, false, Encoder.EncodingType.k4X);
 	
-	DifferentialDrive drivetrain = new DifferentialDrive(leftMotors, rightMotors);
 	
 	public void writeToLog() {
     };
