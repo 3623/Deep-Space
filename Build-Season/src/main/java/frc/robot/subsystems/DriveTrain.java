@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.simulation.DrivetrainModel;
 
 public class DriveTrain {
 	Spark rightMotors = new Spark(0);
@@ -14,8 +15,8 @@ public class DriveTrain {
 
 	Encoder encLeft = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
 	Encoder encRight = new Encoder(1, 2, false, Encoder.EncodingType.k4X);
-	DriveTrainModel model = new DriveTrainModel();
-	
+	DrivetrainModel model = new DrivetrainModel(0.0, 0.0, 0.0);
+
 	public void writeToLog() {
     };
 
