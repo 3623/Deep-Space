@@ -123,7 +123,8 @@ public class Animation extends JPanel implements Runnable
 		double rightVoltage = out.right*10;
 //		leftVoltage = 12.0;
 //		rightVoltage = 0.0;
-		model.update(leftVoltage, rightVoltage, simTime);
+		model.updateVoltage(leftVoltage, rightVoltage, simTime);
+		model.updatePosition(simTime);
 
 		// Get the size of the viewing area
 		size = this.getSize();

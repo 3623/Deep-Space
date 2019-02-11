@@ -47,10 +47,18 @@ public class DrivetrainModel {
 //				DRIVETRAIN_MASS/2);	
 //	}
 
+	public void updateSpeed(double lSpeed, double rSpeed, double time){
+		left.velocity = lSpeed;
+		right.velocity = rSpeed;
+
+	}
+
+	public void updateVoltage(double lVoltage, double rVoltage, double time){
+		left.updateVoltage(lVoltage, time);
+		right.updateVoltage(rVoltage, time);
+	}
 	
-	public void update(double lVoltage, double rVoltage, double time) {
-		left.update(lVoltage, time);
-		right.update(rVoltage, time);
+	public void updatePosition(double time) {
 
 		double radius = Kinematics.radiusICC(WHEEL_BASE, left.velocity, right.velocity);
 		double omega = Kinematics.velocityICC(WHEEL_BASE, left.velocity, right.velocity);
@@ -118,8 +126,14 @@ public class DrivetrainModel {
 			psuedoMass = mass;
 			coast = false;
 		}
+
+		public void updateSpeed(double speed, double time){
+			double deltaVelocity = speed - this.velocity;
+			this.acceleration = deltaVelocity/time;
+			this.velocity = speed;
+		}
 		
-		public void update(double voltage, double time) {
+		public void updateVoltage(double voltage, double time) {
 			double motorSpeed = this.wheelSpeedToMotorSpeed(this.velocity);
 //			double newAcceleration = this.wheelAcceleration(voltage, motorSpeed);
 			
