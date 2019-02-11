@@ -195,7 +195,8 @@ public class DrivetrainModel {
 	public static void main ( String[] args) {
 		DrivetrainModel model = new DrivetrainModel(0.0, 0.0, 0.0);
 		for (int i = 0; i < 300; i++) {
-			model.update(12.0, 12.0, 10.0/1000.0);
+			model.updateVoltage(12.0, 12.0, 10.0/1000.0);
+			model.updatePosition(10.0/1000.0);
 		}
 	}
 }
