@@ -17,6 +17,8 @@ public class DriveTrain {
 	Encoder encRight = new Encoder(1, 2, false, Encoder.EncodingType.k4X);
 	DrivetrainModel model = new DrivetrainModel(0.0, 0.0, 0.0);
 
+	double time;
+
 	public void writeToLog() {
     };
 
@@ -28,9 +30,9 @@ public class DriveTrain {
 	
 	}
 
-	public void updatePosition() {
-		model.updateSpeed(encLeft.getRate(), encRight.getRate(), time());
-		model.updatePosition(time());
+	public void updatePosition(double time) {
+		model.updateSpeed(encLeft.getRate(), encRight.getRate(), time);
+		model.updatePosition(time);
 
 	}
 //    public void zeroSensors() {
@@ -44,6 +46,11 @@ public class DriveTrain {
 
 //    public void registerEnabledLoops(Looper enabledLooper) {
 //	}
+
+	public void update(double time){
+		double deltaTime = time - this.time;
+		this.updatePosition(deltaTime);
+	}
  
     
     public static void main(String[] args) throws IOException{}
