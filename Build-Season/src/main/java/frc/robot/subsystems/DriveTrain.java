@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class DriveTrain {
@@ -13,7 +14,7 @@ public class DriveTrain {
 
 	Encoder encLeft = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
 	Encoder encRight = new Encoder(1, 2, false, Encoder.EncodingType.k4X);
-	
+	DriveTrainModel model = new DriveTrainModel();
 	
 	public void writeToLog() {
     };
@@ -22,9 +23,15 @@ public class DriveTrain {
 
     public void stop() {
     	leftMotors.disable();
-    	rightMotors.disable();
+		rightMotors.disable();
+	
 	}
 
+	public void updatePosition() {
+		model.updateSpeed(encLeft.getRate(), encRight.getRate(), time());
+		model.updatePosition(time());
+
+	}
 //    public void zeroSensors() {
 //    	encLeft.reset();
 //    	encRight.reset();	
