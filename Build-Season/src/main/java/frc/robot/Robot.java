@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
   Joystick steeringWheel = new Joystick(1);
   XboxController operatorController = new XboxController(2);
   
+  Timer timer = new Timer();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -59,6 +61,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    DriveTrain drivetrain2 = drivetrain;
+	drivetrain2.update(timer.getFPGATimestamp());
+
   }
 
   /**
