@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     SmartDashboard.putData("Auto choices", m_chooser);
+    drivetrain.zeroSensors();
   }
 
   /**

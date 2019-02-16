@@ -23,8 +23,8 @@ public class DrivetrainModel {
 	public Pose center;
 	private DrivetrainSide left, right;
 	
-	public DrivetrainModel(double x, double y, double heading) {
-		center = new Pose(x, y, heading); // Initial robot position
+	public DrivetrainModel() {
+		center = new Pose(0.0, 0.0, 0.0); // Initial robot position
 		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
 									DRIVETRAIN_MASS/2);
 		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
@@ -47,10 +47,15 @@ public class DrivetrainModel {
 //				DRIVETRAIN_MASS/2);	
 //	}
 
-	public void updateSpeed(double lSpeed, double rSpeed, double time){
-		left.velocity = lSpeed;
-		right.velocity = rSpeed;
+	public void setPosition(double x, double y, double r){
+		center.x = x;
+		center.y = y;
+		center.heading = r/Math.PI;
+	}
 
+	public void updateSpeed(double lSpeed, double rSpeed, double time){
+		left.updateSpeed(lSpeed, time);
+		right.updateSpeed(rSpeed, time);
 	}
 
 	public void updateVoltage(double lVoltage, double rVoltage, double time){
@@ -109,7 +114,7 @@ public class DrivetrainModel {
 		private double psuedoMass;
 		private Boolean coast; 
 		
-		private static final double WHEEL_RADIUS = 0.0508; // meters
+		private static final double WHEEL_RADIUS = 0.0762; // meters
 		private static final double CIMS_PER_SIDE = 2.0; // Minicim is 0.58
 		private static final double GEAR_RATIO = 10.7/1.0; // Reduction
 		// Future can make motors a list of motors rather than coefficient
@@ -193,7 +198,7 @@ public class DrivetrainModel {
 	
 	// Testing
 	public static void main ( String[] args) {
-		DrivetrainModel model = new DrivetrainModel(0.0, 0.0, 0.0);
+		DrivetrainModel model = new DrivetrainModel();
 		for (int i = 0; i < 300; i++) {
 			model.updateVoltage(12.0, 12.0, 10.0/1000.0);
 			model.updatePosition(10.0/1000.0);
