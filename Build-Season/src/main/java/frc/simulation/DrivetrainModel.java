@@ -17,7 +17,7 @@ import frc.simulation.Kinematics;
 public class DrivetrainModel {
 
 	private final double DRIVETRAIN_MASS = 63.5; // kg
-	private final double WHEEL_BASE = 0.762; // meters
+	private final double WHEEL_BASE = 0.66; // meters
 	private final double CENTER_MASS = 0.381; // from left wheel
 	private Boolean COAST_MODE = false; 
 	public Pose center;
@@ -64,7 +64,6 @@ public class DrivetrainModel {
 	}
 	
 	public void updatePosition(double time) {
-
 		double radius = Kinematics.radiusICC(WHEEL_BASE, left.velocity, right.velocity);
 		double omega = Kinematics.velocityICC(WHEEL_BASE, left.velocity, right.velocity);
 		double theta = omega * (time);
@@ -133,7 +132,7 @@ public class DrivetrainModel {
 		}
 
 		public void updateSpeed(double speed, double time){
-			double deltaVelocity = speed - this.velocity;
+			double deltaVelocity = this.velocity - speed;
 			this.acceleration = deltaVelocity/time;
 			this.velocity = speed;
 		}
