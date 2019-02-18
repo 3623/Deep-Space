@@ -15,10 +15,13 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.controls.WaypointNavigator;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Grabber;
+import frc.util.Tuple;
+
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -41,6 +44,9 @@ public class Robot extends TimedRobot {
   XboxController operatorController = new XboxController(2);
   
   Timer timer = new Timer();
+
+  WaypointNavigator waypointNav = new WaypointNavigator();
+
 
   /**
    * This function is run when the robot is first started up and should be
@@ -89,6 +95,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    Pose goal = waypointNav.updatePursuit(model.center);
+		Tuple out = PathFollower.driveToPoint(goal, model.center);
+
     // switch (m_autoSelected) {
     //   case kCustomAuto:
     //     // Put custom auto code here
@@ -105,7 +114,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drivetrain.openLoopControl(-driverController.getRawAxis(1), steeringWheel.getRawAxis(0));
+    drivetrain.openLoopControl(steeringWheel.getRawAxis(1), steeringWheel.getRawAxis(3));
     if (operatorController.getAButton()) grabber.openClaw();
     else if (operatorController.getBButton()) grabber.halfClaw();
     else grabber.closeClaw();

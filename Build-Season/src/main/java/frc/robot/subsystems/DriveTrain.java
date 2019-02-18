@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.controls.WaypointNavigator;
 import frc.simulation.DrivetrainModel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -17,12 +18,16 @@ public class DriveTrain {
 
 	Encoder encLeft = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
 	Encoder encRight = new Encoder(2, 3, false, Encoder.EncodingType.k4X);
-	DrivetrainModel model = new DrivetrainModel();
+
+	DrivetrainModel model;
 	double distancePerPulse = 0.508/2048.0;
+
 
 	double time;
 
 	public DriveTrain(){
+		model = new DrivetrainModel();
+
 		encLeft.setDistancePerPulse(distancePerPulse);
 		encRight.setDistancePerPulse(distancePerPulse);
 		model.setPosition(0.0, 0.0, 0.0);
@@ -72,7 +77,7 @@ public class DriveTrain {
 		SmartDashboard.putNumber("Rights Encoder", encRight.getDistance());
 		SmartDashboard.putNumber("Position X", model.center.x);
 		SmartDashboard.putNumber("Position Y", model.center.y);
-		SmartDashboard.putNumber("Heading", model.center.heading);
+		SmartDashboard.putNumber("Heading", model.center.heading*180/Math.PI);
 
 	}
     

@@ -6,6 +6,8 @@ import frc.util.Geometry;
 import frc.util.Pose;
 import frc.util.Utils;
 import frc.simulation.Kinematics;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * Model for a differential drivetrain, simulates mass and motor performance
@@ -17,7 +19,7 @@ import frc.simulation.Kinematics;
 public class DrivetrainModel {
 
 	private final double DRIVETRAIN_MASS = 63.5; // kg
-	private final double WHEEL_BASE = 0.66; // meters
+	private final double WHEEL_BASE = 0.67; // meters
 	private final double CENTER_MASS = 0.381; // from left wheel
 	private Boolean COAST_MODE = false; 
 	public Pose center;
@@ -48,9 +50,9 @@ public class DrivetrainModel {
 //	}
 
 	public void setPosition(double x, double y, double r){
-		center.x = x;
-		center.y = y;
-		center.heading = r/Math.PI;
+		center = new Pose(0.0, 0.0, 0.0);
+		left.position = Geometry.inverseCenterLeft(center, WHEEL_BASE);
+		right.position = Geometry.inverseCenterRight(center, WHEEL_BASE);
 	}
 
 	public void updateSpeed(double lSpeed, double rSpeed, double time){
@@ -68,10 +70,10 @@ public class DrivetrainModel {
 		double omega = Kinematics.velocityICC(WHEEL_BASE, left.velocity, right.velocity);
 		double theta = omega * (time);
 		double sinTheta = Math.sin(theta);
-		double alpha = (Math.PI/4.0) - (theta/2.0);
+		double alpha = ((Math.PI) - theta)/2.0;
 		double sinAlpha = Math.sin(alpha);
 
-		double movementAngle = center.heading - (theta/2.0);
+		double movementAngle = center.heading + theta;
 		double leftMovement = Geometry.sideFromLawOfSines(radius+(WHEEL_BASE/2), sinAlpha, sinTheta);
 		double rightMovement = Geometry.sideFromLawOfSines(radius-(WHEEL_BASE/2), sinAlpha, sinTheta);
 		
@@ -92,13 +94,17 @@ public class DrivetrainModel {
 		// Debug statements
 //		System.out.println(center.x + ", " + center.y + ", " + center.heading);
 //		System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
-		System.out.println(left.velocity + ", " + right.velocity);
-//		System.out.println("LP: " + left.position.x + ", " + left.position.y);
-//		System.out.println("RP: " + right.position.x + ", " + right.position.y);
+		// System.out.println(left.velocity + ", " + right.velocity);
+		System.out.println("LP: " + left.position.x + ", " + left.position.y);
+		System.out.println("RP: " + right.position.x + ", " + right.position.y);
 //		System.out.println("MA: " + movementAngle + "Rad ICC: " + radius);
 //		System.out.println("RM: " + rightMovement + " LM: " + leftMovement);
 //		System.out.println(leftMovementX + "====" + leftMovementY);
 //		System.out.println(rightMovementX + "====" + rightMovementY);
+	}
+
+	public void monitor(){
+
 	}
 	
 	/**
