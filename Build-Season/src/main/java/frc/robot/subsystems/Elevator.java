@@ -66,6 +66,7 @@ public class Elevator{
         if (!isStopped){
             elevatorMotors.set(output());
         }
+        zeroEncoder();
     }
 
     private void zeroEncoder(){
