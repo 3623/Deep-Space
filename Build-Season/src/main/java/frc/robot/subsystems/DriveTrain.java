@@ -6,8 +6,11 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.controls.PathFollower;
 import frc.controls.WaypointNavigator;
 import frc.simulation.DrivetrainModel;
+import frc.util.Pose;
+import frc.util.Tuple;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -16,21 +19,23 @@ public class DriveTrain {
 	Spark leftMotors = new Spark(1);
 	DifferentialDrive drivetrain = new DifferentialDrive(leftMotors, rightMotors);
 
-	Encoder encLeft = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
-	Encoder encRight = new Encoder(2, 3, false, Encoder.EncodingType.k4X);
+	Encoder encLeft = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
+	Encoder encRight = new Encoder(2, 3, true, Encoder.EncodingType.k4X);
+	public WaypointNavigator waypointNav = new WaypointNavigator();
 
-	DrivetrainModel model;
-	double distancePerPulse = 0.508/2048.0;
+
+	public DrivetrainModel position;
+	double distancePerPulse = 0.486/2048.0;
 
 
 	double time;
 
 	public DriveTrain(){
-		model = new DrivetrainModel();
+		position = new DrivetrainModel();
 
 		encLeft.setDistancePerPulse(distancePerPulse);
 		encRight.setDistancePerPulse(distancePerPulse);
-		model.setPosition(0.0, 0.0, 0.0);
+		position.setPosition(0.0, 0.0, 0.0);
 	}
 
 	public void writeToLog() {
@@ -45,20 +50,30 @@ public class DriveTrain {
 	}
 
 	public void updatePosition(double time) {
-		model.updateSpeed(encLeft.getRate(), encRight.getRate(), time);
-		model.updatePosition(time);
+		position.updateSpeed(encLeft.getRate(), encRight.getRate(), time);
+		position.updatePosition(time);
 
 	}
 
    	public void zeroSensors() {
    		encLeft.reset();
 	   	encRight.reset();	
-		model.setPosition(0.0, 0.0, 0.0);
-
 	}
     
-   public void openLoopControl(double xSpeed, double rSpeed) {
-	   drivetrain.curvatureDrive(xSpeed, rSpeed, false);
+   public void openLoopControl(double xSpeed, double rSpeed, Boolean quickTurn) {
+	   drivetrain.curvatureDrive(xSpeed, rSpeed, quickTurn);
+   }
+
+   public void directMotorControl(double leftSpeed, double rightSpeed){
+	   drivetrain.tankDrive(leftSpeed, rightSpeed);
+   }
+
+   public void driveToPoint(){
+		Pose goal = waypointNav.updatePursuit(position.center);
+		Tuple out = PathFollower.driveToPoint(goal, position.center);
+		double leftSpeed = out.left/4.0;
+		double rightSpeed = out.right/4.0;
+		directMotorControl(leftSpeed, rightSpeed);
    }
 
 //    public void registerEnabledLoops(Looper enabledLooper) {
@@ -75,9 +90,9 @@ public class DriveTrain {
 	public void monitor(){
 		SmartDashboard.putNumber("Left Encoder", encLeft.getDistance());
 		SmartDashboard.putNumber("Rights Encoder", encRight.getDistance());
-		SmartDashboard.putNumber("Position X", model.center.x);
-		SmartDashboard.putNumber("Position Y", model.center.y);
-		SmartDashboard.putNumber("Heading", model.center.heading*180/Math.PI);
+		SmartDashboard.putNumber("Position X", position.center.x);
+		SmartDashboard.putNumber("Position Y", position.center.y);
+		SmartDashboard.putNumber("Heading", position.center.heading*180/Math.PI);
 
 	}
     
