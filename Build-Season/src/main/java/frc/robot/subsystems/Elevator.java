@@ -30,16 +30,29 @@ public class Elevator{
 
     private Boolean isStopped;
 
+    private double error;
+    private double errorD;
+    private double output;
+    private double checkedOutput;
+
     public Elevator(){
         elevatorEncoder.setDistancePerPulse(distancePerPulse);
         goal = 0.0;
     }
 
-    private double output(){
-        double error = goal - elevatorEncoder.getDistance();
-        double errorD = elevatorEncoder.getRate();
-        double output = (error*kP) + (errorD*kD);
-        double checkedOutput = checkLimit(output) + weightCompensation;
+    public void update(){
+        if (!isStopped){
+            elevatorMotors.set(outputPD());
+        }
+        zeroEncoder();
+        monitor();
+    }
+
+    private double outputPD(){
+        error = goal - elevatorEncoder.getDistance();
+        errorD = elevatorEncoder.getRate();
+        output = (error*kP) + (errorD*kD);
+        checkedOutput = checkLimit(output) + weightCompensation;
         return checkedOutput;
     }
 
@@ -60,13 +73,6 @@ public class Elevator{
 
     public void enable(){
         isStopped = false;
-    }
-
-    public void update(){
-        if (!isStopped){
-            elevatorMotors.set(output());
-        }
-        zeroEncoder();
     }
 
     private void zeroEncoder(){
@@ -95,5 +101,14 @@ public class Elevator{
         return (topLimit.get() || elevatorEncoder.getDistance() > topSoftLimit);
     }
 
-
+    private void monitor(){
+        SmartDashboard.putNumber("Goal", goal);
+        SmartDashboard.putNumber("Position", elevatorEncoder.getDistance());
+        SmartDashboard.putNumber("Error", error);
+        SmartDashboard.putNumber("P Val", error*kP);
+        SmartDashboard.putNumber("D Val", errorD*kD);
+        SmartDashboard.putNumber("Checked Output", checkedOutput);
+        SmartDashboard.putBoolean("At Bottom", atBottomLimit());
+        SmartDashboard.putBoolean("At Top", atTopLimit());
+    }
 }
