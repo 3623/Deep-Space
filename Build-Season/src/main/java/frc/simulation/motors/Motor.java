@@ -28,6 +28,11 @@ abstract public class Motor {
 		double torque = (speed * kSlopeTorque) + stallTorque;
 		return torque;
 	}
+
+	public static double inverseVoltage (double torque, double speed) {
+		return (torque - (speed*kSlopeTorque))*MAX_VOLTAGE/STALL_TORQUE;
+		// Just solved for voltage using outputTorque equation
+	}
 	
 	
 }

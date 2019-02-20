@@ -50,10 +50,12 @@ public class Drivetrain {
 	public void driveToWaypoint(){
 		Pose goal = waypointNav.updatePursuit(model.center);
 		Tuple out = PathFollower.driveToPoint(goal, model.center);
-		double leftSpeed = out.left/4.0;
-		double rightSpeed = out.right/4.0;
+		double leftSpeed = out.left*0.8;
+		double rightSpeed = out.right*0.8;
 		directMotorControl(leftSpeed, rightSpeed);
    }
+
+
 
    	public void zeroSensors() {
    		encLeft.reset();

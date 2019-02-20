@@ -81,10 +81,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // autoSelected = SmartDashboard.getString("Auto Selector",
     // defaultAuto);
-      drivetrain.model.setPosition(0.0, 0.0, 0.0);
-      drivetrain.waypointNav.addWaypoint(new Waypoint(0.0, 0.0, 0.0));
-      drivetrain.waypointNav.addWaypoint(new Waypoint(1.0, 3.0, 0.0, 0.3, 0.6));
-      drivetrain.waypointNav.addWaypoint(new Waypoint(1.0, 3.0, 0.0, 0.3, 0.6));
+
+      drivetrain.model.setPosition(4.2, 1.3, 0.0);
+			drivetrain.waypointNav.addWaypoint(new Waypoint(4.2, 1.3, 0.0));
+			drivetrain.waypointNav.addWaypoint(new Waypoint(5.5, 2.5, 0.0, 0.4, 0.7));
+			drivetrain.waypointNav.addWaypoint(new Waypoint(5.5, 3.5, 0.0, 0.3, 0.4));
 
   }
 

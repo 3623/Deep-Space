@@ -27,7 +27,9 @@ public class DrivetrainModel {
 	static final double WHEEL_RADIUS = 0.0774; // meters
 	private static final double CIMS_PER_SIDE = 2.0; // Minicim is 0.58
 	private static final double GEAR_RATIO = 10.75/1.0; // Reduction
-	private static final double FRICTION = 115;
+	private static final double DRIVETRAIN_FRICTION = 115;
+	private static final double MAX_FORCE = 250.0;
+	private static final double MAX_TORQUE = MAX_FORCE * WHEEL_RADIUS;
 
 	
 	public DrivetrainModel() {
@@ -147,13 +149,27 @@ public class DrivetrainModel {
 			double wheelnetForce = frictionModel(wheelForce, this.velocity);
 			
 			// Fake Traction Limiting
-			if (wheelnetForce < -150.0) wheelnetForce = -150.0;
-			else if (wheelnetForce > 150.0) wheelnetForce = 150.0;
+			double maxForce = 250.0;
+			if (wheelnetForce < -maxForce) wheelnetForce = -maxForce;
+			else if (wheelnetForce > maxForce) wheelnetForce = maxForce;
 			
 			double newAcceleration = wheelnetForce / psuedoMass;
 			this.velocity += (newAcceleration + this.acceleration) / 2 * time; // Trapezoidal integration
 			this.acceleration = newAcceleration;
 			
+		}
+
+		protected double limitAcceleration(double outputVoltage){
+			double motorSpeed = this.wheelSpeedToMotorSpeed(this.velocity);
+			double maxVoltage = CIMMotor.inverseVoltage(MAX_TORQUE, motorSpeed)/CIMS_PER_SIDE/GEAR_RATIO;
+			double minVoltage = CIMMotor.inverseVoltage(-MAX_TORQUE, motorSpeed)/CIMS_PER_SIDE/GEAR_RATIO;
+
+			double limitedVoltage;
+			if (outputVoltage > maxVoltage) limitedVoltage = maxVoltage;
+			else if (outputVoltage < minVoltage) limitedVoltage = minVoltage;
+			else limitedVoltage = outputVoltage;
+			
+			return outputVoltage;
 		}
 		
 		/**
@@ -173,9 +189,9 @@ public class DrivetrainModel {
 			if (speed == 0.0) {
 				netForce = force;
 			} else if (speed < 0.0) {
-				netForce = force + FRICTION;
+				netForce = force + DRIVETRAIN_FRICTION;
 			} else if (speed > 0.0) {
-				netForce = force - FRICTION;
+				netForce = force - DRIVETRAIN_FRICTION;
 			} else {
 				netForce = 0.0;
 			}

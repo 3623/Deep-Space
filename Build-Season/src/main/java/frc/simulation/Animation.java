@@ -66,10 +66,19 @@ public class Animation extends JPanel implements Runnable
 		model = new DrivetrainModel();
 		waypointNav = new WaypointNavigator();
 		
-			model.setPosition(4.2, 0.0, 0.0);
-			waypointNav.addWaypoint(new Waypoint(4.2, 0.0, 0.0));
-			waypointNav.addWaypoint(new Waypoint(5.2, 3.0, 0.0, 0.4, 0.7));
-			waypointNav.addWaypoint(new Waypoint(5.2, 3.5, 0.0, 0.3, 0.4));
+		// // Center to side of cargo ship
+		// model.setPosition(4.2, 1.3, 0.0);
+		// waypointNav.addWaypoint(new Waypoint(4.2, 1.3, 0.0));
+		// waypointNav.addWaypoint(new Waypoint(5.5, 2.5, 0.0, 0.4, 0.7));
+		// waypointNav.addWaypoint(new Waypoint(5.5, 3.5, 0.0, 0.3, 0.4));
+
+		// Center to rocket ship
+		model.setPosition(4.2, 1.3, 0.0);
+		waypointNav.addWaypoint(new Waypoint(4.2, 1.3, 0.0));
+		waypointNav.addWaypoint(new Waypoint(4.2, 2.5, 0.0, 0.7, 0.7));
+		waypointNav.addWaypoint(new Waypoint(7.6, 3.1, 0.0, 0.4, 0.7));
+		waypointNav.addWaypoint(new Waypoint(7.3, 3.8, 0.0, 0.4, 0.5));
+
 		
 			// // Poofs Iconic Gear then Shoot
 			// model.setPosition(2.2, 0.4, 0.0);
@@ -80,13 +89,13 @@ public class Animation extends JPanel implements Runnable
 			// waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.7));
 			// waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
 			
-//			 //  Poofs Iconic 2018 auto
-//			 model.setPosition(1.9, 0.4, 0.0);
-//			 waypointNav = new WaypointNavigator();
-//			 waypointNav.addWaypoint(new Waypoint(1.3, 0.0, -90.0));
-//			 waypointNav.addWaypoint(new Waypoint(1.3, 5.3, -90.0, 0.7, 0.7));
-//			 waypointNav.addWaypoint(new Waypoint(7, 5.3, -90.0, 0.6, 0.7));
-//			 waypointNav.addWaypoint(new Waypoint(7, 5.9, -90.0, 0.6, 0.4));
+			//  //  Poofs Iconic 2018 auto
+			//  model.setPosition(1.9, 0.4, 0.0);
+			//  waypointNav = new WaypointNavigator();
+			//  waypointNav.addWaypoint(new Waypoint(1.3, 0.0, -90.0));
+			//  waypointNav.addWaypoint(new Waypoint(1.3, 5.3, -90.0, 0.7, 0.7));
+			//  waypointNav.addWaypoint(new Waypoint(7, 5.3, -90.0, 0.6, 0.7));
+			//  waypointNav.addWaypoint(new Waypoint(7, 5.9, -90.0, 0.6, 0.4));
 			
 			// // S Curve that we would have used if we had an actual drivetrain in 2018
 			// model = new DrivetrainModel(4.2, 0.4, 0.0);
@@ -122,8 +131,8 @@ public class Animation extends JPanel implements Runnable
 		// out = Drivetrain.driveToPoint(goal, model.center);
 		// out = Drivetrain.deadReckoningCurveLeft(time);
 		// out = Drivetrain.deadReckoningStraight(time);
-		double leftVoltage = out.left*10;
-		double rightVoltage = out.right*10;
+		double leftVoltage = out.left*0.8*12.0;
+		double rightVoltage = out.right*0.8*12.0;
 		
 //		System.out.println(leftVoltage + " " + rightVoltage);
 		
