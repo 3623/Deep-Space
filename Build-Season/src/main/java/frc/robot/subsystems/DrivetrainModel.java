@@ -26,7 +26,7 @@ public class DrivetrainModel {
 	private DrivetrainSide left, right;
 	static final double WHEEL_RADIUS = 0.0774; // meters
 	private static final double CIMS_PER_SIDE = 2.0; // Minicim is 0.58
-	private static final double GEAR_RATIO = 10.7/1.0; // Reduction
+	private static final double GEAR_RATIO = 10.75/1.0; // Reduction
 	private static final double FRICTION = 115;
 
 	
@@ -98,7 +98,7 @@ public class DrivetrainModel {
 		
 		//// Debug statements
 		// System.out.println(center.x + ", " + center.y + ", " + center.heading);
-		// System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
+//		 System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
 		// System.out.println(left.velocity + ", " + right.velocity);
 		// System.out.println("LP: " + left.position.x + ", " + left.position.y);
 		// System.out.println("RP: " + right.position.x + ", " + right.position.y);
@@ -119,6 +119,7 @@ public class DrivetrainModel {
 		double acceleration;
 		private double psuedoMass;
 		private Boolean coast; 
+		private CIMMotor cim = new CIMMotor();
 				
 		public DrivetrainSide(Pose position, double mass) {
 			this.position = position;
@@ -139,6 +140,7 @@ public class DrivetrainModel {
 			// double newAcceleration = this.wheelAcceleration(voltage, motorSpeed);
 			
 			double totalTorque = CIMMotor.outputTorque(voltage, motorSpeed) * GEAR_RATIO * CIMS_PER_SIDE;
+
 			if (coast && Utils.threshold(voltage, 0.0, 0.05)) totalTorque = 0.0;
 			double wheelForce = (totalTorque / WHEEL_RADIUS);
 			
@@ -151,6 +153,7 @@ public class DrivetrainModel {
 			double newAcceleration = wheelnetForce / psuedoMass;
 			this.velocity += (newAcceleration + this.acceleration) / 2 * time; // Trapezoidal integration
 			this.acceleration = newAcceleration;
+			
 		}
 		
 		/**
