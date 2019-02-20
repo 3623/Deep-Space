@@ -14,15 +14,15 @@ public class Elevator{
     private  SpeedControllerGroup elevatorMotors = new SpeedControllerGroup(bottomMotors, topMotors);
 
     private Encoder elevatorEncoder = new Encoder(4, 5, false, Encoder.EncodingType.k4X);
-    private double distancePerPulse = (Math.PI*1*2)/2048.0;
+    private double DISTANCE_PER_PULSE = (Math.PI*1*2)/2048.0;
     private DigitalInput bottomLimit = new DigitalInput(6);
-    private double bottomSoftLimit = 0.5;
+    private double BOTTOM_SOFT_LIMIT = 0.5;
     private DigitalInput topLimit = new DigitalInput(7);
-    private double topSoftLimit = 58.0;
+    private double TOP_SOFT_LIMIT = 58.0;
 
     private double goal;
-    private double maxGoal = 56.0;
-    private double minGoal = 0.0;
+    private double MAX_GOAL = 56.0;
+    private double MIN_GOAL = 0.0;
 
     private double kP = 1.0/56.0;
     private double kD = 0.2/56.0;
@@ -36,7 +36,7 @@ public class Elevator{
     private double checkedOutput;
 
     public Elevator(){
-        elevatorEncoder.setDistancePerPulse(distancePerPulse);
+        elevatorEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
         goal = 0.0;
     }
 
@@ -57,11 +57,11 @@ public class Elevator{
     }
 
     public void setGoal(double goal){
-        if (goal > maxGoal){
-            this.goal = maxGoal;
+        if (goal > MAX_GOAL){
+            this.goal = MAX_GOAL;
         }
-        else if (goal < minGoal){
-            this.goal = minGoal;
+        else if (goal < MIN_GOAL){
+            this.goal = MIN_GOAL;
         }
         else this.goal = goal;
     }
@@ -94,11 +94,11 @@ public class Elevator{
     }
 
     private Boolean atBottomLimit(){
-        return (bottomLimit.get() || elevatorEncoder.getDistance() < bottomSoftLimit);
+        return (bottomLimit.get() || elevatorEncoder.getDistance() < BOTTOM_SOFT_LIMIT);
     }
 
     private Boolean atTopLimit(){
-        return (topLimit.get() || elevatorEncoder.getDistance() > topSoftLimit);
+        return (topLimit.get() || elevatorEncoder.getDistance() > TOP_SOFT_LIMIT);
     }
 
     private void monitor(){

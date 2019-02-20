@@ -4,17 +4,15 @@ import java.io.IOException;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.controls.PathFollower;
 import frc.controls.WaypointNavigator;
-import frc.simulation.DrivetrainModel;
 import frc.util.Pose;
 import frc.util.Tuple;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class DriveTrain {
+public class Drivetrain {
 	Spark rightMotors = new Spark(0);
 	Spark leftMotors = new Spark(1);
 	DifferentialDrive drivetrain = new DifferentialDrive(leftMotors, rightMotors);
@@ -24,18 +22,18 @@ public class DriveTrain {
 	public WaypointNavigator waypointNav = new WaypointNavigator();
 
 
-	public DrivetrainModel position;
-	double distancePerPulse = 0.486/2048.0;
+	public DrivetrainModel model;
+	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS*Math.PI*2/2048.0;
 
 
 	double time;
 
-	public DriveTrain(){
-		position = new DrivetrainModel();
+	public Drivetrain(){
+		model = new DrivetrainModel();
 
-		encLeft.setDistancePerPulse(distancePerPulse);
-		encRight.setDistancePerPulse(distancePerPulse);
-		position.setPosition(0.0, 0.0, 0.0);
+		encLeft.setDistancePerPulse(DISTANCE_PER_PULSE);
+		encRight.setDistancePerPulse(DISTANCE_PER_PULSE);
+		model.setPosition(0.0, 0.0, 0.0);
 	}
 
 	public void writeToLog() {
@@ -49,9 +47,9 @@ public class DriveTrain {
 	
 	}
 
-	public void updatePosition(double time) {
-		position.updateSpeed(encLeft.getRate(), encRight.getRate(), time);
-		position.updatePosition(time);
+	public void updatemodel(double time) {
+		model.updateSpeed(encLeft.getRate(), encRight.getRate(), time);
+		model.updatePosition(time);
 
 	}
 
@@ -68,21 +66,18 @@ public class DriveTrain {
 	   drivetrain.tankDrive(leftSpeed, rightSpeed);
    }
 
-   public void driveToPoint(){
-		Pose goal = waypointNav.updatePursuit(position.center);
-		Tuple out = PathFollower.driveToPoint(goal, position.center);
+   public void driveToWaypoint(){
+		Pose goal = waypointNav.updatePursuit(model.center);
+		Tuple out = PathFollower.driveToPoint(goal, model.center);
 		double leftSpeed = out.left/4.0;
 		double rightSpeed = out.right/4.0;
 		directMotorControl(leftSpeed, rightSpeed);
    }
 
-//    public void registerEnabledLoops(Looper enabledLooper) {
-//	}
-
 	public void update(double time){
 		double deltaTime = time - this.time;
 		this.time = time;
-		this.updatePosition(deltaTime);
+		this.updatemodel(deltaTime);
 		this.monitor();
 		SmartDashboard.putNumber("DT", deltaTime);
 	}
@@ -90,19 +85,13 @@ public class DriveTrain {
 	public void monitor(){
 		SmartDashboard.putNumber("Left Encoder", encLeft.getDistance());
 		SmartDashboard.putNumber("Rights Encoder", encRight.getDistance());
-		SmartDashboard.putNumber("Position X", position.center.x);
-		SmartDashboard.putNumber("Position Y", position.center.y);
-		SmartDashboard.putNumber("Heading", position.center.heading*180/Math.PI);
+		SmartDashboard.putNumber("model X", model.center.x);
+		SmartDashboard.putNumber("model Y", model.center.y);
+		SmartDashboard.putNumber("Heading", model.center.heading*180/Math.PI);
 
 	}
     
     public static void main(String[] args) throws IOException{}
     
-
-
-
-
-
-
 
 }

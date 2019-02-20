@@ -6,6 +6,7 @@ import javax.swing.*;
 import frc.controls.PathFollower;
 import frc.controls.Waypoint;
 import frc.controls.WaypointNavigator;
+import frc.robot.subsystems.DrivetrainModel;
 import frc.util.Pose;
 import frc.util.Tuple;
 
@@ -42,19 +43,17 @@ public class Animation extends JPanel implements Runnable
 		field = ImageIO.read(new File("field-blue.png"));
 		robot = ImageIO.read(new File("robot-blue.png"));
 
-
 		// Set the width and heigth and size
 		width = field.getWidth(this);
 		height = field.getHeight(this);
 		robotWidth = robot.getWidth(this);
 		robotHeight = robot.getHeight(this);
 		
-		speed = 1.0;
-
 		setSize ( width, height );
 		scale = 101;
 		offset = 10.0;
 
+		speed = 1.0;
 		time = 0;
 
 		// Set the time interval between frames in millisec
@@ -64,43 +63,41 @@ public class Animation extends JPanel implements Runnable
 		x = width / 2;
 		y = height;
 		
-		// Poofs Iconic Gear then Shoot
-		model = new DrivetrainModel();
-		model.setPosition(2.2, 0.4, 0.0);
-		waypointNav = new WaypointNavigator();
-		waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
-		waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.7));
-		waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.6));
-		waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.7));
-		waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
-		
-// //		 Poofs Iconic 2018 auto
-// 		model = new DrivetrainModel(1.9, 0.4, 0.0);
-// 		waypointNav = new WaypointNavigator();
-// 		waypointNav.addWaypoint(new Waypoint(1.3, 0.0, -90.0));
-// 		waypointNav.addWaypoint(new Waypoint(1.3, 5.3, -90.0, 0.7, 0.7));
-// 		waypointNav.addWaypoint(new Waypoint(7, 5.3, -90.0, 0.6, 0.7));
-// 		waypointNav.addWaypoint(new Waypoint(7, 5.9, -90.0, 0.6, 0.4));
+			// // Poofs Iconic Gear then Shoot
+			// model = new DrivetrainModel();
+			// model.setPosition(2.2, 0.4, 0.0);
+			// waypointNav = new WaypointNavigator();
+			// waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
+			// waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.7));
+			// waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.6));
+			// waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.7));
+			// waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
+			
+			// //  Poofs Iconic 2018 auto
+			// model = new DrivetrainModel(1.9, 0.4, 0.0);
+			// waypointNav = new WaypointNavigator();
+			// waypointNav.addWaypoint(new Waypoint(1.3, 0.0, -90.0));
+			// waypointNav.addWaypoint(new Waypoint(1.3, 5.3, -90.0, 0.7, 0.7));
+			// waypointNav.addWaypoint(new Waypoint(7, 5.3, -90.0, 0.6, 0.7));
+			// waypointNav.addWaypoint(new Waypoint(7, 5.9, -90.0, 0.6, 0.4));
+			
+			// // S Curve that we would have used if we had an actual drivetrain in 2018
+			// model = new DrivetrainModel(4.2, 0.4, 0.0);
+			// waypointNav = new WaypointNavigator();
+			// waypointNav.addWaypoint(new Waypoint(4.2, 0.4, 0.0));
+			// waypointNav.addWaypoint(new Waypoint(6., 2.3, 0.0, 0.4, 0.6));
+			// waypointNav.addWaypoint(new Waypoint(5.94, 2.6, 0.0, 0.3, 0.6));
+			
+			// // Square with initial correction
+			// model = new DrivetrainModel(6.5, 0.4, 0.0);
+			// waypointNav = new WaypointNavigator();
+			// waypointNav.addWaypoint(new Waypoint(7.0, 0.4, 0.0));
+			// waypointNav.addWaypoint(new Waypoint(7.0, 5.4, 0.0, 0.6, 0.7));
+			// waypointNav.addWaypoint(new Waypoint(1.0, 5.4, 0.0, 0.1, 0.7));
+			// waypointNav.addWaypoint(new Waypoint(1.0, 0.45, 0.0, 0.6, 0.7));
+			// waypointNav.addWaypoint(new Waypoint(6.0, 0.45, 0.0, 0.6, 0.7));
 
-
-		
-//		// S Curve that we would have used if we had an actual drivetrain in 2018
-//		model = new DrivetrainModel(4.2, 0.4, 0.0);
-//		waypointNav = new WaypointNavigator();
-//		waypointNav.addWaypoint(new Waypoint(4.2, 0.4, 0.0));
-//		waypointNav.addWaypoint(new Waypoint(6., 2.3, 0.0, 0.4, 0.6));
-//		waypointNav.addWaypoint(new Waypoint(5.94, 2.6, 0.0, 0.3, 0.6));
-		
-//		// Square with initial correction
-//		model = new DrivetrainModel(6.5, 0.4, 0.0);
-//		waypointNav = new WaypointNavigator();
-//		waypointNav.addWaypoint(new Waypoint(7.0, 0.4, 0.0));
-//		waypointNav.addWaypoint(new Waypoint(7.0, 5.4, 0.0, 0.6, 0.7));
-//		waypointNav.addWaypoint(new Waypoint(1.0, 5.4, 0.0, 0.1, 0.7));
-//		waypointNav.addWaypoint(new Waypoint(1.0, 0.45, 0.0, 0.6, 0.7));
-//		waypointNav.addWaypoint(new Waypoint(6.0, 0.45, 0.0, 0.6, 0.7));
-
-
+			
 		// Create and start the thread
 		sim = new Thread ( this );
 		sim.start();
@@ -112,18 +109,16 @@ public class Animation extends JPanel implements Runnable
 		double simTime = dt*1.0/1000.0/speed;
 		time += simTime;
 
-
-		Tuple out;
 		Pose goal = waypointNav.updatePursuit(model.center);
-		out = PathFollower.driveToPoint(goal, model.center);
+		Tuple out = PathFollower.driveToPoint(goal, model.center);
 
-//		out = Drivetrain.driveToPoint(goal, model.center);
-//		out = Drivetrain.deadReckoningCurveLeft(time);
-//		out = Drivetrain.deadReckoningStraight(time);
+		// out = Drivetrain.driveToPoint(goal, model.center);
+		// out = Drivetrain.deadReckoningCurveLeft(time);
+		// out = Drivetrain.deadReckoningStraight(time);
 		double leftVoltage = out.left*10;
 		double rightVoltage = out.right*10;
-//		leftVoltage = 12.0;
-//		rightVoltage = 0.0;
+		// leftVoltage = 12.0;
+		// rightVoltage = 0.0;
 		model.updateVoltage(leftVoltage, rightVoltage, simTime);
 		model.updatePosition(simTime);
 
@@ -147,8 +142,7 @@ public class Animation extends JPanel implements Runnable
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 
-//		goal = new Pose(4.0, 4.0, -135.0);
-
+		// Draw Pursuit Point
 		xPixels = goal.x * scale + offset;
 		yPixels = goal.y * scale + offset;
 		xCoord = (int) Math.round(xPixels);

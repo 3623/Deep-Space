@@ -7,31 +7,59 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 
-public class Grabber extends Subsystem {
-    Solenoid Solenoid1 = new Solenoid(1);
-    Solenoid Solenoid2 = new Solenoid(2);
+public class Grabber {
+    Solenoid clawSolenoid1 = new Solenoid(1);
+    Solenoid clawSolenoid2 = new Solenoid(2);
 
-	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
-    }
+    Solenoid extensionSolenoid = new Solenoid(3);
     
-    public void openClaw() {
-        Solenoid1.set(true);
-        Solenoid2.set(true);
+    DigitalInput hatchSwitch = new DigitalInput(8);
+
+    Boolean isPlacing;
+
+    public void intake(){
+        extensionSolenoid.set(true);
+        if (hatchSwitch.get()) openClaw();
+        else closeClaw();
+        isPlacing = false;
     }
 
-    public void closeClaw() {
-        Solenoid1.set(false);
-        Solenoid2.set(false);
+    public void place(){
+        extensionSolenoid.set(true);
+        halfClaw();
+        isPlacing = true;
     }
 
-    public void halfClaw() {
-        Solenoid1.set(true);
-        Solenoid2.set(false);
+    public void defaultState(){
+        extensionSolenoid.set(false);
+        if (hatchSwitch.get()){
+            if (isPlacing) halfClaw();
+            else openClaw();
+        }
+        else {
+            closeClaw();
+            isPlacing = false;
+        }
+    }
+
+    
+    private void openClaw() {
+        clawSolenoid1.set(true);
+        clawSolenoid2.set(true);
+    }
+
+    private void closeClaw() {
+        clawSolenoid1.set(false);
+        clawSolenoid2.set(false);
+    }
+
+    private void halfClaw() {
+        clawSolenoid1.set(true);
+        clawSolenoid2.set(false);
     }
 }

@@ -20,15 +20,6 @@ public class WaypointNavigator {
 		waypoints.add(curWaypoint);
 	}
 	
-	public void updateWaypoint() {
-		prevWaypoint = waypoints.get(index-1);
-		curWaypoint = waypoints.get(index);
-		if (curWaypoint.kRadius!=0.0) kRadius = curWaypoint.kRadius;
-		else kRadius = kRadiusDefault;
-		if (curWaypoint.kLookAhead!=0.0) kLookAhead = curWaypoint.kLookAhead;
-		else kLookAhead = kLookAheadDefault;
-	}
-	
 	public Pose updatePursuit(Pose position) {
 		updateWaypoint();
 		if (atWaypoint(curWaypoint, position, kRadius) && index != waypoints.size()-1) {
@@ -60,6 +51,15 @@ public class WaypointNavigator {
 //											Math.toDegrees(chaseRelativeAngle) + " - " + 
 //											Math.toDegrees(position.heading) );
 		return pursuit;
+	}
+
+	private void updateWaypoint() {
+		prevWaypoint = waypoints.get(index-1);
+		curWaypoint = waypoints.get(index);
+		if (curWaypoint.kRadius!=0.0) kRadius = curWaypoint.kRadius;
+		else kRadius = kRadiusDefault;
+		if (curWaypoint.kLookAhead!=0.0) kLookAhead = curWaypoint.kLookAhead;
+		else kLookAhead = kLookAheadDefault;
 	}
 	
 	private Boolean atWaypoint(Waypoint curWaypoint, Pose position, double radius) {

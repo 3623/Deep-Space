@@ -1,11 +1,10 @@
-package frc.simulation;
+package frc.robot.subsystems;
 
 import frc.simulation.motors.CIMMotor;
 import frc.simulation.motors.Motor;
 import frc.util.Geometry;
 import frc.util.Pose;
 import frc.util.Utils;
-import frc.simulation.Kinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -23,7 +22,13 @@ public class DrivetrainModel {
 	private final double CENTER_MASS = 0.381; // from left wheel
 	private Boolean COAST_MODE = false; 
 	public Pose center;
+	
 	private DrivetrainSide left, right;
+	static final double WHEEL_RADIUS = 0.0774; // meters
+	private static final double CIMS_PER_SIDE = 2.0; // Minicim is 0.58
+	private static final double GEAR_RATIO = 10.7/1.0; // Reduction
+	private static final double FRICTION = 115;
+
 	
 	public DrivetrainModel() {
 		center = new Pose(0.0, 0.0, 0.0); // Initial robot position
@@ -33,26 +38,26 @@ public class DrivetrainModel {
 									DRIVETRAIN_MASS/2);	
 		
 		if (COAST_MODE) {
-			left.setCoast();
-			right.setCoast();
+			left.coast = true;
+			right.coast = true;
 		} else {
-			left.setBrake();
-			right.setBrake();
+			left.coast = false;
+			right.coast = false;
 		}
 	}
-	
-//	public DrivetrainModel() {
-//		center = new Pose(0.0, 0.0, 0.0); // Initial robot position
-//		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
-//				DRIVETRAIN_MASS/2);
-//		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
-//				DRIVETRAIN_MASS/2);	
-//	}
 
 	public void setPosition(double x, double y, double r){
-		center = new Pose(0.0, 0.0, 0.0);
+		center = new Pose(x, y, r);
 		left.position = Geometry.inverseCenterLeft(center, WHEEL_BASE);
 		right.position = Geometry.inverseCenterRight(center, WHEEL_BASE);
+		zeroSensors();
+	}
+
+	public void zeroSensors(){
+		left.velocity = 0.0;
+		right.velocity = 0.0;
+		left.acceleration = 0.0;
+		right.acceleration = 0.0;
 	}
 
 	public void updateSpeed(double lSpeed, double rSpeed, double time){
@@ -66,8 +71,8 @@ public class DrivetrainModel {
 	}
 	
 	public void updatePosition(double time) {
-		double radius = Kinematics.radiusICC(WHEEL_BASE, left.velocity, right.velocity);
-		double omega = Kinematics.velocityICC(WHEEL_BASE, left.velocity, right.velocity);
+		double radius = radiusICC(WHEEL_BASE, left.velocity, right.velocity);
+		double omega = velocityICC(WHEEL_BASE, left.velocity, right.velocity);
 		double theta = omega * (time);
 		double sinTheta = Math.sin(theta);
 		double alpha = ((Math.PI) - theta)/2.0;
@@ -91,44 +96,30 @@ public class DrivetrainModel {
 		right.position.update(rightMovementX, rightMovementY);
 		center = Geometry.center(left.position, right.position);
 		
-		// Debug statements
-//		System.out.println(center.x + ", " + center.y + ", " + center.heading);
-//		System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
+		//// Debug statements
+		// System.out.println(center.x + ", " + center.y + ", " + center.heading);
+		// System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
 		// System.out.println(left.velocity + ", " + right.velocity);
-		System.out.println("LP: " + left.position.x + ", " + left.position.y);
-		System.out.println("RP: " + right.position.x + ", " + right.position.y);
-//		System.out.println("MA: " + movementAngle + "Rad ICC: " + radius);
-//		System.out.println("RM: " + rightMovement + " LM: " + leftMovement);
-//		System.out.println(leftMovementX + "====" + leftMovementY);
-//		System.out.println(rightMovementX + "====" + rightMovementY);
+		// System.out.println("LP: " + left.position.x + ", " + left.position.y);
+		// System.out.println("RP: " + right.position.x + ", " + right.position.y);
+		// System.out.println("MA: " + movementAngle + "Rad ICC: " + radius);
+		// System.out.println("RM: " + rightMovement + " LM: " + leftMovement);
+		// System.out.println(leftMovementX + "====" + leftMovementY);
+		// System.out.println(rightMovementX + "====" + rightMovementY);
 	}
 
 	public void monitor(){
 
 	}
 	
-	/**
-	 * 
-	 * @author eric
-	 *
-	 */
+
 	private static class DrivetrainSide{
 		Pose position;
 		double velocity;
-		private double acceleration;
+		double acceleration;
 		private double psuedoMass;
 		private Boolean coast; 
-		
-		private static final double WHEEL_RADIUS = 0.0762; // meters
-		private static final double CIMS_PER_SIDE = 2.0; // Minicim is 0.58
-		private static final double GEAR_RATIO = 10.7/1.0; // Reduction
-		// Future can make motors a list of motors rather than coefficient
-//		private static final CIMMotor cimL1, cimL2, cimR1, cimR2 = new CIMMotor();
-//		private static final Motor[] motorsL = {cimL1, cimL2};
-		private static final double FRICTION = 115;
-		
-		static CIMMotor cim = new CIMMotor();
-		
+				
 		public DrivetrainSide(Pose position, double mass) {
 			this.position = position;
 			velocity = 0.0;
@@ -145,24 +136,21 @@ public class DrivetrainModel {
 		
 		public void updateVoltage(double voltage, double time) {
 			double motorSpeed = this.wheelSpeedToMotorSpeed(this.velocity);
-//			double newAcceleration = this.wheelAcceleration(voltage, motorSpeed);
+			// double newAcceleration = this.wheelAcceleration(voltage, motorSpeed);
 			
 			double totalTorque = CIMMotor.outputTorque(voltage, motorSpeed) * GEAR_RATIO * CIMS_PER_SIDE;
 			if (coast && Utils.threshold(voltage, 0.0, 0.05)) totalTorque = 0.0;
 			double wheelForce = (totalTorque / WHEEL_RADIUS);
 			
-
 			double wheelnetForce = frictionModel(wheelForce, this.velocity);
 			
+			// Fake Traction Limiting
 			if (wheelnetForce < -150.0) wheelnetForce = -150.0;
 			else if (wheelnetForce > 150.0) wheelnetForce = 150.0;
 			
-//			System.out.println(wheelForce + " " + wheelnetForce);
 			double newAcceleration = wheelnetForce / psuedoMass;
-			
 			this.velocity += (newAcceleration + this.acceleration) / 2 * time; // Trapezoidal integration
 			this.acceleration = newAcceleration;
-
 		}
 		
 		/**
@@ -190,18 +178,39 @@ public class DrivetrainModel {
 			}
 			return netForce;
 		}
+	}
 
-		
-		public void setBrake() {
-			if (coast) coast = false;
-		}
-		
-		public void setCoast() {
-			if (!coast) coast = true;
-		}
+		/**
+	 * The radius of the robot about the Instantaneous Center of Curvature (ICC)
+	 * Used to infinitesimally calculate the displacement of the robot
+	 * A positive radius is to the right of the robot (relative to robot) and negative is left
+	 * @see <a href="http://www.cs.columbia.edu/~allen/F17/NOTES/icckinematics.pdf">
+	 * Columbia University: CS W4733 NOTES - Differential Drive Robots</a>
+	 * @param wheelBase width between left and right sides of the drivetrain, meters
+	 * @param left velocity of the left wheel, m/s
+	 * @param right velocity of the right wheel, m/s
+	 * @return the radius from the center of the robot to the ICC
+	 */
+	private static double radiusICC(double wheelBase, double left, double right) {
+		return -(wheelBase/2)*(left+right)/(right-left);
 	}
 	
-	// Testing
+	/**
+	 * The angular velocity of the robot about the Instantaneous Center of Curvature (ICC)
+	 * Used to infinitesimally calculate the displacement of the robot
+	 * A positive radius is to the left of the robot (relative to robot) and negative is right
+	 * @see <a href="http://www.cs.columbia.edu/~allen/F17/NOTES/icckinematics.pdf">
+	 * Columbia University: CS W4733 NOTES - Differential Drive Robots</a>
+	 * @param wheelBase width between left and right sides of the drivetrain, meters
+	 * @param left velocity of the left wheel, m/s
+	 * @param right velocity of the right wheel, m/s
+	 * @return
+	 */
+	private static double velocityICC(double wheelBase, double left, double right) {
+		return (right-left)/wheelBase;
+	}
+	
+	// For Testing
 	public static void main ( String[] args) {
 		DrivetrainModel model = new DrivetrainModel();
 		for (int i = 0; i < 300; i++) {

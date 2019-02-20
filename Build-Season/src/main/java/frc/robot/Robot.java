@@ -7,21 +7,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controls.Waypoint;
-import frc.controls.WaypointNavigator;
-import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Grabber;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 /**
@@ -32,16 +29,12 @@ import frc.robot.subsystems.Grabber;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
-
-	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
 	
-  DriveTrain drivetrain = new DriveTrain();	 
+  Drivetrain drivetrain = new Drivetrain();	 
   Grabber grabber = new Grabber();
   Elevator elevator = new Elevator();
 
-	XboxController driverController = new XboxController(0);
+	Joystick driverController = new Joystick(0);
   Joystick steeringWheel = new Joystick(1);
   XboxController operatorController = new XboxController(2);
   
@@ -55,7 +48,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    SmartDashboard.putData("Auto choices", m_chooser);
+    // SmartDashboard.putData("Auto choices", );
     drivetrain.zeroSensors();
   }
 
@@ -69,7 +62,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-	drivetrain.update(timer.getFPGATimestamp());
+	  drivetrain.update(timer.getFPGATimestamp());
     elevator.update(); 
   }
 
@@ -88,12 +81,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // autoSelected = SmartDashboard.getString("Auto Selector",
     // defaultAuto);
-      drivetrain.position.setPosition(0.0, 0.0, 0.0);
+      drivetrain.model.setPosition(0.0, 0.0, 0.0);
       drivetrain.waypointNav.addWaypoint(new Waypoint(0.0, 0.0, 0.0));
       drivetrain.waypointNav.addWaypoint(new Waypoint(1.0, 3.0, 0.0, 0.3, 0.6));
       drivetrain.waypointNav.addWaypoint(new Waypoint(1.0, 3.0, 0.0, 0.3, 0.6));
 
-      // drivetrain.waypointNav.addWaypoint(new Waypoint(5.94, 2.6, 0.0, 0.3, 0.6));
   }
 
   /**
@@ -101,7 +93,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-      drivetrain.driveToPoint();
+      drivetrain.driveToWaypoint();
     // switch (m_autoSelected) {
     //   case kCustomAuto:
     //     // Put custom auto code here
@@ -118,10 +110,23 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    drivetrain.openLoopControl(-steeringWheel.getRawAxis(1), steeringWheel.getRawAxis(3), steeringWheel.getTrigger());
-    if (operatorController.getAButton()) grabber.openClaw();
-    else if (operatorController.getBButton()) grabber.halfClaw();
-    else grabber.closeClaw();
+
+    // Drivetrain
+    drivetrain.openLoopControl(-steeringWheel.getRawAxis(1), 
+      steeringWheel.getRawAxis(3)*Math.abs(steeringWheel.getRawAxis(3)), 
+      steeringWheel.getTrigger());
+    
+    // Grabber
+    if (operatorController.getAButton()) grabber.intake();
+    else if (operatorController.getBButton()) grabber.place();
+    else grabber.defaultState();
+
+    // Elevator
+    if (operatorController.getPOV() == 180) elevator.setGoal(0.0);
+    else if (operatorController.getPOV() == 90) elevator.setGoal(28.0);
+    else if (operatorController.getPOV() == 0) elevator.setGoal(56.0);
+
+    // Turret
 
   }
 
