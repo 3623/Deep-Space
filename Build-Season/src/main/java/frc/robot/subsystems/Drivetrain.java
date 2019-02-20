@@ -19,12 +19,11 @@ public class Drivetrain {
 
 	Encoder encLeft = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
 	Encoder encRight = new Encoder(2, 3, true, Encoder.EncodingType.k4X);
-	public WaypointNavigator waypointNav = new WaypointNavigator();
-
 
 	public DrivetrainModel model;
 	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS*Math.PI*2/2048.0;
 
+	public WaypointNavigator waypointNav = new WaypointNavigator();
 
 	double time;
 

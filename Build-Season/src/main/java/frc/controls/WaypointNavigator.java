@@ -24,7 +24,7 @@ public class WaypointNavigator {
 		updateWaypoint();
 		if (atWaypoint(curWaypoint, position, kRadius) && index != waypoints.size()-1) {
 			index++;
-//			updateWaypoint();
+			updateWaypoint();
 		}
 		
 
@@ -33,6 +33,7 @@ public class WaypointNavigator {
 		double pathAngle = Math.atan2(curWaypoint.x-prevWaypoint.x, curWaypoint.y-prevWaypoint.y);
 		double stateAngle = Math.atan2(curWaypoint.x-position.x, curWaypoint.y-position.y);
 		double relativeAngle = stateAngle - pathAngle;
+
 		double lineDist = dist*Math.cos(relativeAngle);
 		if (lineDist > kLookAhead) {
 			lineDist -= kLookAhead;
@@ -44,6 +45,7 @@ public class WaypointNavigator {
 		double yChase = curWaypoint.y - (lineDist * Math.cos(pathAngle));
 		double chaseRelativeAngle = Math.atan2(xChase-position.x, yChase-position.y);
 		double chaseAngle = pathAngle + (chaseRelativeAngle) - position.heading;
+		
 		Pose pursuit = new Pose(xChase, yChase, Math.toDegrees(chaseAngle));
 		
 //		System.out.println(Math.toDegrees());
@@ -56,8 +58,10 @@ public class WaypointNavigator {
 	private void updateWaypoint() {
 		prevWaypoint = waypoints.get(index-1);
 		curWaypoint = waypoints.get(index);
+
 		if (curWaypoint.kRadius!=0.0) kRadius = curWaypoint.kRadius;
 		else kRadius = kRadiusDefault;
+
 		if (curWaypoint.kLookAhead!=0.0) kLookAhead = curWaypoint.kLookAhead;
 		else kLookAhead = kLookAheadDefault;
 	}
