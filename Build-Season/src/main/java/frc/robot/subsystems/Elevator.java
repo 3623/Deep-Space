@@ -76,7 +76,7 @@ public class Elevator{
     }
 
     private void zeroEncoder(){
-        if (bottomLimit.get()){
+        if (atBottomLimit()){
             elevatorEncoder.reset();
         }
     }
