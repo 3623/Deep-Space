@@ -39,12 +39,12 @@ public class Drivetrain {
 		encLeft.setDistancePerPulse(DISTANCE_PER_PULSE);
 		encRight.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-		navx = new AHRS(SerialPort.Port.kMXP)
+		navx = new AHRS(SerialPort.Port.kMXP);
 
 		model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);
 
-		waypointNav = new WaypointNavigator()
+		waypointNav = new WaypointNavigator();
 	}
 
     public void stop() {
