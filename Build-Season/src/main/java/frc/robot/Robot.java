@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
   
   Timer timer = new Timer();
 
+  SendableChooser autoChooser;
 
 
   /**

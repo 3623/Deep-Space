@@ -15,28 +15,36 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Drivetrain {
-	Spark rightMotors = new Spark(0);
-	Spark leftMotors = new Spark(1);
-	DifferentialDrive drivetrain = new DifferentialDrive(leftMotors, rightMotors);
+	Spark rightMotors, leftMotors;
+	DifferentialDrive drivetrain;
 
-	Encoder encLeft = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
-	Encoder encRight = new Encoder(2, 3, true, Encoder.EncodingType.k4X);
+	Encoder encLeft, encRight;
 
-	AHRS navx = new AHRS(SerialPort.Port.kMXP); 
+	AHRS navx; 
 
 	public DrivetrainModel model;
 	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS*Math.PI*2/2048.0;
 
-	public WaypointNavigator waypointNav = new WaypointNavigator();
+	public WaypointNavigator waypointNav;
 
 	double time;
 
 	public Drivetrain(){
-		model = new DrivetrainModel();
+		rightMotors = new Spark(0);
+		leftMotors = new Spark(1);
+		drivetrain = new DifferentialDrive(leftMotors, rightMotors);
 
+		encLeft = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
+		encRight = new Encoder(2, 3, true, Encoder.EncodingType.k4X);
 		encLeft.setDistancePerPulse(DISTANCE_PER_PULSE);
 		encRight.setDistancePerPulse(DISTANCE_PER_PULSE);
+
+		navx = new AHRS(SerialPort.Port.kMXP)
+
+		model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);
+
+		waypointNav = new WaypointNavigator()
 	}
 
     public void stop() {
