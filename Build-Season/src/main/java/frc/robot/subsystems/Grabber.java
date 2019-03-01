@@ -40,8 +40,7 @@ public class Grabber {
         if (hatchSwitch.get()){
             if (isPlacing) halfClaw();
             else openClaw();
-        }
-        else {
+        } else {
             closeClaw();
             isPlacing = false;
         }

@@ -48,11 +48,11 @@ public class Turret {
     public void setGoal(double goal){
         if (goal > MAX_GOAL){
             this.goal = MAX_GOAL;
-        }
-        else if (goal < MIN_GOAL){
+        } else if (goal < MIN_GOAL){
             this.goal = MIN_GOAL;
+        } else {
+            this.goal = goal;
         }
-        else this.goal = goal;
     }
 
     public void stop(){

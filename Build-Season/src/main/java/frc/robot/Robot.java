@@ -8,15 +8,16 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.controls.Waypoint;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -29,19 +30,21 @@ import edu.wpi.first.wpilibj.XboxController;
  * project.
  */
 public class Robot extends TimedRobot {
-	
-  Drivetrain drivetrain = new Drivetrain();	 
-  Grabber grabber = new Grabber();
-  Elevator elevator = new Elevator();
-
-	Joystick driverController = new Joystick(0);
-  Joystick steeringWheel = new Joystick(1);
-  XboxController operatorController = new XboxController(2);
+  DriverStation DS;  
   
-  Timer timer = new Timer();
+  Drivetrain drivetrain;	 
+  Grabber grabber;
+  Elevator elevator;
 
-  SendableChooser autoChooser;
+	Joystick driverController, steeringWheel;
+  XboxController operatorController;
+  
+  Timer timer;
 
+  SendableChooser<String> autoChooser;
+  String autoSelected;
+  final String CrossLine = "Cross Line";
+  final String DriveBy = "Drive Forward and Plop";
 
   /**
    * This function is run when the robot is first started up and should be
@@ -49,7 +52,22 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // SmartDashboard.putData("Auto choices", );
+    DS = DriverStation.getInstance();
+    timer = new Timer();
+
+    drivetrain = new Drivetrain();	 
+    grabber = new Grabber();
+    elevator = new Elevator();
+  
+    driverController = new Joystick(0);
+    steeringWheel = new Joystick(1);
+    operatorController = new XboxController(2);
+
+    autoChooser = new SendableChooser<String>();
+    autoChooser.addDefault(CrossLine, CrossLine);
+    autoChooser.addObject(DriveBy, DriveBy);
+    SmartDashboard.putData("Auto choices", autoChooser);
+
     drivetrain.zeroSensors();
   }
 
@@ -80,13 +98,21 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // autoSelected = SmartDashboard.getString("Auto Selector",
-    // defaultAuto);
+    autoSelected = autoChooser.getSelected();
 
-      drivetrain.model.setPosition(4.2, 1.3, 0.0);
-			drivetrain.waypointNav.addWaypoint(new Waypoint(4.2, 1.3, 0.0));
-			drivetrain.waypointNav.addWaypoint(new Waypoint(5.5, 2.5, 0.0, 0.4, 0.7));
-			drivetrain.waypointNav.addWaypoint(new Waypoint(5.5, 3.5, 0.0, 0.3, 0.4));
+    switch(autoSelected){
+      case CrossLine:
+        drivetrain.model.setPosition(4.2, 1.3, 0.0);
+        drivetrain.waypointNav.addWaypoint(new Waypoint(4.2, 3.3, 0.0, 0.3, 0.5));
+      break;
+
+      case DriveBy:
+        drivetrain.model.setPosition(4.2, 1.3, 0.0);
+        drivetrain.waypointNav.addWaypoint(new Waypoint(4.2, 1.3, 0.0));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(5.5, 2.5, 0.0, 0.4, 0.7));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(5.5, 3.5, 0.0, 0.3, 0.4));
+      break;
+    }
 
   }
 
@@ -96,15 +122,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
       drivetrain.driveToWaypoint();
-    // switch (m_autoSelected) {
-    //   case kCustomAuto:
-    //     // Put custom auto code here
-    //     break;
-    //   case kDefaultAuto:
-    //   default:
-    //     // Put default auto code here
-    //     break;
-    // }
   }
 
   /**
@@ -114,9 +131,15 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     // Drivetrain
-    drivetrain.openLoopControl(-steeringWheel.getRawAxis(1), 
-      steeringWheel.getRawAxis(3)*Math.abs(steeringWheel.getRawAxis(3)), 
-      steeringWheel.getTrigger());
+    if (driverController.getTrigger()){
+      drivetrain.openLoopControl(-driverController.getRawAxis(1)/2.0, 
+      driverController.getRawAxis(3)/2.0, 
+      driverController.getTrigger());
+    } else{
+      drivetrain.openLoopControl(-driverController.getRawAxis(1), 
+      driverController.getRawAxis(3)*Math.abs(driverController.getRawAxis(3)), 
+      driverController.getTrigger());
+    }
     
     // Grabber
     if (operatorController.getAButton()) grabber.intake();

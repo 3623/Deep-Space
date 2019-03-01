@@ -59,11 +59,11 @@ public class Elevator{
     public void setGoal(double goal){
         if (goal > MAX_GOAL){
             this.goal = MAX_GOAL;
-        }
-        else if (goal < MIN_GOAL){
+        } else if (goal < MIN_GOAL){
             this.goal = MIN_GOAL;
+        } else {
+            this.goal = goal;
         }
-        else this.goal = goal;
     }
 
     public void stop(){
@@ -85,11 +85,11 @@ public class Elevator{
         double limitedOutput;
         if (atTopLimit() && motorOutput > 0.0){
             limitedOutput = 0.0;
-        }
-        else if (atBottomLimit() && motorOutput < 0.0){
+        } else if (atBottomLimit() && motorOutput < 0.0){
             limitedOutput = 0.0;
+        } else {
+            limitedOutput = motorOutput;
         }
-        else limitedOutput = motorOutput;
         return limitedOutput;
     }
 

@@ -65,6 +65,9 @@ public class Animation extends JPanel implements Runnable
 		
 		model = new DrivetrainModel();
 		waypointNav = new WaypointNavigator();
+
+		model.setPosition(4.2, 1.3, 0.0);
+        waypointNav.addWaypoint(new Waypoint(4.2, 3.3, 0.0, 0.3, 0.5));
 		
 		// // Center to side of cargo ship
 		// model.setPosition(4.2, 1.3, 0.0);
@@ -72,12 +75,12 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(5.5, 2.5, 0.0, 0.4, 0.7));
 		// waypointNav.addWaypoint(new Waypoint(5.5, 3.5, 0.0, 0.3, 0.4));
 
-		// Center to rocket ship
-		model.setPosition(4.2, 1.3, 0.0);
-		waypointNav.addWaypoint(new Waypoint(4.2, 1.3, 0.0));
-		waypointNav.addWaypoint(new Waypoint(4.2, 2.5, 0.0, 0.7, 0.7));
-		waypointNav.addWaypoint(new Waypoint(7.6, 3.1, 0.0, 0.4, 0.7));
-		waypointNav.addWaypoint(new Waypoint(7.3, 3.8, 0.0, 0.4, 0.5));
+		// // Center to rocket ship
+		// model.setPosition(4.2, 1.3, 0.0);
+		// waypointNav.addWaypoint(new Waypoint(4.2, 1.3, 0.0));
+		// waypointNav.addWaypoint(new Waypoint(4.2, 2.5, 0.0, 0.7, 0.7));
+		// waypointNav.addWaypoint(new Waypoint(7.6, 3.1, 0.0, 0.4, 0.7));
+		// waypointNav.addWaypoint(new Waypoint(7.3, 3.8, 0.0, 0.4, 0.5));
 
 		
 			// // Poofs Iconic Gear then Shoot
@@ -184,8 +187,7 @@ public class Animation extends JPanel implements Runnable
 			repaint ();
 			try {
 				Thread.sleep ( dt );
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				System.out.println ("Exception: " + e.getMessage());
 			}        
 		}
