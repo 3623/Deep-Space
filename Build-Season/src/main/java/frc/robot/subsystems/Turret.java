@@ -27,8 +27,11 @@ public class Turret {
     private double errorD;
     private double output;
 
+    private Pixy pixy;
+
     public Turret(){
         goal = 0.0;
+        pixy = new Pixy();
     }
 
     public void update(){
@@ -62,6 +65,11 @@ public class Turret {
 
     public void enable(){
         isStopped = false;
+    }
+
+    public void vision(){
+        double x = pixy.getTargetX();
+        
     }
 
 

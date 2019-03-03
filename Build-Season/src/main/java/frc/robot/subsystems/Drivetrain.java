@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
-import com.kauailabs.navx.frc.AHRS;
+// import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Encoder;
@@ -20,7 +20,7 @@ public class Drivetrain {
 
 	Encoder encLeft, encRight;
 
-	AHRS navx; 
+	// AHRS navx; 
 
 	public DrivetrainModel model;
 	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS*Math.PI*2/2048.0;
@@ -39,7 +39,7 @@ public class Drivetrain {
 		encLeft.setDistancePerPulse(DISTANCE_PER_PULSE);
 		encRight.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-		navx = new AHRS(SerialPort.Port.kMXP);
+		// navx = new AHRS(SerialPort.Port.kMXP);
 
 		model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);
@@ -69,7 +69,7 @@ public class Drivetrain {
    	public void zeroSensors() {
    		encLeft.reset();
 		encRight.reset();
-		navx.reset();   	
+		// navx.reset();   	
 	}
     
    	public void openLoopControl(double xSpeed, double rSpeed, Boolean quickTurn) {
