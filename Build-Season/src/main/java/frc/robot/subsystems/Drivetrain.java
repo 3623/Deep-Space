@@ -77,7 +77,7 @@ public class Drivetrain {
    	}
 
    	public void directMotorControl(double leftSpeed, double rightSpeed){
-	  	drivetrain.tankDrive(leftSpeed, rightSpeed);
+	  	drivetrain.tankDrive(leftSpeed, rightSpeed, false);
    	}
 
 	public void update(double time){

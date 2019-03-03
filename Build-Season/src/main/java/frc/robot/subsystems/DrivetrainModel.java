@@ -67,6 +67,12 @@ public class DrivetrainModel {
 		right.updateSpeed(rSpeed, time);
 	}
 
+	public void updateHeading (double heading){
+		center.heading = heading;
+		left.position = Geometry.inverseCenterLeft(center, WHEEL_BASE);
+		right.position = Geometry.inverseCenterRight(center, WHEEL_BASE);
+	}
+
 	public void updateVoltage(double lVoltage, double rVoltage, double time){
 		left.updateVoltage(lVoltage, time);
 		right.updateVoltage(rVoltage, time);
@@ -97,6 +103,8 @@ public class DrivetrainModel {
 		double rightMovementY = -rightMovement*cosine;
 		right.position.update(rightMovementX, rightMovementY);
 		center = Geometry.center(left.position, right.position);
+		left.position = Geometry.inverseCenterLeft(center, WHEEL_BASE);
+		right.position = Geometry.inverseCenterRight(center, WHEEL_BASE);
 		
 		//// Debug statements
 		// System.out.println(center.x + ", " + center.y + ", " + center.heading);
