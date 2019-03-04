@@ -4,6 +4,7 @@ import frc.simulation.motors.CIMMotor;
 import frc.simulation.motors.Motor;
 import frc.util.Geometry;
 import frc.util.Pose;
+import frc.util.Tuple;
 import frc.util.Utils;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -48,36 +49,65 @@ public class DrivetrainModel {
 		}
 	}
 
+	/**
+	 * Sets the drivetrain position to a known location
+	 * @param x location (side to side), in meters
+	 * @param y location (forwards backwards, in meters
+	 * @param heading, in degrees
+	 */
 	public void setPosition(double x, double y, double r){
 		center = new Pose(x, y, r);
 		left.position = Geometry.inverseCenterLeft(center, WHEEL_BASE);
 		right.position = Geometry.inverseCenterRight(center, WHEEL_BASE);
-		zeroSensors();
+		zero();
 	}
 
-	public void zeroSensors(){
+	/**
+	 * Zeros the velocity and acceleration of each drivetrain side
+	 */
+	public void zero(){
 		left.velocity = 0.0;
 		right.velocity = 0.0;
 		left.acceleration = 0.0;
 		right.acceleration = 0.0;
 	}
 
+	/**
+	 * Sets the speed of each drivetrain side to a known value. For using encoders
+	 * @param left speed, in meters/sec
+	 * @param right speed, in meters/sec
+	 */
 	public void updateSpeed(double lSpeed, double rSpeed, double time){
 		left.updateSpeed(lSpeed, time);
 		right.updateSpeed(rSpeed, time);
 	}
 
+	/**
+	 * Updates the models heading with a set heading. For using a gyro to more accurately
+	 * track heading
+	 * @param angle in degrees
+	 */
 	public void updateHeading (double heading){
 		center.heading = heading;
 		left.position = Geometry.inverseCenterLeft(center, WHEEL_BASE);
 		right.position = Geometry.inverseCenterRight(center, WHEEL_BASE);
 	}
 
+	/**
+	 * Updates velocity and acceleration of each side of the drivetrain using motor curves
+	 * @param left voltage
+	 * @param right voltage
+	 * @param the elapsedtime between updates, in seconds
+	 */
 	public void updateVoltage(double lVoltage, double rVoltage, double time){
 		left.updateVoltage(lVoltage, time);
 		right.updateVoltage(rVoltage, time);
 	}
 	
+	/**
+	 * Updates the models position from each sides velocity 
+	 * @param the elapsed time between updates, in seconds
+	 */
 	public void updatePosition(double time) {
 		double radius = radiusICC(WHEEL_BASE, left.velocity, right.velocity);
 		double omega = velocityICC(WHEEL_BASE, left.velocity, right.velocity);
@@ -108,7 +138,7 @@ public class DrivetrainModel {
 		
 		//// Debug statements
 		// System.out.println(center.x + ", " + center.y + ", " + center.heading);
-//		 System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
+		// System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
 		// System.out.println(left.velocity + ", " + right.velocity);
 		// System.out.println("LP: " + left.position.x + ", " + left.position.y);
 		// System.out.println("RP: " + right.position.x + ", " + right.position.y);
@@ -116,6 +146,15 @@ public class DrivetrainModel {
 		// System.out.println("RM: " + rightMovement + " LM: " + leftMovement);
 		// System.out.println(leftMovementX + "====" + leftMovementY);
 		// System.out.println(rightMovementX + "====" + rightMovementY);
+	}
+
+	public Tuple limitAcceleration(double leftOut, double rightOut){
+		double leftVoltage = leftOut*12.0;
+		double rightVoltage = leftOut*12.0;
+		double leftVoltageChecked = left.limitAcceleration(leftVoltage);
+		double rightVoltageChecked = right.limitAcceleration(rightVoltage);
+		Tuple checkedOutput = new Tuple(leftVoltageChecked, rightVoltageChecked);
+		return checkedOutput;
 	}
 
 	public void monitor(){
