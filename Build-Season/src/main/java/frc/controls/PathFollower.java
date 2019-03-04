@@ -35,6 +35,8 @@ public class PathFollower {
 		else direction = 1.0;
 		double leftOut = distLeft*direction*goal.kSpeedFactor;
 		double rightOut = distRight*direction*goal.kSpeedFactor;
+		// System.out.println(leftOut + " " + rightOut);
+
 		Tuple out = new Tuple(leftOut, rightOut);
 		return out;
 	}
