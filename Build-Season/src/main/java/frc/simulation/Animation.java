@@ -118,13 +118,13 @@ public class Animation extends JPanel implements Runnable
 
 		Waypoint goal = waypointNav.updatePursuit(model.center);
 		Tuple out = PathFollower.driveToPoint2(goal, model.center);
-
+		Tuple limitedVoltage = model.limitAcceleration(out);
 		// out = Drivetrain.driveToPoint(goal, model.center);
 		// out = Drivetrain.deadReckoningCurveLeft(time);
 		// out = Drivetrain.deadReckoningStraight(time);
 
-		double leftVoltage = out.left*12.0;
-		double rightVoltage = out.right*12.0;
+		double leftVoltage = limitedVoltage.left*12.0;
+		double rightVoltage = limitedVoltage.right*12.0;
 		
 		System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
 		

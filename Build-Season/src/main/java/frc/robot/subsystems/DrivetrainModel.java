@@ -73,8 +73,9 @@ public class DrivetrainModel {
 	/**
 	 * Sets the speed of each drivetrain side to a known value and calculates
 	 * acceleration. For using encoders
-	 * @param left speed, in meters/sec
-	 * @param right speed, in meters/sec
+	 * @param lSpeed left speed, in meters/sec
+	 * @param rSpeed right speed, in meters/sec
+	 * @param time elapsed time since last update, in seconds
 	 */
 	public void updateSpeed(double lSpeed, double rSpeed, double time){
 		left.updateSpeed(lSpeed, time);
@@ -144,6 +145,20 @@ public class DrivetrainModel {
 		Tuple checkedOutput = new Tuple(leftVoltageChecked, rightVoltageChecked);
 		return checkedOutput;
 	}
+
+	/** 
+	 * Limits acceleration using the models velocity and information about motors
+	 * @param unchecked output voltage
+	 * @return checked voltage, limited to acceleration of MAX_TORQUE constant
+	 */
+	public Tuple limitAcceleration(Tuple out){
+		double leftVoltage = out.left*12.0;
+		double rightVoltage = out.right*12.0;
+		double leftVoltageChecked = left.limitAcceleration(leftVoltage)/12.0;
+		double rightVoltageChecked = right.limitAcceleration(rightVoltage)/12.0;
+		Tuple checkedOutput = new Tuple(leftVoltageChecked, rightVoltageChecked);
+		return checkedOutput;
+	}
 	
 
 	private static class DrivetrainSide{
@@ -205,15 +220,19 @@ public class DrivetrainModel {
 		 */
 		protected double limitAcceleration(double outputVoltage){
 			double motorSpeed = this.wheelSpeedToMotorSpeed(this.velocity);
-			double maxVoltage = CIMMotor.inverseVoltage(MAX_TORQUE, motorSpeed)/CIMS_PER_SIDE/GEAR_RATIO;
-			double minVoltage = CIMMotor.inverseVoltage(-MAX_TORQUE, motorSpeed)/CIMS_PER_SIDE/GEAR_RATIO;
+			double maxVoltage = CIMMotor.inverseVoltage(MAX_TORQUE/CIMS_PER_SIDE/GEAR_RATIO, motorSpeed);
+			double minVoltage = CIMMotor.inverseVoltage(-MAX_TORQUE/CIMS_PER_SIDE/GEAR_RATIO, motorSpeed);
+
 
 			double limitedVoltage;
 			if (outputVoltage > maxVoltage) limitedVoltage = maxVoltage;
 			else if (outputVoltage < minVoltage) limitedVoltage = minVoltage;
 			else limitedVoltage = outputVoltage;
+
+			System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
+
 			
-			return outputVoltage;
+			return limitedVoltage;
 		}
 		
 		/**
@@ -281,9 +300,9 @@ public class DrivetrainModel {
 	// For Testing
 	public static void main ( String[] args) {
 		DrivetrainModel model = new DrivetrainModel();
-		for (int i = 0; i < 300; i++) {
-			model.updateVoltage(12.0, 12.0, 10.0/1000.0);
-			model.updatePosition(10.0/1000.0);
+		for (int i = 0; i < 1; i++) {
+			model.updateSpeed(3.0, 3.0, 0.02);
+			model.limitAcceleration(12.0, 12.0);
 		}
 	}
 }

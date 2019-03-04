@@ -10,6 +10,12 @@ public class Waypoint {
 	public double x, y, r, heading;
 	protected final Boolean driveBackwards;
 	
+	/**
+	 * Constructor for waypoint without driving params
+	 * @param x, in meters
+	 * @param y, in meters,
+	 * @param heading, in degrees. Call .r for radians
+	 */
 	public Waypoint(double x, double y, double heading) {
 		this.x = x;
 		this.y = y;

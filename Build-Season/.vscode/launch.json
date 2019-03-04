@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - DrivetrainModel",
+      "request": "launch",
+      "mainClass": "frc.robot.subsystems.DrivetrainModel",
+      "projectName": "Build-Season"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - Geometry",
       "request": "launch",
       "mainClass": "frc.util.Geometry",
