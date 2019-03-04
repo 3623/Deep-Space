@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - Geometry",
+      "request": "launch",
+      "mainClass": "frc.util.Geometry",
+      "projectName": "Build-Season"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - Animation",
       "request": "launch",
       "mainClass": "frc.simulation.Animation",

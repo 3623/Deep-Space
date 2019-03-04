@@ -23,14 +23,16 @@ public class Animation extends JPanel implements Runnable
 	protected Thread sim;      // animation thread
 	protected int width;          // width of viewing area in pixels
 	protected int height;         // height of viewing area in pixels
-	protected int x, y;           // current position of text
 	protected Dimension size;     // size of viewing area
 	protected Image image;        // off-screen image
 	protected Graphics offScreen; // off-screen graphics
 	protected Image field, robot;
 	protected final double speed = 1.0;
-	protected double scale;
-	protected final int offsetX, offsetY; // pixels per meter
+	protected final double scale = 65; // pixels per meter
+	protected static final int offsetX = 5;
+	protected static final int offsetY = 15; 
+	protected final int x;
+	protected final int y;
 	protected int robotWidth, robotHeight;
 
 	protected int dt = 20;          // interval between frames in millisec
@@ -48,16 +50,8 @@ public class Animation extends JPanel implements Runnable
 		height = field.getHeight(this);
 		robotWidth = robot.getWidth(this);
 		robotHeight = robot.getHeight(this);
-		
-		setSize(width, height);
-		scale = 65;
-		offsetX = 5;
-		offsetY = 15;
-
-		time = 0;
-
-		// Set the initial values for x and y
-		x = 0 + offsetX;
+		setSize(width, height);	
+		x = 0 + offsetX;	
 		y = height-offsetY;
 		
 		model = new DrivetrainModel();
@@ -153,7 +147,7 @@ public class Animation extends JPanel implements Runnable
 		// Draw robot
 		int xCoord = x + (int) Math.round(model.center.x * scale)-(robotWidth/2);
 		int yCoord = y - (int) Math.round(model.center.y * scale)-(robotHeight/2);
-		AffineTransform tx = AffineTransform.getRotateInstance(model.center.heading, robotWidth/2, robotHeight/2);
+		AffineTransform tx = AffineTransform.getRotateInstance(model.center.r, robotWidth/2, robotHeight/2);
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 

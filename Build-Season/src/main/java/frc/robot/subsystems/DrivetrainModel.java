@@ -56,7 +56,7 @@ public class DrivetrainModel {
 	public void setPosition(double x, double y, double heading){
 		center.x= x;
 		center.y= y;
-		center.heading = Math.toRadians(heading);
+		center.setHeading(heading);
 		zero();
 	}
 
@@ -87,7 +87,7 @@ public class DrivetrainModel {
 	 * @param angle in degrees
 	 */
 	public void updateHeading (double heading){
-		center.heading = Math.toRadians(heading);
+		center.setHeading(heading);
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class DrivetrainModel {
 		double alpha = ((Math.PI) - theta)/2.0;
 		double sinAlpha = Math.sin(alpha);
 
-		double movementAngle = center.heading + theta;
+		double movementAngle = center.r + theta;
 		double movement = Geometry.sideFromLawOfSines(radius, sinAlpha, sinTheta);
 		
 		if (omega == 0.0) {

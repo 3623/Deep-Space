@@ -3,28 +3,29 @@ package frc.util;
 public class Geometry {
 	
 	public static Pose center(Pose left, Pose right) {
-		Pose coordinate = new Pose();
-		coordinate.x = (left.x + right.x)/2;
-		coordinate.y = (left.y + right.y)/2;
+		
+		double x = (left.x + right.x)/2;
+		double y = (left.y + right.y)/2;
 		
 		double xDif = -(left.x-right.x);
 		double yDif = left.y - right.y;
 		double angle = Math.atan2(yDif, xDif);
-		coordinate.heading = angle;
+		double r = angle;
 		
+		Pose coordinate = new Pose(x, y, Math.toDegrees(r));
 		return coordinate;
 	}
 	
 	public static Pose inverseCenterLeft(Pose center, double drivebase) {
-		double x = center.x - drivebase/2.0 * Math.cos(center.heading);
-		double y = center.y + drivebase/2.0 * Math.sin(center.heading);
+		double x = center.x - drivebase/2.0 * Math.cos(center.r);
+		double y = center.y + drivebase/2.0 * Math.sin(center.r);
 		Pose left = new Pose(x, y);
 		return left;
 	}
 	
 	public static Pose inverseCenterRight(Pose center, double drivebase) {
-		double x = center.x + drivebase/2.0 * Math.cos(center.heading);
-		double y = center.y - drivebase/2.0 * Math.sin(center.heading);
+		double x = center.x + drivebase/2.0 * Math.cos(center.r);
+		double y = center.y - drivebase/2.0 * Math.sin(center.r);
 		Pose right = new Pose(x, y);
 		return right;
 	}
@@ -60,6 +61,7 @@ public class Geometry {
 	      Pose left = new Pose(6, 5);
 	      Pose right = new Pose(5, 4);
 
-	      System.out.println(Geometry.distance(left,  right));
+				System.out.println(Geometry.distance(left,  right));
+				System.out.println(Math.cos(180));
 	  }
 }

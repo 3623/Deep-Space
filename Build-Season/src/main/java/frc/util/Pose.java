@@ -9,6 +9,7 @@ package frc.util;
 public class Pose {
 	public double x;
 	public double y;
+	public double r;
 	public double heading;
 	
 	/**
@@ -20,7 +21,8 @@ public class Pose {
 	public Pose(double x, double y, double heading) {
 		this.x = x;
 		this.y = y;
-		this.heading = Math.toRadians(heading);
+		this.r = Math.toRadians(heading);
+		this.heading = heading;
 	}
 	
 	public Pose(double x, double y) {
@@ -32,16 +34,18 @@ public class Pose {
 		this.x = 0.0;
 		this.y = 0.0;
 		this.heading = 0.0;
-	}
-	
-	public void update(double deltaX, double deltaY) {
-		this.x += deltaX;
-		this.y += deltaY;
+		this.r = 0.0;
 	}
 
 	public void update(double deltaX, double deltaY, double deltaR) {
 		this.x += deltaX;
 		this.y += deltaY;
-		this.heading += deltaR;
+		this.r += deltaR;
+		this.heading = Math.toDegrees(r);
+	}
+
+	public void setHeading(double heading) {
+		this.heading = heading;
+		this.r = Math.toRadians(heading);
 	}
 }
