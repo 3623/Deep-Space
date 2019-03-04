@@ -20,11 +20,15 @@ public class WaypointNavigator {
 		waypoints.add(curWaypoint);
 	}
 	
-	public Pose updatePursuit(Pose position) {
+	public Waypoint updatePursuit(Pose position) {
 		updateWaypoint();
-		if (atWaypoint(curWaypoint, position, kRadius) && index != waypoints.size()-1) {
-			index++;
-			updateWaypoint();
+		if (atWaypoint(curWaypoint, position, kRadius)) {
+			if (index != waypoints.size()-1){
+				index++;
+				updateWaypoint();
+			}
+			else{
+			}
 		}
 		
 
@@ -46,7 +50,10 @@ public class WaypointNavigator {
 		double chaseRelativeAngle = Math.atan2(xChase-position.x, yChase-position.y);
 		double chaseAngle = pathAngle + (chaseRelativeAngle) - position.heading;
 		
-		Pose pursuit = new Pose(xChase, yChase, Math.toDegrees(chaseAngle));
+		Waypoint pursuit = new Waypoint(xChase, yChase, Math.toDegrees(chaseAngle), curWaypoint.kSpeedFactor, curWaypoint.kLookAhead, curWaypoint.kRadius, curWaypoint.driveBackwards);
+		// pursuit.x= xChase;
+		// pursuit.y = yChase;
+		// pursuit.heading = Math.toDegrees(chaseAngle);
 		
 //		System.out.println(Math.toDegrees());
 //		System.out.println(Math.toDegrees(chaseAngle) + " = " + 

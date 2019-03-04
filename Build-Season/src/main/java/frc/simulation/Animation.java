@@ -72,17 +72,18 @@ public class Animation extends JPanel implements Runnable
 		// // Left to side of cargo ship
 		// model.setPosition(3.0, 1.7, 0.0);
 		// waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
-		// waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.6, 0.5));
-		// waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 0.4, 0.8));
+		// waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.3, 0.5, 0.5, false));
+		// waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 1.0, 1.2, 0.4, false));
+
 
 		// // Left to rocket ship far
 		// model.setPosition(3.0, 1.7, 0.0);
 		// waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
-		// waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.6, 0.5));
-		// waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 0.5, 0.7));
-		// waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.5, 0.5));
+		// waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.3, 0.6, 0.5, false));
+		// waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
+		// waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.5, 0.5, false));
 
-		// // Left to  rocket ship close
+		// // Left to  rocket ship close OLD
 		// model.setPosition(3.0, 1.7, 0.0);
 		// waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
 		// waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.6, 0.5));
@@ -97,12 +98,20 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 0.5, 0.9));
 		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.4, 0.5));
 
-		// // Rocket far to loading zone
-		// model.setPosition(0.7, 6.7, -60.0);
-		// waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0));
-		// waypointNav.addWaypoint(new Waypoint(1.5, 5.5, 0.0, 0.9, 0.7));
-		// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 0.5, 0.9));
-		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.4, 0.5));
+		// Rocket far to loading zone
+		model.setPosition(0.7, 6.7, -60.0);
+		waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0));
+		waypointNav.addWaypoint(new Waypoint(1.5, 5.5, 0.0, 0.7, 0.9, 0.9, true));
+		waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
+		waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
+
+		// // Loading zone to rocket close 
+		// model.setPosition(0.6, 0.4, 0.0);
+		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0));
+		// waypointNav.addWaypoint(new Waypoint(0.5, 4.9, 0.0, 0.1, 0.7));
+		// waypointNav.addWaypoint(new Waypoint(0.7, 5.1, 0.0, 0.5, 0.5));
+
+
 
 		// waypointNav.addWaypoint(new Waypoint(7.6, 3.1, 0.0, 0.4, 0.7));
 		// waypointNav.addWaypoint(new Waypoint(7.3, 3.8, 0.0, 0.4, 0.5));
@@ -153,15 +162,15 @@ public class Animation extends JPanel implements Runnable
 		double simTime = dt*1.0/1000.0/speed;
 		time += simTime;
 
-		Pose goal = waypointNav.updatePursuit(model.center);
-		Tuple out = PathFollower.driveToPoint(goal, model.center);
+		Waypoint goal = waypointNav.updatePursuit(model.center);
+		Tuple out = PathFollower.driveToPoint2(goal, model.center);
 
 		// out = Drivetrain.driveToPoint(goal, model.center);
 		// out = Drivetrain.deadReckoningCurveLeft(time);
 		// out = Drivetrain.deadReckoningStraight(time);
-		double inverted = 1;
-		double leftVoltage = out.left*0.8*12.0*inverted;
-		double rightVoltage = out.right*0.8*12.0*inverted;
+
+		double leftVoltage = out.left*12.0;
+		double rightVoltage = out.right*12.0;
 		
 //		System.out.println(leftVoltage + " " + rightVoltage);
 		

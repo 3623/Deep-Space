@@ -21,13 +21,21 @@ public class PathFollower {
 		return out;
 	}
 	
-	public static Tuple driveToPoint2(Pose goal, Pose current) {
+	public static Tuple driveToPoint2(Waypoint goal, Pose current) {
+		Pose goalCenter = new Pose(goal.x, goal.y, goal.heading);
+		Pose leftGoal = Geometry.inverseCenterLeft(goalCenter, WHEEL_BASE);
+		Pose rightGoal = Geometry.inverseCenterRight(goalCenter, WHEEL_BASE);
 		Pose left = Geometry.inverseCenterLeft(current, WHEEL_BASE);
 		Pose right = Geometry.inverseCenterRight(current, WHEEL_BASE);
-		double distLeft = Geometry.distance(goal, left);
-		double distRight = Geometry.distance(goal, right);
-		System.out.println(distLeft + " " + distRight);
-		Tuple out = new Tuple(distLeft, distRight);
+		double distLeft = Geometry.distance(leftGoal, left);
+		double distRight = Geometry.distance(rightGoal, right);
+		
+		double direction;
+		if (goal.driveBackwards) direction = -1.0;
+		else direction = 1.0;
+		double leftOut = distLeft*direction*goal.kSpeedFactor;
+		double rightOut = distRight*direction*goal.kSpeedFactor;
+		Tuple out = new Tuple(leftOut, rightOut);
 		return out;
 	}
 	

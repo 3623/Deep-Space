@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.controls.PathFollower;
+import frc.controls.Waypoint;
 import frc.controls.WaypointNavigator;
 import frc.util.Pose;
 import frc.util.Tuple;
@@ -59,10 +60,10 @@ public class Drivetrain {
 	}
 
 	public void driveToWaypoint(){
-		Pose goal = waypointNav.updatePursuit(model.center);
-		Tuple out = PathFollower.driveToPoint(goal, model.center);
-		double leftSpeed = out.left*0.8;
-		double rightSpeed = out.right*0.8;
+		Waypoint goal = waypointNav.updatePursuit(model.center);
+		Tuple out = PathFollower.driveToPoint2(goal, model.center);
+		double leftSpeed = out.left;
+		double rightSpeed = out.right;
 		directMotorControl(leftSpeed, rightSpeed);
    }
 

@@ -45,6 +45,7 @@ public class Robot extends TimedRobot {
   String autoSelected;
   final String CrossLine = "Cross Line";
   final String DriveBy = "Drive Forward and Plop";
+  final String HabLeft_RocketLeftFar = "Left to rocket ship far";
 
   /**
    * This function is run when the robot is first started up and should be
@@ -102,15 +103,24 @@ public class Robot extends TimedRobot {
 
     switch(autoSelected){
       case CrossLine:
-        drivetrain.model.setPosition(4.2, 1.3, 0.0);
-        drivetrain.waypointNav.addWaypoint(new Waypoint(4.2, 3.3, 0.0, 0.3, 0.5));
+        drivetrain.model.setPosition(3.0, 1.7, 0.0);
+        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.3, 0.5, 0.5, false));
       break;
 
       case DriveBy:
-        drivetrain.model.setPosition(4.2, 1.3, 0.0);
-        drivetrain.waypointNav.addWaypoint(new Waypoint(4.2, 1.3, 0.0));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(5.5, 2.5, 0.0, 0.4, 0.7));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(5.5, 3.5, 0.0, 0.3, 0.4));
+        drivetrain.model.setPosition(3.0, 1.7, 0.0);
+        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.3, 0.5, 0.5, false));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 1.0, 1.2, 0.4, false));
+      break;
+
+      case HabLeft_RocketLeftFar:
+        drivetrain.model.setPosition(3.0, 1.7, 0.0);
+        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.5, 0.6, 0.5, false));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.5, 0.5, false));drivetrain.waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.2, 0.5, false));
       break;
     }
 
