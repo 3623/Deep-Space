@@ -29,7 +29,7 @@ public class DrivetrainModel {
 	private static final double CIMS_PER_SIDE = 2.0; // Minicim is 0.58
 	private static final double GEAR_RATIO = 10.75/1.0; // Reduction
 	private static final double DRIVETRAIN_FRICTION = 115;
-	private static final double MAX_FORCE = 250.0;
+	private static final double MAX_FORCE = 200.0;
 	private static final double MAX_TORQUE = MAX_FORCE * WHEEL_RADIUS;
 
 	
@@ -126,10 +126,10 @@ public class DrivetrainModel {
 		double movementY = -movement*cosine;
 		center.update(movementX, movementY,-theta);
 		
-		//// Debug statements
-		System.out.println("X: " + center.x + ", Y: " + center.y + ", Heading: " + center.heading);
-		System.out.println("MA: " + movementAngle + ", Rad ICC: " + radius);
-		System.out.println("Movement X: " + movementX + ", Movement Y: " + movementY);
+		// //// Debug statements
+		// System.out.println("X: " + center.x + ", Y: " + center.y + ", Heading: " + center.heading);
+		// System.out.println("MA: " + movementAngle + ", Rad ICC: " + radius);
+		// System.out.println("Movement X: " + movementX + ", Movement Y: " + movementY);
 	}
 
 	/** 
@@ -229,7 +229,7 @@ public class DrivetrainModel {
 			else if (outputVoltage < minVoltage) limitedVoltage = minVoltage;
 			else limitedVoltage = outputVoltage;
 
-			System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
+			// System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
 
 			
 			return limitedVoltage;

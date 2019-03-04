@@ -62,8 +62,9 @@ public class Drivetrain {
 	public void driveToWaypoint(){
 		Waypoint goal = waypointNav.updatePursuit(model.center);
 		Tuple out = PathFollower.driveToPoint2(goal, model.center);
-		double leftSpeed = out.left;
-		double rightSpeed = out.right;
+		Tuple limitedOut = model.limitAcceleration(out);
+		double leftSpeed = limitedOut.left;
+		double rightSpeed = limitedOut.right;
 		directMotorControl(leftSpeed, rightSpeed);
    }
 
