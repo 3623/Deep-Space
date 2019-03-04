@@ -134,6 +134,12 @@ public class Robot extends TimedRobot {
       drivetrain.driveToWaypoint();
   }
 
+  @Override
+  public void teleopInit() {
+      elevator.enable();
+  }
+
+
   /**
    * This function is called periodically during operator control.
    */
@@ -157,9 +163,9 @@ public class Robot extends TimedRobot {
     else grabber.defaultState();
 
     // Elevator
-    if (operatorController.getPOV() == 180) elevator.setGoal(0.0);
-    else if (operatorController.getPOV() == 90) elevator.setGoal(28.0);
-    else if (operatorController.getPOV() == 0) elevator.setGoal(56.0);
+    if (operatorController.getPOV() == 180) elevator.setGoal(19.0);
+    else if (operatorController.getPOV() == 90) elevator.setGoal(56.0);
+    else if (operatorController.getPOV() == 0) elevator.setGoal(75.0);
 
     // Turret
 

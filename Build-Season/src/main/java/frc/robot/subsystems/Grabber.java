@@ -20,7 +20,7 @@ public class Grabber {
     
     DigitalInput hatchSwitch = new DigitalInput(8);
 
-    Boolean isPlacing;
+    Boolean isPlacing = false;
 
     public void intake(){
         extensionSolenoid.set(true);

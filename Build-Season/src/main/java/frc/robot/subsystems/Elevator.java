@@ -9,24 +9,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Elevator{
-    private Spark bottomMotors = new Spark(2);
-    private Spark topMotors = new Spark(3);
-    private  SpeedControllerGroup elevatorMotors = new SpeedControllerGroup(bottomMotors, topMotors);
+    private  Spark elevatorMotors;
 
-    private Encoder elevatorEncoder = new Encoder(4, 5, false, Encoder.EncodingType.k4X);
-    private double DISTANCE_PER_PULSE = (Math.PI*1*2)/2048.0;
+    private Encoder elevatorEncoder;
+    private final double DISTANCE_PER_PULSE = Math.PI*1.125*2.0/2024.0;
+    private final double OFFSET = 19.0;
     private DigitalInput bottomLimit = new DigitalInput(6);
-    private double BOTTOM_SOFT_LIMIT = 0.5;
+    private final double BOTTOM_SOFT_LIMIT = 19.5;
     private DigitalInput topLimit = new DigitalInput(7);
-    private double TOP_SOFT_LIMIT = 58.0;
+    private final double TOP_SOFT_LIMIT = 78.0;
 
     private double goal;
-    private double MAX_GOAL = 56.0;
-    private double MIN_GOAL = 0.0;
+    private final double MAX_GOAL = 77.75
+    ;
+    private final double MIN_GOAL = 19.5;
 
-    private double kP = 1.0/56.0;
-    private double kD = 0.2/56.0;
-    private double weightCompensation = 0.06;
+    private final double kP = 0.9/60.0;
+    private final double kD = 0.3/60.0;
+    private final double weightCompensation = 0.06;
 
     private Boolean isStopped;
 
@@ -35,22 +35,29 @@ public class Elevator{
     private double output;
     private double checkedOutput;
 
+    private Boolean isInverted = false;
+
     public Elevator(){
-        elevatorEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        elevatorMotors  = new Spark(2);
+        elevatorMotors.setInverted(isInverted);
+
+        elevatorEncoder = new Encoder(4, 5, isInverted, Encoder.EncodingType.k4X);
+        // elevatorEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
         goal = 0.0;
     }
 
     public void update(){
+        double output = outputPD();
         if (!isStopped){
-            elevatorMotors.set(outputPD());
+            elevatorMotors.set(output);
         }
         zeroEncoder();
         monitor();
     }
 
     private double outputPD(){
-        error = goal - elevatorEncoder.getDistance();
-        errorD = elevatorEncoder.getRate();
+        error = goal - elevatorPosition();
+        errorD = elevatorEncoder.getRate()*DISTANCE_PER_PULSE;
         output = (error*kP) + (errorD*kD);
         checkedOutput = checkLimit(output) + weightCompensation;
         return checkedOutput;
@@ -76,7 +83,7 @@ public class Elevator{
     }
 
     private void zeroEncoder(){
-        if (atBottomLimit()){
+        if (!bottomLimit.get()){
             elevatorEncoder.reset();
         }
     }
@@ -94,21 +101,27 @@ public class Elevator{
     }
 
     private Boolean atBottomLimit(){
-        return (bottomLimit.get() || elevatorEncoder.getDistance() < BOTTOM_SOFT_LIMIT);
+        return (!bottomLimit.get() || elevatorPosition() < BOTTOM_SOFT_LIMIT);
     }
 
     private Boolean atTopLimit(){
-        return (topLimit.get() || elevatorEncoder.getDistance() > TOP_SOFT_LIMIT);
+        return (!topLimit.get() || elevatorPosition() > TOP_SOFT_LIMIT);
+    }
+
+    private double elevatorPosition(){
+        return elevatorEncoder.getDistance()*DISTANCE_PER_PULSE+OFFSET;
     }
 
     private void monitor(){
         SmartDashboard.putNumber("Goal", goal);
-        SmartDashboard.putNumber("Position", elevatorEncoder.getDistance());
+        SmartDashboard.putNumber("Position", elevatorPosition());
         SmartDashboard.putNumber("Error", error);
         SmartDashboard.putNumber("P Val", error*kP);
         SmartDashboard.putNumber("D Val", errorD*kD);
         SmartDashboard.putNumber("Checked Output", checkedOutput);
         SmartDashboard.putBoolean("At Bottom", atBottomLimit());
         SmartDashboard.putBoolean("At Top", atTopLimit());
+        System.out.println(DISTANCE_PER_PULSE);
+
     }
 }
