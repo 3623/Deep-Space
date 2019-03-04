@@ -18,9 +18,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DrivetrainModel {
 
-	private final double DRIVETRAIN_MASS = 63.5; // kg
-	private final double WHEEL_BASE = 0.67; // meters
-	private final double CENTER_MASS = 0.381; // from left wheel
+	private static final double DRIVETRAIN_MASS = 63.5; // kg
+	private static final double WHEEL_BASE = 0.67; // meters
+	private static final double CENTER_MASS = 0.335; // from left wheel
 	private Boolean COAST_MODE = false; 
 	public Pose center;
 	
@@ -35,10 +35,8 @@ public class DrivetrainModel {
 	
 	public DrivetrainModel() {
 		center = new Pose(0.0, 0.0, 0.0); // Initial robot position
-		left = new DrivetrainSide(Geometry.inverseCenterLeft(center, WHEEL_BASE),
-									DRIVETRAIN_MASS/2);
-		right = new DrivetrainSide(Geometry.inverseCenterRight(center, WHEEL_BASE),
-									DRIVETRAIN_MASS/2);	
+		left = new DrivetrainSide();
+		right = new DrivetrainSide();	
 		
 		if (COAST_MODE) {
 			left.coast = true;
@@ -57,8 +55,6 @@ public class DrivetrainModel {
 	 */
 	public void setPosition(double x, double y, double r){
 		center = new Pose(x, y, r);
-		left.position = Geometry.inverseCenterLeft(center, WHEEL_BASE);
-		right.position = Geometry.inverseCenterRight(center, WHEEL_BASE);
 		zero();
 	}
 
@@ -90,8 +86,6 @@ public class DrivetrainModel {
 	 */
 	public void updateHeading (double heading){
 		center.heading = heading;
-		left.position = Geometry.inverseCenterLeft(center, WHEEL_BASE);
-		right.position = Geometry.inverseCenterRight(center, WHEEL_BASE);
 	}
 
 	/**
@@ -118,35 +112,20 @@ public class DrivetrainModel {
 		double sinAlpha = Math.sin(alpha);
 
 		double movementAngle = center.heading + theta;
-		double leftMovement = Geometry.sideFromLawOfSines(radius+(WHEEL_BASE/2), sinAlpha, sinTheta);
-		double rightMovement = Geometry.sideFromLawOfSines(radius-(WHEEL_BASE/2), sinAlpha, sinTheta);
+		double movement = Geometry.sideFromLawOfSines(radius, sinAlpha, sinTheta);
 		
 		if (omega == 0.0) {
-			leftMovement = -left.velocity * time;
-			rightMovement = -right.velocity * time;
+			movement = -(left.velocity+right.velocity)/2.0 * time;
 		}
 		double sine = Math.sin(movementAngle);
 		double cosine = Math.cos(movementAngle);
-		double leftMovementX = -leftMovement*sine;
-		double leftMovementY = -leftMovement*cosine;
-		left.position.update(leftMovementX, leftMovementY);
-		double rightMovementX = -rightMovement*sine;
-		double rightMovementY = -rightMovement*cosine;
-		right.position.update(rightMovementX, rightMovementY);
-		center = Geometry.center(left.position, right.position);
-		left.position = Geometry.inverseCenterLeft(center, WHEEL_BASE);
-		right.position = Geometry.inverseCenterRight(center, WHEEL_BASE);
+		double movementX = -movement*sine;
+		double movementY = -movement*cosine;
+		center.update(movement, movementY);
 		
 		//// Debug statements
 		// System.out.println(center.x + ", " + center.y + ", " + center.heading);
-		// System.out.println("LV: " + left.velocity + "RV: " + right.velocity);
-		// System.out.println(left.velocity + ", " + right.velocity);
-		// System.out.println("LP: " + left.position.x + ", " + left.position.y);
-		// System.out.println("RP: " + right.position.x + ", " + right.position.y);
 		// System.out.println("MA: " + movementAngle + "Rad ICC: " + radius);
-		// System.out.println("RM: " + rightMovement + " LM: " + leftMovement);
-		// System.out.println(leftMovementX + "====" + leftMovementY);
-		// System.out.println(rightMovementX + "====" + rightMovementY);
 	}
 
 	/** 
@@ -165,18 +144,16 @@ public class DrivetrainModel {
 	
 
 	private static class DrivetrainSide{
-		Pose position;
 		double velocity;
 		double acceleration;
 		private double psuedoMass;
 		private Boolean coast; 
 		private CIMMotor cim = new CIMMotor();
 				
-		public DrivetrainSide(Pose position, double mass) {
-			this.position = position;
+		public DrivetrainSide() {
 			velocity = 0.0;
 			acceleration = 0.0;
-			psuedoMass = mass;
+			psuedoMass = DRIVETRAIN_MASS/2;
 			coast = false;
 		}
 
