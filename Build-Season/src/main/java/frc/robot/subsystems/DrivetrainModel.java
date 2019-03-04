@@ -73,7 +73,8 @@ public class DrivetrainModel {
 	}
 
 	/**
-	 * Sets the speed of each drivetrain side to a known value. For using encoders
+	 * Sets the speed of each drivetrain side to a known value and calculates
+	 * acceleration. For using encoders
 	 * @param left speed, in meters/sec
 	 * @param right speed, in meters/sec
 	 */
@@ -148,6 +149,11 @@ public class DrivetrainModel {
 		// System.out.println(rightMovementX + "====" + rightMovementY);
 	}
 
+	/** 
+	 * Limits acceleration using the models velocity and information about motors
+	 * @param unchecked output voltage
+	 * @return checked voltage, limited to acceleration of MAX_TORQUE constant
+	 */
 	public Tuple limitAcceleration(double leftOut, double rightOut){
 		double leftVoltage = leftOut*12.0;
 		double rightVoltage = leftOut*12.0;
@@ -155,10 +161,6 @@ public class DrivetrainModel {
 		double rightVoltageChecked = right.limitAcceleration(rightVoltage);
 		Tuple checkedOutput = new Tuple(leftVoltageChecked, rightVoltageChecked);
 		return checkedOutput;
-	}
-
-	public void monitor(){
-
 	}
 	
 
@@ -178,13 +180,23 @@ public class DrivetrainModel {
 			coast = false;
 		}
 
-		public void updateSpeed(double speed, double time){
+		/**
+		 * Sets the speed of each drivetrain side to a known value and calculates
+		 * acceleration. For using encoders
+		 * @param speed, in meters/sec
+		 */
+		protected void updateSpeed(double speed, double time){
 			double deltaVelocity = this.velocity - speed;
 			this.acceleration = deltaVelocity/time;
 			this.velocity = speed;
 		}
 		
-		public void updateVoltage(double voltage, double time) {
+		/**
+		 * Updates velocity and acceleration of each side of the drivetrain using motor curves
+		 * @param voltage
+		 * @param the elapsedtime between updates, in seconds
+		 */
+		protected void updateVoltage(double voltage, double time) {
 			double motorSpeed = this.wheelSpeedToMotorSpeed(this.velocity);
 			// double newAcceleration = this.wheelAcceleration(voltage, motorSpeed);
 			
@@ -206,6 +218,11 @@ public class DrivetrainModel {
 			
 		}
 
+		/** 
+		 * Limits acceleration using the models velocity and information about motors
+		 * @param unchecked output voltage
+		 * @return checked voltage, limited to acceleration of MAX_TORQUE constant
+		 */
 		protected double limitAcceleration(double outputVoltage){
 			double motorSpeed = this.wheelSpeedToMotorSpeed(this.velocity);
 			double maxVoltage = CIMMotor.inverseVoltage(MAX_TORQUE, motorSpeed)/CIMS_PER_SIDE/GEAR_RATIO;
@@ -231,6 +248,11 @@ public class DrivetrainModel {
 			return motorRevs;
 		}
 		
+		/**
+		 * Models friction as a constant
+		 * @param Ideal output force of the drivetrain, in newtons
+		 * @param Speed of the drivetrain, to set direction of friction
+		 */
 		private double frictionModel(double force, double speed) {
 			double netForce;
 			if (speed == 0.0) {
