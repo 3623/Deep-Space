@@ -53,8 +53,10 @@ public class DrivetrainModel {
 	 * @param y location (forwards backwards, in meters
 	 * @param heading, in degrees
 	 */
-	public void setPosition(double x, double y, double r){
-		center = new Pose(x, y, r);
+	public void setPosition(double x, double y, double heading){
+		center.x= x;
+		center.y= y;
+		center.heading = Math.toRadians(heading);
 		zero();
 	}
 
@@ -85,7 +87,7 @@ public class DrivetrainModel {
 	 * @param angle in degrees
 	 */
 	public void updateHeading (double heading){
-		center.heading = heading;
+		center.heading = Math.toRadians(heading);
 	}
 
 	/**
@@ -121,11 +123,12 @@ public class DrivetrainModel {
 		double cosine = Math.cos(movementAngle);
 		double movementX = -movement*sine;
 		double movementY = -movement*cosine;
-		center.update(movement, movementY);
+		center.update(movementX, movementY,-theta);
 		
 		//// Debug statements
-		// System.out.println(center.x + ", " + center.y + ", " + center.heading);
-		// System.out.println("MA: " + movementAngle + "Rad ICC: " + radius);
+		System.out.println("X: " + center.x + ", Y: " + center.y + ", Heading: " + center.heading);
+		System.out.println("MA: " + movementAngle + ", Rad ICC: " + radius);
+		System.out.println("Movement X: " + movementX + ", Movement Y: " + movementY);
 	}
 
 	/** 

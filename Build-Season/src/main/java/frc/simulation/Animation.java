@@ -28,18 +28,18 @@ public class Animation extends JPanel implements Runnable
 	protected Image image;        // off-screen image
 	protected Graphics offScreen; // off-screen graphics
 	protected Image field, robot;
-	protected double speed;
-	protected double scale, offset; // pixels per meter
+	protected final double speed = 1.0;
+	protected double scale;
+	protected final int offsetX, offsetY; // pixels per meter
 	protected int robotWidth, robotHeight;
 
-	protected int dt;          // interval between frames in millisec
+	protected int dt = 20;          // interval between frames in millisec
 	private DrivetrainModel model;
 	private frc.controls.WaypointNavigator waypointNav;
 
-	protected double time;
+	protected double time = 0.0;
 
 	public Animation() throws IOException {
-		//    field = Toolkit.getDefaultToolkit().getImage("field.png");
 		field = ImageIO.read(new File("field-blue.png"));
 		robot = ImageIO.read(new File("robot-blue.png"));
 
@@ -49,19 +49,16 @@ public class Animation extends JPanel implements Runnable
 		robotWidth = robot.getWidth(this);
 		robotHeight = robot.getHeight(this);
 		
-		setSize ( width, height );
+		setSize(width, height);
 		scale = 65;
-		offset = 10.0;
+		offsetX = 5;
+		offsetY = 15;
 
-		speed = 1.0;
 		time = 0;
 
-		// Set the time interval between frames in millisec
-		dt = 10;
-
 		// Set the initial values for x and y
-		x = width / 2;
-		y = height;
+		x = 0 + offsetX;
+		y = height-offsetY;
 		
 		model = new DrivetrainModel();
 		waypointNav = new WaypointNavigator();
@@ -71,19 +68,19 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(2.8, 1.7, 0.0));
 		// waypointNav.addWaypoint(new Waypoint(2.8, 3.5, 0.0, 0.0, 0.5, 0.5, false));
 		
-		// Left to side of cargo ship
-		model.setPosition(2.85, 1.7, 0.0);
-		waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
-		waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
-		waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 1.0, 1.2, 0.4, false));
-
-
-		// // Left to rocket ship far
+		// // Left to side of cargo ship
 		// model.setPosition(2.85, 1.7, 0.0);
 		// waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
-		// waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.6, 0.5, false));
-		// waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
-		// waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.5, 0.5, false));
+		// waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
+		// waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 1.0, 1.2, 0.4, false));
+
+
+		// Left to rocket ship far
+		model.setPosition(2.85, 1.7, 0.0);
+		waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
+		waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.6, 0.5, false));
+		waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
+		waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.5, 0.5, false));
 
 		// // Left to  rocket ship close OLD
 		// model.setPosition(3.0, 1.7, 0.0);
@@ -113,45 +110,6 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(0.5, 4.9, 0.0, 0.1, 0.7));
 		// waypointNav.addWaypoint(new Waypoint(0.7, 5.1, 0.0, 0.5, 0.5));
 
-
-
-		// waypointNav.addWaypoint(new Waypoint(7.6, 3.1, 0.0, 0.4, 0.7));
-		// waypointNav.addWaypoint(new Waypoint(7.3, 3.8, 0.0, 0.4, 0.5));
-
-		
-			// // Poofs Iconic Gear then Shoot
-			// model.setPosition(2.2, 0.4, 0.0);
-			// waypointNav = new WaypointNavigator();
-			// waypointNav.addWaypoint(new Waypoint(2.2, 0.0, -90.0));
-			// waypointNav.addWaypoint(new Waypoint(2.2, 2.5, -90.0, 0.6, 0.7));
-			// waypointNav.addWaypoint(new Waypoint(3, 3.1, -90.0, 0.2, 0.6));
-			// waypointNav.addWaypoint(new Waypoint(0.3, 4.1, -90.0, 1.2, 0.7));
-			// waypointNav.addWaypoint(new Waypoint(0.4, 2.8, -90.0, 0.75, 0.6));
-			
-			//  //  Poofs Iconic 2018 auto
-			//  model.setPosition(1.9, 0.4, 0.0);
-			//  waypointNav = new WaypointNavigator();
-			//  waypointNav.addWaypoint(new Waypoint(1.3, 0.0, -90.0));
-			//  waypointNav.addWaypoint(new Waypoint(1.3, 5.3, -90.0, 0.7, 0.7));
-			//  waypointNav.addWaypoint(new Waypoint(7, 5.3, -90.0, 0.6, 0.7));
-			//  waypointNav.addWaypoint(new Waypoint(7, 5.9, -90.0, 0.6, 0.4));
-			
-			// // S Curve that we would have used if we had an actual drivetrain in 2018
-			// model = new DrivetrainModel(4.2, 0.4, 0.0);
-			// waypointNav = new WaypointNavigator();
-			// waypointNav.addWaypoint(new Waypoint(4.2, 0.4, 0.0));
-			// waypointNav.addWaypoint(new Waypoint(6., 2.3, 0.0, 0.4, 0.6));
-			// waypointNav.addWaypoint(new Waypoint(5.94, 2.6, 0.0, 0.3, 0.6));
-			
-			// // Square with initial correction
-			// model = new DrivetrainModel(6.5, 0.4, 0.0);
-			// waypointNav = new WaypointNavigator();
-			// waypointNav.addWaypoint(new Waypoint(7.0, 0.4, 0.0));
-			// waypointNav.addWaypoint(new Waypoint(7.0, 5.4, 0.0, 0.6, 0.7));
-			// waypointNav.addWaypoint(new Waypoint(1.0, 5.4, 0.0, 0.1, 0.7));
-			// waypointNav.addWaypoint(new Waypoint(1.0, 0.45, 0.0, 0.6, 0.7));
-			// waypointNav.addWaypoint(new Waypoint(6.0, 0.45, 0.0, 0.6, 0.7));
-
 			
 		// Create and start the thread
 		sim = new Thread ( this );
@@ -174,10 +132,10 @@ public class Animation extends JPanel implements Runnable
 		double leftVoltage = out.left*12.0;
 		double rightVoltage = out.right*12.0;
 		
-		System.out.println(leftVoltage + " " + rightVoltage);
+		System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
 		
-		// leftVoltage = 12.0;
-		// rightVoltage = 0.0;
+		// leftVoltage = 4.0;
+		// rightVoltage = 3.0;
 		model.updateVoltage(leftVoltage, rightVoltage, simTime);
 		model.updatePosition(simTime);
 
@@ -193,21 +151,17 @@ public class Animation extends JPanel implements Runnable
 		offScreen.drawImage(field, 0, 0, this);
 
 		// Draw robot
-		double xPixels = model.center.x * scale + offset;
-		double yPixels = model.center.y * scale + offset;
-		int xCoord = (int) Math.round(xPixels)-(robotWidth/2);
-		int yCoord = y-(int) Math.round(yPixels)-(robotHeight/2);
+		int xCoord = x + (int) Math.round(model.center.x * scale)-(robotWidth/2);
+		int yCoord = y - (int) Math.round(model.center.y * scale)-(robotHeight/2);
 		AffineTransform tx = AffineTransform.getRotateInstance(model.center.heading, robotWidth/2, robotHeight/2);
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 
 		// Draw Pursuit Point
-		xPixels = goal.x * scale + offset;
-		yPixels = goal.y * scale + offset;
-		xCoord = (int) Math.round(xPixels);
-		yCoord = y-(int) Math.round(yPixels);
+		xCoord = x + (int) Math.round(goal.x * scale);
+		yCoord = y - (int) Math.round(goal.y * scale);
 		offScreen.setColor ( Color.yellow );
-		offScreen.drawOval(xCoord, yCoord, 4, 4);
+		offScreen.drawOval(xCoord, yCoord, 6, 6);
 
 		// Copy the off-screen image to the screen
 		g.drawImage ( image, 0, 0, this );     

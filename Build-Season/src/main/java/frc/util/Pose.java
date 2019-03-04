@@ -38,4 +38,10 @@ public class Pose {
 		this.x += deltaX;
 		this.y += deltaY;
 	}
+
+	public void update(double deltaX, double deltaY, double deltaR) {
+		this.x += deltaX;
+		this.y += deltaY;
+		this.heading += deltaR;
+	}
 }
