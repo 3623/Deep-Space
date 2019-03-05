@@ -5,7 +5,7 @@ import frc.util.Pose;
 public class Waypoint {
 //	public final Pose point;
 	protected final double kLookAhead;
-	protected final double kSpeedFactor;
+	protected double kSpeedFactor;
 	protected final double kRadius;
 	public double x, y, r, heading;
 	protected final Boolean driveBackwards;

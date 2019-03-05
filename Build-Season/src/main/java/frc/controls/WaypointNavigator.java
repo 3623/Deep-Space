@@ -15,6 +15,20 @@ public class WaypointNavigator {
 	private final double kRadiusDefault = 0.6;
 	private double kRadius = kRadiusDefault;
 
+	private Boolean isFinished = false;
+
+	public Boolean getIsFinished(){
+		return isFinished;
+	}
+
+	public void clearWaypoints(){
+		waypoints.clear();
+		index = 1;
+	}	
+
+	public Waypoint getCurrentWaypoint(){
+		return curWaypoint;
+	}
 	
 	public void addWaypoint(Waypoint curWaypoint) {
 		waypoints.add(curWaypoint);
@@ -23,11 +37,13 @@ public class WaypointNavigator {
 	public Waypoint updatePursuit(Pose position) {
 		updateWaypoint();
 		if (atWaypoint(curWaypoint, position, kRadius)) {
-			if (index != waypoints.size()-1){
-				index++;
-				updateWaypoint();
+			if (index == waypoints.size()-1){
+				isFinished = true;
+				curWaypoint.kSpeedFactor = 0.0;
 			}
 			else{
+				index++;
+				updateWaypoint();
 			}
 		}
 		
@@ -50,7 +66,8 @@ public class WaypointNavigator {
 		double chaseRelativeAngle = Math.atan2(xChase-position.x, yChase-position.y);
 		double chaseAngle = pathAngle + (chaseRelativeAngle) - position.r;
 		
-		Waypoint pursuit = new Waypoint(xChase, yChase, Math.toDegrees(chaseAngle), curWaypoint.kSpeedFactor, curWaypoint.kLookAhead, curWaypoint.kRadius, curWaypoint.driveBackwards);
+		double isDriving = !isFinished ? 1 : 0;
+		Waypoint pursuit = new Waypoint(xChase, yChase, Math.toDegrees(chaseAngle), curWaypoint.kSpeedFactor*isDriving, curWaypoint.kLookAhead, curWaypoint.kRadius, curWaypoint.driveBackwards);
 		
 //		System.out.println(Math.toDegrees());
 //		System.out.println(Math.toDegrees(chaseAngle) + " = " + 

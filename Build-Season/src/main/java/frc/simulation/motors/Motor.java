@@ -20,7 +20,7 @@ abstract public class Motor {
 	// Init value function
 	protected void calculateSlopes () {
 		kSlopeTorque = -STALL_TORQUE / FREE_SPEED;
-		kSlopeCurrent = - STALL_CURRENT / FREE_CURRENT;
+		kSlopeCurrent = -(STALL_CURRENT - FREE_CURRENT) / FREE_SPEED;
 	}
 
 	public static double outputTorque (double voltage, double speed) {
@@ -32,6 +32,10 @@ abstract public class Motor {
 	public static double inverseVoltage (double torque, double speed) {
 		return (torque - (speed*kSlopeTorque))*MAX_VOLTAGE/STALL_TORQUE;
 		// Just solved for voltage using outputTorque equation
+	}
+
+	public static double inverseCurrent (double current, double speed) {
+		return (current - (speed*kSlopeCurrent))*MAX_VOLTAGE/STALL_CURRENT;
 	}
 	
 	
