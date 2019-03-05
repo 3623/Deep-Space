@@ -6,10 +6,11 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.simulation.motors.A775Pro;
 
 
 public class Elevator{
-    private  Spark elevatorMotors;
+    private Spark elevatorMotors;
 
     private Encoder elevatorEncoder;
     private final double DISTANCE_PER_PULSE = Math.PI*1.125*2.0/2024.0;
@@ -26,7 +27,7 @@ public class Elevator{
 
     private final double kP = 0.9/60.0;
     private final double kD = 0.3/60.0;
-    private final double weightCompensation = 0.06;
+    private final double weightCompensation = 0.1;
 
     private Boolean isStopped;
 
@@ -34,6 +35,12 @@ public class Elevator{
     private double errorD;
     private double output;
     private double checkedOutput;
+
+    private A775Pro  a775Pro = new A775Pro();
+    private static final double MAX_CURRENT = 30.0;
+    private static final double MOTORS_PER_SIDE = 4.0;
+    private static final double GEAR_RATIO = 20.8;
+
 
     private Boolean isInverted = false;
 
@@ -48,8 +55,9 @@ public class Elevator{
 
     public void update(){
         double output = outputPD();
+        double limitedOutput = limitAcceleration(12.0*output)/12.0;
         if (!isStopped){
-            elevatorMotors.set(output);
+            elevatorMotors.set(limitedOutput);
         }
         zeroEncoder();
         monitor();
@@ -57,10 +65,32 @@ public class Elevator{
 
     private double outputPD(){
         error = goal - elevatorPosition();
-        errorD = elevatorEncoder.getRate()*DISTANCE_PER_PULSE;
-        output = (error*kP) + (errorD*kD);
+        errorD = elevatorSpeed();
+        output = (error*kP) - (errorD*kD);
         checkedOutput = checkLimit(output) + weightCompensation;
         return checkedOutput;
+    }
+
+    /** 
+     * Limits acceleration using the models velocity and information about motors
+     * @param unchecked output voltage
+     * @return checked voltage, limited to acceleration of MAX_TORQUE constant
+     */
+    protected double limitAcceleration(double outputVoltage){
+        double motorSpeed = elevatorEncoder.getRate()/2024.0*GEAR_RATIO;
+        double maxVoltage = A775Pro.inverseCurrent(MAX_CURRENT, motorSpeed);
+        double minVoltage = A775Pro.inverseCurrent(-MAX_CURRENT, motorSpeed);
+
+
+        double limitedVoltage;
+        if (outputVoltage > maxVoltage) limitedVoltage = maxVoltage;
+        else if (outputVoltage < minVoltage) limitedVoltage = minVoltage;
+        else limitedVoltage = outputVoltage;
+
+        // System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
+
+        
+        return limitedVoltage;
     }
 
     public void setGoal(double goal){
@@ -110,6 +140,10 @@ public class Elevator{
 
     private double elevatorPosition(){
         return elevatorEncoder.getDistance()*DISTANCE_PER_PULSE+OFFSET;
+    }
+
+    private double elevatorSpeed(){
+        return elevatorEncoder.getRate()*DISTANCE_PER_PULSE;
     }
 
     private void monitor(){
