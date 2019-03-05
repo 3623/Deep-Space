@@ -55,8 +55,9 @@ public class Elevator{
 
     public void update(){
         double output = outputPD();
+        double limitedOutput = limitAcceleration(12.0*output)/12.0;
         if (!isStopped){
-            elevatorMotors.set(output);
+            elevatorMotors.set(limitedOutput);
         }
         zeroEncoder();
         monitor();
