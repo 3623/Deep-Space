@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
-// import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Encoder;
@@ -21,7 +21,7 @@ public class Drivetrain {
 
 	Encoder encLeft, encRight;
 
-	// AHRS navx; 
+	AHRS navx; 
 
 	public DrivetrainModel model;
 	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS*Math.PI*2/2048.0;
@@ -35,12 +35,12 @@ public class Drivetrain {
 		leftMotors = new Spark(1);
 		drivetrain = new DifferentialDrive(leftMotors, rightMotors);
 
-		encLeft = new Encoder(0, 1, true, Encoder.EncodingType.k4X);
-		encRight = new Encoder(2, 3, true, Encoder.EncodingType.k4X);
+		encLeft = new Encoder(0, 1, true, Encoder.EncodingType.k2X);
+		encRight = new Encoder(2, 3, true, Encoder.EncodingType.k2X);
 		encLeft.setDistancePerPulse(DISTANCE_PER_PULSE);
 		encRight.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-		// navx = new AHRS(SerialPort.Port.kMXP);
+		navx = new AHRS(SerialPort.Port.kMXP);
 
 		model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);
@@ -56,6 +56,7 @@ public class Drivetrain {
 
 	public void updatePosition(double time) {
 		model.updateSpeed(encLeft.getRate(), encRight.getRate(), time);
+		model.updateHeading(navx.getAngle());
 		model.updatePosition(time);
 	}
 
@@ -71,7 +72,7 @@ public class Drivetrain {
    	public void zeroSensors() {
    		encLeft.reset();
 		encRight.reset();
-		// navx.reset();   	
+		navx.reset();   	
 	}
     
    	public void openLoopControl(double xSpeed, double rSpeed, Boolean quickTurn) {
@@ -95,7 +96,7 @@ public class Drivetrain {
 		SmartDashboard.putNumber("Rights Encoder", encRight.getDistance());
 		SmartDashboard.putNumber("model X", model.center.x);
 		SmartDashboard.putNumber("model Y", model.center.y);
-		SmartDashboard.putNumber("Heading", model.center.heading*180/Math.PI);
+		SmartDashboard.putNumber("Heading", navx.getAngle());
 	}
     
     public static void main(String[] args) throws IOException{}

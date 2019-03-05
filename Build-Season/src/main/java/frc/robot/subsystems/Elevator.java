@@ -41,7 +41,7 @@ public class Elevator{
         elevatorMotors  = new Spark(2);
         elevatorMotors.setInverted(isInverted);
 
-        elevatorEncoder = new Encoder(4, 5, isInverted, Encoder.EncodingType.k4X);
+        elevatorEncoder = new Encoder(4, 5, isInverted, Encoder.EncodingType.k1X);
         // elevatorEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
         goal = 0.0;
     }

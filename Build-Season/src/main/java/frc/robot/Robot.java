@@ -65,8 +65,9 @@ public class Robot extends TimedRobot {
     operatorController = new XboxController(2);
 
     autoChooser = new SendableChooser<String>();
-    autoChooser.addDefault(CrossLine, CrossLine);
-    autoChooser.addObject(DriveBy, DriveBy);
+    autoChooser.setDefaultOption(CrossLine, CrossLine);
+    autoChooser.addOption(DriveBy, DriveBy);
+    autoChooser.addOption(HabLeft_RocketLeftFar, HabLeft_RocketLeftFar);
     SmartDashboard.putData("Auto choices", autoChooser);
 
     drivetrain.zeroSensors();
@@ -99,6 +100,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    drivetrain.zeroSensors();
     autoSelected = autoChooser.getSelected();
 
     switch(autoSelected){
@@ -116,11 +118,11 @@ public class Robot extends TimedRobot {
       break;
 
       case HabLeft_RocketLeftFar:
-        drivetrain.model.setPosition(3.0, 1.7, 0.0);
-        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.5, 0.6, 0.5, false));
+        drivetrain.model.setPosition(2.85, 1.7, 0.0);
+        drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
         drivetrain.waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.5, 0.5, false));drivetrain.waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.2, 0.5, false));
+        drivetrain.waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.5, 0.5, false));
       break;
     }
 
