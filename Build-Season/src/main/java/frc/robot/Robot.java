@@ -174,10 +174,10 @@ public class Robot extends TimedRobot {
     else if (operatorController.getPOV() == 0) elevator.setGoal(75.0);
 
     // Turret
-    if (operatorController.getX(Hand.kLeft) > 0.1 || operatorController.getX(Hand.kLeft) < 0.1){
-      turret.manualControl(operatorController.getX(Hand.kLeft), false);
-    }
-    else turret.manualControl(0.0, false);
+    // Manual Control w/o Potentiometer
+    if (operatorController.getBumper(Hand.kLeft)) turret.manualControl(1, false);
+    else if (operatorController.getBumper(Hand.kRight)) turret.manualControl(-1, false);
+    else turret.stop();  
   }
 
   @Override

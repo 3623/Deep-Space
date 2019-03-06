@@ -72,11 +72,12 @@ public class Turret {
         
     }
 
-    public void manualControl(double turnSpeedDirection, Boolean inverted){
+    public void manualControl(int direction, Boolean inverted){
         if (inverted){
-            turnSpeedDirection = turnSpeedDirection * -1;
+            direction = direction * -1;
         }
-        turretMotor.set(turnSpeedDirection);
+        direction/=2;
+        turretMotor.set(direction);
     }
 
 
