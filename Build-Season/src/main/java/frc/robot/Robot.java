@@ -17,9 +17,11 @@ import frc.controls.Waypoint;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.Turret;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 
 /**
@@ -35,6 +37,7 @@ public class Robot extends TimedRobot {
   Drivetrain drivetrain;	 
   Grabber grabber;
   Elevator elevator;
+  Turret turret;
 
 	Joystick driverController, steeringWheel;
   XboxController operatorController;
@@ -59,6 +62,7 @@ public class Robot extends TimedRobot {
     drivetrain = new Drivetrain();	 
     grabber = new Grabber();
     elevator = new Elevator();
+    turret = new Turret();
   
     driverController = new Joystick(0);
     steeringWheel = new Joystick(1);
@@ -170,7 +174,10 @@ public class Robot extends TimedRobot {
     else if (operatorController.getPOV() == 0) elevator.setGoal(75.0);
 
     // Turret
-
+    if (operatorController.getX(Hand.kLeft) > 0.1 || operatorController.getX(Hand.kLeft) < 0.1){
+      turret.manualControl(operatorController.getX(Hand.kLeft), false);
+    }
+    else turret.manualControl(0.0, false);
   }
 
   @Override

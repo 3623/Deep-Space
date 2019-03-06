@@ -72,6 +72,13 @@ public class Turret {
         
     }
 
+    public void manualControl(double turnSpeedDirection, Boolean inverted){
+        if (inverted){
+            turnSpeedDirection = turnSpeedDirection * -1;
+        }
+        turretMotor.set(turnSpeedDirection);
+    }
+
 
     // public void turnToAngle(double desiredAngle, double currentAngle){
     //     double error = desiredAngle - currentAngle;

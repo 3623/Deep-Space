@@ -74,7 +74,7 @@ public class Animation extends JPanel implements Runnable
 		waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
 		waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
 		waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
-		waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.5, 0.5, false));
+		waypointNav.addWaypoint(new Waypoint(0.3, 6.8, 0.0, 0.2, 0.5, 0.5, false));
 
 		// // Left to  rocket ship close OLD
 		// model.setPosition(3.0, 1.7, 0.0);
