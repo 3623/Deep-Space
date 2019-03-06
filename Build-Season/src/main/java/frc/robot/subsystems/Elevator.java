@@ -25,10 +25,10 @@ public class Elevator{
     ;
     private final double MIN_GOAL = 19.5;
 
-    private final double kP = 0.9/60.0;
-    private final double kD = 0.3/60.0;
-    private final double weightCompensation = 0.1;
-
+    private final double kP = 0.2/60.0;
+    private final double kD = 0.0/60.0;
+    private final double weightCompensation = 0.0/12.0;
+    private final double deadband = 3.0;
     private Boolean isStopped;
 
     private double error;
@@ -42,7 +42,7 @@ public class Elevator{
     private static final double GEAR_RATIO = 20.8;
 
 
-    private Boolean isInverted = false;
+    private Boolean isInverted = true;
 
     public Elevator(){
         elevatorMotors  = new Spark(2);
@@ -57,10 +57,14 @@ public class Elevator{
         double output = outputPD();
         double limitedOutput = limitAcceleration(12.0*output)/12.0;
         if (!isStopped){
-            elevatorMotors.set(limitedOutput);
+            elevatorMotors.set(output);
         }
         zeroEncoder();
         monitor();
+    }
+
+    public void calibrate(double speed){
+        elevatorMotors.set(speed);
     }
 
     private double outputPD(){
@@ -68,6 +72,7 @@ public class Elevator{
         errorD = elevatorSpeed();
         output = (error*kP) - (errorD*kD);
         checkedOutput = checkLimit(output) + weightCompensation;
+        if (withinDeadband()) checkedOutput = weightCompensation;
         return checkedOutput;
     }
 
@@ -118,6 +123,14 @@ public class Elevator{
         }
     }
 
+    private Boolean withinDeadband(){
+        if (Math.abs(elevatorPosition()-this.goal) < deadband){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private double checkLimit(double motorOutput){
         double limitedOutput;
         if (atTopLimit() && motorOutput > 0.0){
@@ -138,7 +151,7 @@ public class Elevator{
         return (!topLimit.get() || elevatorPosition() > TOP_SOFT_LIMIT);
     }
 
-    private double elevatorPosition(){
+    public double elevatorPosition(){
         return elevatorEncoder.getDistance()*DISTANCE_PER_PULSE+OFFSET;
     }
 

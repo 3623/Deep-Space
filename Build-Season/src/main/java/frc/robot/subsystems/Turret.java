@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class Turret {
     Spark turretMotor = new Spark(3);
     // zeroing sensor ??
-    AnalogPotentiometer pot = new AnalogPotentiometer(8, 180, -90);
+    AnalogPotentiometer pot = new AnalogPotentiometer(0
+    
+    , 180, -90);
 
     private double goal;
     private double MAX_GOAL = 100.0;
@@ -72,13 +74,13 @@ public class Turret {
         
     }
 
-    public void manualControl(int direction, Boolean inverted){
-        if (inverted){
-            direction = direction * -1;
-        }
-        direction/=2;
-        turretMotor.set(direction);
-    }
+    // public void manualControl(int direction, Boolean inverted){
+    //     if (inverted){
+    //         direction = direction * -1;
+    //     }
+    //     direction/=2;
+    //     turretMotor.set(direction);
+    // }
 
 
     // public void turnToAngle(double desiredAngle, double currentAngle){

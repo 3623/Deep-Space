@@ -19,6 +19,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Turret;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -89,6 +90,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 	  drivetrain.update(timer.getFPGATimestamp());
     elevator.update(); 
+
   }
 
   /**
@@ -143,6 +145,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
       elevator.enable();
+      elevator.setGoal(elevator.elevatorPosition());
   }
 
 
@@ -170,20 +173,19 @@ public class Robot extends TimedRobot {
 
     // Elevator
     if (operatorController.getPOV() == 180) elevator.setGoal(19.0);
-    else if (operatorController.getPOV() == 90) elevator.setGoal(56.0);
+    else if (operatorController.getPOV() == 90) elevator.setGoal(49.0);
     else if (operatorController.getPOV() == 0) elevator.setGoal(75.0);
 
     // Turret
     // Manual Control w/o Potentiometer
-    if (operatorController.getBumper(Hand.kLeft)) turret.manualControl(1, false);
-    else if (operatorController.getBumper(Hand.kRight)) turret.manualControl(-1, false);
+    // if (operatorController.getBumper(Hand.kLeft)) turret.manualControl(1, false);
+    // else if (operatorController.getBumper(Hand.kRight)) turret.manualControl(-1, false);
     else turret.stop();  
   }
 
   @Override
   public void testInit() {
-    elevator.enable();
-    elevator.setGoal(30.0);
+    
   }
 
 
@@ -192,7 +194,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-
+    // elevator.calibrate(operatorController.getY(GenericHID.Hand.kRight));
   }
 
   @Override
