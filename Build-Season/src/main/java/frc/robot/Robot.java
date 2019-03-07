@@ -178,9 +178,7 @@ public class Robot extends TimedRobot {
 
     // Turret
     // Manual Control w/o Potentiometer
-    // if (operatorController.getBumper(Hand.kLeft)) turret.manualControl(1, false);
-    // else if (operatorController.getBumper(Hand.kRight)) turret.manualControl(-1, false);
-    else turret.stop();  
+    turret.manualControl(operatorController.getX(GenericHID.Hand.kRight));
   }
 
   @Override

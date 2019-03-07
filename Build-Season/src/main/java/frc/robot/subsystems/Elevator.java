@@ -35,6 +35,7 @@ public class Elevator{
     private double errorD;
     private double output;
     private double checkedOutput;
+    private double limitedOutput;
 
     private A775Pro  a775Pro = new A775Pro();
     private static final double MAX_CURRENT = 20.0;
@@ -55,16 +56,12 @@ public class Elevator{
 
     public void update(){
         double output = outputPD();
-        double limitedOutput = limitCurrent(12.0*output, elevatorSpeedToMotorSpeed(elevatorSpeed()))/12.0;
+        limitedOutput = limitCurrent(12.0*output, elevatorSpeedToMotorSpeed(elevatorSpeed()))/12.0;
         if (!isStopped){
-            elevatorMotors.set(output);
+            elevatorMotors.set(limitedOutput);
         }
         zeroEncoder();
         monitor();
-    }
-
-    public void calibrate(double speed){
-        elevatorMotors.set(speed);
     }
 
     private double outputPD(){
@@ -72,7 +69,6 @@ public class Elevator{
         errorD = elevatorSpeed();
         output = (error*kP) - (errorD*kD);
         checkedOutput = checkLimit(output) + weightCompensation;
-        if (withinDeadband()) checkedOutput = weightCompensation;
         return checkedOutput;
     }
 
@@ -169,7 +165,7 @@ public class Elevator{
         SmartDashboard.putNumber("Error", error);
         SmartDashboard.putNumber("P Val", error*kP);
         SmartDashboard.putNumber("D Val", errorD*kD);
-        SmartDashboard.putNumber("Checked Output", checkedOutput);
+        SmartDashboard.putNumber("Checked Output", limitedOutput);
         SmartDashboard.putBoolean("At Bottom", atBottomLimit());
         SmartDashboard.putBoolean("At Top", atTopLimit());
         System.out.println(DISTANCE_PER_PULSE);
