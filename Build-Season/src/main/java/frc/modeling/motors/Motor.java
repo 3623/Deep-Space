@@ -1,4 +1,4 @@
-package frc.simulation.motors;
+package frc.modeling.motors;
 
 /**
  * Abstract class for motor implementation, with methods for calculating torque
@@ -14,14 +14,8 @@ abstract public class Motor {
 	protected static double STALL_CURRENT; // Amps
 	protected static double FREE_CURRENT; // Amps
 	private static final double MAX_VOLTAGE = 12.0; // Volts
-	private static double kSlopeTorque;
-	private static double kSlopeCurrent;
-
-	// Init value function
-	protected void calculateSlopes () {
-		kSlopeTorque = -STALL_TORQUE / FREE_SPEED;
-		kSlopeCurrent = -(STALL_CURRENT - FREE_CURRENT) / FREE_SPEED;
-	}
+	protected static double kSlopeTorque; // -STALL_TORQUE / FREE_SPEED;
+	protected static double kSlopeCurrent; // -(STALL_CURRENT - FREE_CURRENT) / FREE_SPEED;
 
 	public static double outputTorque (double voltage, double speed) {
 		double stallTorque = STALL_TORQUE * (voltage / MAX_VOLTAGE);
@@ -37,6 +31,4 @@ abstract public class Motor {
 	public static double inverseCurrent (double current, double speed) {
 		return (current - (speed*kSlopeCurrent))*MAX_VOLTAGE/STALL_CURRENT;
 	}
-	
-	
 }

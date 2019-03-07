@@ -6,6 +6,34 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - Animation",
+      "request": "launch",
+      "mainClass": "frc.modeling.Animation",
+      "projectName": "Build-Season"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - A775Pro",
+      "request": "launch",
+      "mainClass": "frc.simulation.motors.A775Pro",
+      "projectName": "Build-Season"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - CIMMotor",
+      "request": "launch",
+      "mainClass": "frc.simulation.motors.CIMMotor",
+      "projectName": "Build-Season"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - Elevator",
+      "request": "launch",
+      "mainClass": "frc.robot.subsystems.Elevator",
+      "projectName": "Build-Season"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - DrivetrainModel",
       "request": "launch",
       "mainClass": "frc.robot.subsystems.DrivetrainModel",

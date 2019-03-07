@@ -1,4 +1,4 @@
-package frc.simulation;
+package frc.modeling;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

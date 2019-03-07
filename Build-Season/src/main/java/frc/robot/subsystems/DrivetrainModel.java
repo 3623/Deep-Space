@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
-import frc.simulation.motors.CIMMotor;
-import frc.simulation.motors.Motor;
+import frc.modeling.motors.CIMMotor;
+import frc.modeling.motors.Motor;
 import frc.util.Geometry;
 import frc.util.Pose;
 import frc.util.Tuple;
