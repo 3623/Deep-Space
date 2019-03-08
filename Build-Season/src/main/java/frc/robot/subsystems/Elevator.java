@@ -38,7 +38,7 @@ public class Elevator{
     private double limitedOutput;
 
     private A775Pro  a775Pro = new A775Pro();
-    private static final double MAX_CURRENT = 20.0;
+    private static final double MAX_CURRENT = 15.0;
     private static final double MOTORS_PER_SIDE = 4.0;
     private static final double GEAR_RATIO = 20.8;
 
@@ -56,9 +56,8 @@ public class Elevator{
 
     public void update(){
         double output = outputPD();
-        limitedOutput = limitCurrent(12.0*output, elevatorSpeedToMotorSpeed(elevatorSpeed()))/12.0;
         if (!isStopped){
-            elevatorMotors.set(limitedOutput);
+            elevatorMotors.set(output);
         }
         zeroEncoder();
         monitor();
@@ -67,9 +66,18 @@ public class Elevator{
     private double outputPD(){
         error = goal - elevatorPosition();
         errorD = elevatorSpeed();
-        output = (error*kP) - (errorD*kD);
+        double pVal = (error*kP);
+        double dVal = -(errorD*kD);
+        output = pVal + dVal;
         checkedOutput = checkLimit(output) + weightCompensation;
-        return checkedOutput;
+        limitedOutput = limitCurrent(12.0*output, elevatorSpeedToMotorSpeed(elevatorSpeed()))/12.0;
+
+        SmartDashboard.putNumber("P Val", pVal);
+        SmartDashboard.putNumber("D Val", dVal);
+        SmartDashboard.putNumber("Checked Output", checkedOutput);
+        SmartDashboard.putNumber("Limited Output", limitedOutput);
+
+        return limitedOutput;
     }
 
     /** 
@@ -162,13 +170,8 @@ public class Elevator{
     private void monitor(){
         SmartDashboard.putNumber("Goal", goal);
         SmartDashboard.putNumber("Position", elevatorPosition());
-        SmartDashboard.putNumber("Error", error);
-        SmartDashboard.putNumber("P Val", error*kP);
-        SmartDashboard.putNumber("D Val", errorD*kD);
-        SmartDashboard.putNumber("Checked Output", limitedOutput);
         SmartDashboard.putBoolean("At Bottom", atBottomLimit());
         SmartDashboard.putBoolean("At Top", atTopLimit());
-        System.out.println(DISTANCE_PER_PULSE);
     }
 
     // acceleration = (motorTorque/radius - gravity)/mass
