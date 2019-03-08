@@ -220,8 +220,8 @@ public class DrivetrainModel {
 		 */
 		protected double limitAcceleration(double outputVoltage){
 			double motorSpeed = this.wheelSpeedToMotorSpeed(this.velocity);
-			double maxVoltage = CIMMotor.inverseVoltage(MAX_TORQUE/CIMS_PER_SIDE/GEAR_RATIO, motorSpeed);
-			double minVoltage = CIMMotor.inverseVoltage(-MAX_TORQUE/CIMS_PER_SIDE/GEAR_RATIO, motorSpeed);
+			double maxVoltage = CIMMotor.torqueToVoltage(MAX_TORQUE/CIMS_PER_SIDE/GEAR_RATIO, motorSpeed);
+			double minVoltage = CIMMotor.torqueToVoltage(-MAX_TORQUE/CIMS_PER_SIDE/GEAR_RATIO, motorSpeed);
 
 
 			double limitedVoltage;

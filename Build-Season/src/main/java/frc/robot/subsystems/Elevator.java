@@ -86,8 +86,8 @@ public class Elevator{
      * @return checked voltage, limited to acceleration of MAX_TORQUE constant
      */
     protected static double limitCurrent(double outputVoltage, double motorSpeed){
-        double maxVoltage = A775Pro.inverseCurrent(MAX_CURRENT, motorSpeed);
-        double minVoltage = A775Pro.inverseCurrent(-MAX_CURRENT, motorSpeed);
+        double maxVoltage = A775Pro.currentToVoltage(MAX_CURRENT, motorSpeed);
+        double minVoltage = A775Pro.currentToVoltage(-MAX_CURRENT, motorSpeed);
 
 
         double limitedVoltage;

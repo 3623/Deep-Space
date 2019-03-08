@@ -23,12 +23,12 @@ abstract public class Motor {
 		return torque;
 	}
 
-	public static double inverseVoltage (double torque, double speed) {
+	public static double torqueToVoltage (double torque, double speed) {
 		return (torque - (speed*kSlopeTorque))*MAX_VOLTAGE/STALL_TORQUE;
 		// Just solved for voltage using outputTorque equation
 	}
 
-	public static double inverseCurrent (double current, double speed) {
+	public static double currentToVoltage (double current, double speed) {
 		return (current - (speed*kSlopeCurrent))*MAX_VOLTAGE/STALL_CURRENT;
 	}
 }
