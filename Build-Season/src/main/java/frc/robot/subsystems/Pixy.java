@@ -1,148 +1,218 @@
 package frc.robot.subsystems;
 
-import java.util.Optional;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- *
- */
 public class Pixy {
+	String name;
+	PixyPacket values;
+	I2C pixy;
+	Port port = Port.kOnboard;
+	PixyPacket[] packets;
+	PixyException pExc;
+	String print;
 
-	private static I2C pixyi2c;
-	private static PixyPacket previousPkt;
-	public int targetX;
-	
-	public Pixy() {
-		
-		// // Must initialize previous packet the very first time Pixy() is run. 
-		// previousPkt.X = RobotMap.RED_X_OFFSET;
-		// previousPkt.Width = 35;
-		// previousPkt.Height = 6;
-		// previousPkt.Area = 210;
-		previousPkt = new PixyPacket();
-		
-		pixyi2c = new I2C(I2C.Port.kOnboard, 0x54);
+	public Pixy(String id, I2C argPixy, PixyPacket[] argPixyPacket, PixyException argPixyException,
+			PixyPacket argValues) {
+		pixy = argPixy;
+		packets = argPixyPacket;
+		pExc = argPixyException;
+		values = argValues;
+		name = "Pixy_" + id;
 	}
 
-	private void UpdateSmartDash(PixyPacket Target) {
-		SmartDashboard.putNumber("xPosition", Target.X);
-		SmartDashboard.putNumber("yPosition", Target.Y);
-		SmartDashboard.putNumber("width", Target.Width);
-		SmartDashboard.putNumber("height", Target.Height);
-		SmartDashboard.putNumber("Signature", Target.Sig);
-		SmartDashboard.putNumber("Area", Target.Area);
+	// This method parses raw data from the pixy into readable integers
+	public int cvt(byte upper, byte lower) {
+		return (((int) upper & 0xff) << 8) | ((int) lower & 0xff);
 	}
 
-	/** 
-	 * Parses raw data from the I2C port into Pixy Packet's X , Y, Width, Height, Signature.
-	 *  */
-	public Optional<PixyPacket> readPixyPacket(){
-		byte[] pixyValues = new byte[64];
-		pixyValues[0] = (byte) 0b01010101;
-		pixyValues[1] = (byte) 0b10101010;
-
-		PixyPacket packet = new PixyPacket();
-		
-		pixyi2c.readOnly(pixyValues, 64);
-		if (pixyValues == null) {
-			SmartDashboard.putString("Target Angle", "No Target");
-			return Optional.empty();
+	// This method gathers data, then parses that data, and assigns the ints to
+	// global variables
+	// The
+	// signature
+	// should
+	// be
+	// which
+	// number
+	// object
+	// in
+	// pixymon you are trying to get data for
+	public PixyPacket readPacket(int Signature) throws PixyException {
+		int Checksum;
+		int Sig;
+		byte[] rawData = new byte[32];
+		// SmartDashboard.putString("rawData", rawData[0] + " " + rawData[1] + "
+		// " + rawData[15] + " " + rawData[31]);
+		try {
+			pixy.readOnly(rawData, 32);
+		} catch (RuntimeException e) {
+			SmartDashboard.putString(name + "Status", e.toString());
+			System.out.println(name + "  " + e);
 		}
-		int i = 0;
-		while (!(pixyValues[i] == 85 && pixyValues[i + 1] == -86) && i < 50) {
-			i++;
+		if (rawData.length < 32) {
+			SmartDashboard.putString(name + "Status", "raw data length " + rawData.length);
+			System.out.println("byte array length is broken length=" + rawData.length);
+			return null;
 		}
-		i++;
-		if (i > 50)
-			i = 49;
-		while (!(pixyValues[i] == 85 && pixyValues[i + 1] == -86) && i < 50) {
-			i++;
+		for (int i = 0; i <= 16; i++) {
+			int syncWord = cvt(rawData[i + 1], rawData[i + 0]); // Parse first 2
+																// bytes
+			if (syncWord == 0xaa55) { // Check is first 2 bytes equal a "sync
+										// word", which indicates the start of a
+										// packet of valid data
+				syncWord = cvt(rawData[i + 3], rawData[i + 2]); // Parse the
+																// next 2 bytes
+				if (syncWord != 0xaa55) { // Shifts everything in the case that
+											// one syncword is sent
+					i -= 2;
+				}
+				// This next block parses the rest of the data
+				Checksum = cvt(rawData[i + 5], rawData[i + 4]);
+				Sig = cvt(rawData[i + 7], rawData[i + 6]);
+				if (Sig <= 0 || Sig > packets.length) {
+					break;
+				}
+
+				packets[Sig - 1] = new PixyPacket();
+				packets[Sig - 1].X = cvt(rawData[i + 9], rawData[i + 8]);
+				packets[Sig - 1].Y = cvt(rawData[i + 11], rawData[i + 10]);
+				packets[Sig - 1].Width = cvt(rawData[i + 13], rawData[i + 12]);
+				packets[Sig - 1].Height = cvt(rawData[i + 15], rawData[i + 14]);
+				// Checks whether the data is valid using the checksum *This if
+				// block should never be entered*
+				if (Checksum != Sig + packets[Sig - 1].X + packets[Sig - 1].Y + packets[Sig - 1].Width
+						+ packets[Sig - 1].Height) {
+					packets[Sig - 1] = null;
+					throw pExc;
+				}
+				break;
+			} else
+				SmartDashboard.putNumber("syncword: ", syncWord);
 		}
-		char xPosition = (char) (((pixyValues[i + 7] & 0xff) << 8) | (pixyValues[i + 6] & 0xff));
-		char yPosition = (char) ((pixyValues[i + 9] & 0xff << 8) | pixyValues[i + 8] & 0xff);
-		char width = (char) ((pixyValues[i + 11] & 0xff << 8) | pixyValues[i + 10] & 0xff);
-		char height = (char) ((pixyValues[i + 13] & 0xff << 8) | pixyValues[i + 12] & 0xff);
-
-		packet.X = xPosition;
-		packet.Y = yPosition;
-		packet.Width = width;
-		packet.Height = height;
-		packet.Sig = pixyValues[5];
-		packet.Area = packet.Height * packet.Width;
-
-		return Optional.of(packet);
+		// Assigns our packet to a temp packet, then deletes data so that we
+		// dont return old data
+		PixyPacket pkt = packets[Signature - 1];
+		packets[Signature - 1] = null;
+		return pkt;
 	}
 
-	public int getTargetX() {
-		Optional<PixyPacket> target = readPixyPacket();
+	private byte[] readData(int len) {
+		byte[] rawData = new byte[len];
+		try {
+			pixy.readOnly(rawData, len);
+		} catch (RuntimeException e) {
+			SmartDashboard.putString(name + "Status", e.toString());
+			System.out.println(name + "  " + e);
+		}
+		if (rawData.length < len) {
+			SmartDashboard.putString(name + "Status", "raw data length " + rawData.length);
+			System.out.println("byte array length is broken length=" + rawData.length);
+			return null;
+		}
+		return rawData;
+	}
 
-		// Running through filters.
-		// Ensure the packet was not null
-		if (!target.isPresent()) {
-			target = Optional.of(previousPkt);
-			DriverStation.reportError("NO TARGET: bad connection", true);
-			return -1;
-		} 
-		
-		UpdateSmartDash(target.get());
-		
-		// Height and Width of the target should not be 0
-		if (target.get().Height == 0 && target.get().Width == 0) {
-			target = Optional.of(previousPkt);
-			return -1;
+	private int readWord() {
+		byte[] data = readData(2);
+		if (data == null) {
+			return 0;
 		}
-		
-		// Throw away any packets whose area is an outlier;  May need to decrease further
-		if (target.get().Area > 4000) {
-			target = Optional.of(previousPkt);
-			return -1;
+		return cvt(data[1], data[0]);
+	}
+
+	private PixyPacket readBlock(int checksum) {
+		// See Object block format section in
+		// http://www.cmucam.org/projects/cmucam5/wiki/Porting_Guide#Object-block-format
+		// Each block is 14 bytes, but we already read 2 bytes for checksum in
+		// caller so now we need to read rest.
+
+		byte[] data = readData(12);
+		if (data == null) {
+			return null;
 		}
-		
-		// X should range 1 - 320;  No 0's because we were getting sporadic trash packets with X of 0;
-		// The possibility of a valid target at an X of Zero is low.
-		if ((target.get().X <= 0) || (target.get().X > 320)) {
-			target = Optional.of(previousPkt);
-			return -1;
+		PixyPacket block = new PixyPacket();
+		block.Signature = cvt(data[1], data[0]);
+		if (block.Signature <= 0 || block.Signature > 7) {
+			return null;
 		}
-		
-		if (Math.abs(target.get().X - previousPkt.X) > 50){
-			target = Optional.of(previousPkt);
-			return -1;
+		block.X = cvt(data[3], data[2]);
+		block.Y = cvt(data[5], data[4]);
+		block.Width = cvt(data[7], data[6]);
+		block.Height = cvt(data[9], data[8]);
+
+		int sum = block.Signature + block.X + block.Y + block.Width + block.Height;
+		if (sum != checksum) {
+			return null;
+		}
+		return block;
+	}
+
+	private final int MAX_SIGNATURES = 7;
+	private final int OBJECT_SIZE = 14;
+	private final int START_WORD = 0xaa55;
+	private final int START_WORD_CC = 0xaa5;
+	private final int START_WORD_X = 0x55aa;
+
+	public boolean getStart() {
+		int numBytesRead = 0;
+		int lastWord = 0xffff;
+		// This while condition was originally true.. may not be a good idea if
+		// something goes wrong robot will be stuck in this loop forever. So
+		// let's read some number of bytes and give up so other stuff on robot
+		// can have a chance to run. What number of bytes to choose? Maybe size
+		// of a block * max number of signatures that can be detected? Or how
+		// about size of block and max number of blocks we are looking for?
+		while (numBytesRead < (OBJECT_SIZE * MAX_SIGNATURES)) {
+			int word = readWord();
+			numBytesRead += 2;
+			if (word == 0 && lastWord == 0) {
+				return false;
+			} else if (word == START_WORD && lastWord == START_WORD) {
+				return true;
+			} else if (word == START_WORD_CC && lastWord == START_WORD) {
+				return true;
+			} else if (word == START_WORD_X) {
+				byte[] data = readData(1);
+				numBytesRead += 1;
+			}
+			lastWord = word;
+		}
+		return false;
+	}
+
+	private boolean skipStart = false;
+
+	public PixyPacket[] readBlocks() {
+		// This has to match the max block setting in pixymon?
+		int maxBlocks = 2;
+		PixyPacket[] blocks = new PixyPacket[maxBlocks];
+
+		if (!skipStart) {
+			if (getStart() == false) {
+				return null;
+			}
 		} else {
-			targetX =  target.get().X;
-			previousPkt.X = target.get().X;
-			previousPkt.Y = target.get().Y;
-			previousPkt.Height = target.get().Height;
-			previousPkt.Width = target.get().Width;
-			previousPkt.Sig = target.get().Sig;
-			previousPkt.Area = target.get().Area;	
+			skipStart = false;
 		}
-		
-//		UpdateSmartDash(target.get());
-		
-		DriverStation.reportError("Turn To X : " + targetX, false);
-		return targetX;
-	}
-
-
-	private class PixyPacket {
-		public int X;
-		public int Y;
-		public int Width;
-		public int Height;
-		public int Sig;
-		public int Area;
-		
-		public PixyPacket() {
-			X = 0;
-			Y = 0;
-			Width = 0;
-			Height = 0;
-			Sig = 0;
-			Area = 0;
+		for (int i = 0; i < maxBlocks; i++) {
+			// Should we set to empty PixyPacket? To avoid having to check for
+			// null in callers?
+			blocks[i] = null;
+			int checksum = readWord();
+			if (checksum == START_WORD) {
+				// we've reached the beginning of the next frame
+				skipStart = true;
+				return blocks;
+			} else if (checksum == START_WORD_CC) {
+				// we've reached the beginning of the next frame
+				skipStart = true;
+				return blocks;
+			} else if (checksum == 0) {
+				return blocks;
+			}
+			blocks[i] = readBlock(checksum);
 		}
+		return blocks;
 	}
 }
