@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class Turret {
-    Spark turretMotor = new Spark(3);
+    Spark turretMotor = new Spark(6);
     // zeroing sensor ??
     AnalogPotentiometer pot = new AnalogPotentiometer(0, 180, -90);
 
