@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
       elevator.enable();
-      elevator.setGoal(elevator.elevatorPosition());
+      elevator.setSetpoint(elevator.elevatorPosition());
   }
 
 
@@ -172,9 +172,9 @@ public class Robot extends TimedRobot {
     else grabber.defaultState();
 
     // Elevator
-    if (operatorController.getPOV() == 180) elevator.setGoal(19.0);
-    else if (operatorController.getPOV() == 90) elevator.setGoal(49.0);
-    else if (operatorController.getPOV() == 0) elevator.setGoal(75.0);
+    if (operatorController.getPOV() == 180) elevator.setSetpoint(19.0);
+    else if (operatorController.getPOV() == 90) elevator.setSetpoint(49.0);
+    else if (operatorController.getPOV() == 0) elevator.setSetpoint(75.0);
 
     // Turret
     // Manual Control w/o Potentiometer
