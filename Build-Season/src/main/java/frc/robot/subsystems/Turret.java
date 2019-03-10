@@ -31,7 +31,7 @@ public class Turret {
 
     public Turret(){
         goal = 0.0;
-        pixy = new Pixy();
+        // pixy = new Pixy();
     }
 
     public void update(){
@@ -68,7 +68,7 @@ public class Turret {
     }
 
     public void vision(){
-        double x = pixy.getTargetX();
+        // double x = pixy.getTargetX();
         
     }
 

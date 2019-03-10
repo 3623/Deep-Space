@@ -4,6 +4,7 @@ import java.io.IOException;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -15,7 +16,7 @@ import frc.util.Tuple;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class Drivetrain {
+public class Drivetrain extends Subsystem{
 	Spark rightMotors, leftMotors;
 	DifferentialDrive drivetrain;
 
@@ -47,6 +48,8 @@ public class Drivetrain {
 
 		waypointNav = new WaypointNavigator();
 	}
+
+	public void initDefaultCommand(){}
 
     public void stop() {
     	leftMotors.disable();

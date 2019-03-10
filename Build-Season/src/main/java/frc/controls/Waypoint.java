@@ -27,6 +27,17 @@ public class Waypoint {
 		this.driveBackwards = false;
 	}
 
+	public Waypoint(Pose pose) {
+		this.x = pose.x;
+		this.y = pose.y;
+		this.r = pose.r;
+		this.heading = pose.heading;
+		this.kRadius = 0.0;
+		this.kLookAhead = 0.0;
+		this.kSpeedFactor = 0.0;
+		this.driveBackwards = false;
+	}
+
 	public Waypoint(double x, double y, double heading, double speed, double lookAhead, double radius, Boolean inverted) {
 		this.x = x;
 		this.y = y;

@@ -70,7 +70,7 @@ public class Elevator extends PIDSubsystem {
 
 	public void initDefaultCommand() {
 	}
-
+    
 	protected double returnPIDInput() {
 		return elevatorEncoder.getDistance() + OFFSET; // returns the sensor value that is providing the feedback for the system
 	}

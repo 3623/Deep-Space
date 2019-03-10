@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.controls.Waypoint;
+import frc.robot.commands.drive.LeftHab1ToLeftFarRocket;
+import frc.robot.commands.grabber.Intake;
+import frc.robot.commands.grabber.Place;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
@@ -23,6 +26,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 
 /**
@@ -35,13 +40,13 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 public class Robot extends TimedRobot {
   DriverStation DS;  
   
-  Drivetrain drivetrain;	 
-  Grabber grabber;
-  Elevator elevator;
-  Turret turret;
+  public static Drivetrain drivetrain;	 
+  public static Grabber grabber;
+  public static Elevator elevator;
+  public static Turret turret;
 
 	Joystick driverController, steeringWheel;
-  XboxController operatorController;
+  public static XboxController operatorController;
   
   Timer timer;
 
@@ -50,6 +55,8 @@ public class Robot extends TimedRobot {
   final String CrossLine = "Cross Line";
   final String DriveBy = "Drive Forward and Plop";
   final String HabLeft_RocketLeftFar = "Left to rocket ship far";
+
+  Command autoCommand;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -75,6 +82,7 @@ public class Robot extends TimedRobot {
     autoChooser.addOption(HabLeft_RocketLeftFar, HabLeft_RocketLeftFar);
     SmartDashboard.putData("Auto choices", autoChooser);
 
+
     drivetrain.zeroSensors();
   }
 
@@ -89,7 +97,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
 	  drivetrain.update(timer.getFPGATimestamp());
-    elevator.update(); 
+    // elevator.update(); 
 
   }
 
@@ -124,13 +132,11 @@ public class Robot extends TimedRobot {
       break;
 
       case HabLeft_RocketLeftFar:
-        drivetrain.model.setPosition(2.85, 1.7, 0.0);
-        drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.2, 0.5, 0.5, false));
+        autoCommand = new LeftHab1ToLeftFarRocket();
       break;
     }
+
+    autoCommand.start();
 
   }
 
@@ -140,6 +146,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
       drivetrain.driveToWaypoint();
+      Scheduler.getInstance().run();
+      teleopInit();
+
   }
 
   @Override
@@ -154,6 +163,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().run();
 
     // Drivetrain
     if (driverController.getTrigger()){
@@ -167,9 +177,9 @@ public class Robot extends TimedRobot {
     }
     
     // Grabber
-    if (operatorController.getAButton()) grabber.intake();
-    else if (operatorController.getBButton()) grabber.place();
-    else grabber.defaultState();
+    if (operatorController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
+    else if (operatorController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
+
 
     // Elevator
     if (operatorController.getPOV() == 180) elevator.setSetpoint(19.0);
@@ -197,6 +207,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    elevator.stop();
+    // elevator.stop();
   }
 }

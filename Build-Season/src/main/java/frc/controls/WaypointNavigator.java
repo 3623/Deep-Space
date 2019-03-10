@@ -24,6 +24,7 @@ public class WaypointNavigator {
 	public void clearWaypoints(){
 		waypoints.clear();
 		index = 1;
+		isFinished = false;
 	}	
 
 	public Waypoint getCurrentWaypoint(){
