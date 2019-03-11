@@ -9,12 +9,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.modeling.motors.A775Pro;
 
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.command.PIDSubsystem;
-import edu.wpi.first.wpilibj.interfaces.Potentiometer;
-
 public class Elevator extends PIDSubsystem {
 	private Spark elevatorMotor1, elevatorMotor2, elevatorMotor3, elevatorMotor4;
     private SpeedControllerGroup elevatorMotors;
@@ -64,7 +58,7 @@ public class Elevator extends PIDSubsystem {
         elevatorMotors.setInverted(isInverted);
 
         elevatorEncoder = new Encoder(4, 5, isInverted, Encoder.EncodingType.k1X);
-        // elevatorEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+        elevatorEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
 
 	}
 
@@ -141,7 +135,7 @@ public class Elevator extends PIDSubsystem {
         else if (outputVoltage < minVoltage) limitedVoltage = minVoltage;
         else limitedVoltage = outputVoltage;
 
-        System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
+//         System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
 
         
         return limitedVoltage;
@@ -151,7 +145,8 @@ public class Elevator extends PIDSubsystem {
         SmartDashboard.putNumber("Goal", this.getSetpoint());
         SmartDashboard.putNumber("Position", this.getPosition());
         SmartDashboard.putNumber("Speed", elevatorEncoder.getRate());
-
+ 	SmartDashboard.putBoolean("At Bottom", atBottomLimit());
+        SmartDashboard.putBoolean("At Top", atTopLimit());
     }
 
 
