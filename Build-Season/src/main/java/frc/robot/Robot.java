@@ -45,8 +45,7 @@ public class Robot extends TimedRobot {
   public static Elevator elevator;
   public static Turret turret;
 
-	Joystick driverController, steeringWheel;
-  public static XboxController operatorController;
+  public static XboxController driverController, operatorController;
   
   Timer timer;
 
@@ -72,9 +71,8 @@ public class Robot extends TimedRobot {
     elevator = new Elevator();
     turret = new Turret();
   
-    driverController = new Joystick(0);
-    steeringWheel = new Joystick(1);
-    operatorController = new XboxController(2);
+    driverController = new XboxController(0);
+    operatorController = new XboxController(1);
 
     autoChooser = new SendableChooser<String>();
     autoChooser.setDefaultOption(CrossLine, CrossLine);
@@ -97,7 +95,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
 	  drivetrain.update(timer.getFPGATimestamp());
-    // elevator.update(); 
+    elevator.updateStuff(); 
 
   }
 
@@ -155,6 +153,8 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
       elevator.enable();
       elevator.setSetpoint(elevator.elevatorPosition());
+	turret.enable();
+
   }
 
 
@@ -166,14 +166,18 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().run();
 
     // Drivetrain
-    if (driverController.getTrigger()){
+	Boolean noSpeed;
+    if (Math.abs(driverController.getRawAxis(1)) < 0.1) noSpeed = true;
+    else noSpeed = false;
+
+    if (driverController.getRawButton(9)){
       drivetrain.openLoopControl(-driverController.getRawAxis(1)/2.0, 
-      driverController.getRawAxis(3)/2.0, 
-      driverController.getTrigger());
+      driverController.getRawAxis(4)/2.0,
+      noSpeed);
     } else{
-      drivetrain.openLoopControl(-driverController.getRawAxis(1), 
-      driverController.getRawAxis(3)*Math.abs(driverController.getRawAxis(3)), 
-      driverController.getTrigger());
+      drivetrain.openLoopControl(-driverController.getRawAxis(1)*Math.abs(driverController.getRawAxis(1)), 
+      driverController.getRawAxis(4)/2.0, 
+      noSpeed);
     }
     
     // Grabber
@@ -207,6 +211,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    // elevator.stop();
+    elevator.disable();
   }
 }
