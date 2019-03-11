@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class Turret {
-    Spark turretMotor = new Spark(6);
+    Spark turretMotor;
     // zeroing sensor ??
-    AnalogPotentiometer pot = new AnalogPotentiometer(0, 180, -90);
+    AnalogPotentiometer pot;
 
     private double goal;
     private double MAX_GOAL = 100.0;
@@ -30,8 +30,9 @@ public class Turret {
     private Pixy pixy;
 
     public Turret(){
+        turretMotor = new Spark(6);
+        pot = new AnalogPotentiometer(0, 180, -90);
         goal = 0.0;
-        // pixy = new Pixy();
     }
 
     public void update(){
@@ -67,10 +68,9 @@ public class Turret {
         isStopped = false;
     }
 
-    public void vision(){
-        // double x = pixy.getTargetX();
-        
-    }
+//     public void vision(){
+//         double x = pixy.getTargetX();   
+//     }
 
     public void manualControl(double speed){
         turretMotor.set(speed);
