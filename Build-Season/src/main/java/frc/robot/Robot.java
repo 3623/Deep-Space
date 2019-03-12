@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.controls.Waypoint;
 import frc.robot.commands.auto.LeftRocket;
+import frc.robot.commands.drive.DriveOffLevel1;
 import frc.robot.commands.auto.LeftCargoShip;
 import frc.robot.commands.grabber.Intake;
 import frc.robot.commands.grabber.Place;
@@ -55,6 +56,9 @@ public class Robot extends TimedRobot {
   final String CrossLine = "Cross Line";
   final String LeftCargoShip = "Left Cargo Ship";
   final String LeftRocket = "Left Rocket Ship";
+  final String DriverControl = "Driver Control";
+
+  Boolean driverControl;
 
   Command autoCommand;
 
@@ -79,7 +83,10 @@ public class Robot extends TimedRobot {
     autoChooser.setDefaultOption(CrossLine, CrossLine);
     autoChooser.addOption(LeftCargoShip, LeftCargoShip);
     autoChooser.addOption(LeftRocket, LeftRocket);
+    autoChooser.addOption(DriverControl, DriverControl);
     SmartDashboard.putData("Auto choices", autoChooser);
+
+    driverControl = false;
 
 
     drivetrain.zeroSensors();
@@ -118,9 +125,7 @@ public class Robot extends TimedRobot {
 
     switch(autoSelected){
       case CrossLine:
-        drivetrain.model.setPosition(3.0, 1.7, 0.0);
-        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.3, 0.5, 0.5, false));
+        autoCommand = new DriveOffLevel1();
       break;
 
       case LeftCargoShip:
@@ -130,6 +135,9 @@ public class Robot extends TimedRobot {
       case LeftRocket:
         autoCommand = new LeftRocket();
       break;
+
+      case DriverControl:
+        driverControl = true;
     }
 
     autoCommand.start();
@@ -141,18 +149,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-      drivetrain.driveToWaypoint();
+      // drivetrain.driveToWaypoint();
       Scheduler.getInstance().run();
-      teleopInit();
+      
+      if (driverControl) teleopInit();
 
   }
 
   @Override
   public void teleopInit() {
-      elevator.enable();
-      elevator.setSetpoint(elevator.elevatorPosition());
-	turret.enable();
-
+    elevator.enable();
+    elevator.setSetpoint(elevator.elevatorPosition());
+    turret.enable();
   }
 
 
@@ -190,7 +198,7 @@ public class Robot extends TimedRobot {
 
     // Turret
     // Manual Control w/o Potentiometer
-    turret.manualControl(operatorController.getX(GenericHID.Hand.kRight));
+    turret.manualControl(operatorController.getRawAxis(4));
   }
 
   @Override
