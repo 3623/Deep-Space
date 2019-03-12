@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.controls.Waypoint;
 import frc.robot.commands.auto.LeftRocket;
+import frc.robot.commands.auto.LeftCargoShip;
 import frc.robot.commands.grabber.Intake;
 import frc.robot.commands.grabber.Place;
 import frc.robot.subsystems.Drivetrain;
@@ -52,8 +53,8 @@ public class Robot extends TimedRobot {
   SendableChooser<String> autoChooser;
   String autoSelected;
   final String CrossLine = "Cross Line";
-  final String DriveBy = "Drive Forward and Plop";
-  final String HabLeft_RocketLeftFar = "Left to rocket ship far";
+  final String LeftCargoShip = "Left Cargo Ship";
+  final String LeftRocket = "Left Rocket Ship";
 
   Command autoCommand;
 
@@ -76,8 +77,8 @@ public class Robot extends TimedRobot {
 
     autoChooser = new SendableChooser<String>();
     autoChooser.setDefaultOption(CrossLine, CrossLine);
-    autoChooser.addOption(DriveBy, DriveBy);
-    autoChooser.addOption(HabLeft_RocketLeftFar, HabLeft_RocketLeftFar);
+    autoChooser.addOption(LeftCargoShip, LeftCargoShip);
+    autoChooser.addOption(LeftRocket, LeftRocket);
     SmartDashboard.putData("Auto choices", autoChooser);
 
 
@@ -122,14 +123,11 @@ public class Robot extends TimedRobot {
         drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.3, 0.5, 0.5, false));
       break;
 
-      case DriveBy:
-        drivetrain.model.setPosition(3.0, 1.7, 0.0);
-        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.3, 0.5, 0.5, false));
-        drivetrain.waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 1.0, 1.2, 0.4, false));
+      case LeftCargoShip:
+        autoCommand = new LeftCargoShip();
       break;
 
-      case HabLeft_RocketLeftFar:
+      case LeftRocket:
         autoCommand = new LeftRocket();
       break;
     }
