@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.controls.Waypoint;
-import frc.robot.commands.drive.LeftHab1ToLeftFarRocket;
+import frc.robot.commands.auto.LeftRocket;
 import frc.robot.commands.grabber.Intake;
 import frc.robot.commands.grabber.Place;
 import frc.robot.subsystems.Drivetrain;
@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
       break;
 
       case HabLeft_RocketLeftFar:
-        autoCommand = new LeftHab1ToLeftFarRocket();
+        autoCommand = new LeftRocket();
       break;
     }
 

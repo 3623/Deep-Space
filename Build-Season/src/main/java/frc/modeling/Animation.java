@@ -68,7 +68,7 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
 		// waypointNav.addWaypoint(new Waypoint(3.0, 6.7, 0.0, 1.0, 1.2, 0.2, false));
 
-		// // Left to side of cargo ship
+		// // Left to front of cargo ship
 		// model.setPosition(2.85, 1.7, 0.0);
 		// waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
 		// waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
@@ -96,11 +96,19 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
 		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
 
-		// Loading zone to rocket close 
+		// // Loading zone to rocket close 
+		// model.setPosition(0.6, 0.4, 0.0);
+		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0));
+		// waypointNav.addWaypoint(new Waypoint(0.5, 4.9, 0.0, 1.0, 1.2, 0.7, false));
+		// waypointNav.addWaypoint(new Waypoint(0.7, 5.1, 0.0, 0.5, 0.7, 0.3, false));
+
+		// Loading Zone to Cargo Ship
 		model.setPosition(0.6, 0.4, 0.0);
 		waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0));
-		waypointNav.addWaypoint(new Waypoint(0.5, 4.9, 0.0, 1.0, 1.2, 0.7, false));
-		waypointNav.addWaypoint(new Waypoint(0.7, 5.1, 0.0, 0.5, 0.7, 0.3, false));
+		waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.5, 0.7, 0.3, false));
+		waypointNav.addWaypoint(new Waypoint(3.0, 5.0, 0.0, 1.0, 1.2, 0.9, false));
+		waypointNav.addWaypoint(new Waypoint(3.0, 7.3, 0.0, 0.6, 0.9, 0.3, false));
+
 
 			
 		// Create and start the thread
@@ -117,11 +125,13 @@ public class Animation extends JPanel implements Runnable
 		Waypoint goal = waypointNav.updatePursuit(model.center);
 
 		if (waypointNav.getIsFinished()){
-			// waypointNav.clearWaypoints();
-			// waypointNav.addWaypoint(new Waypoint(model.center));
-			// waypointNav.addWaypoint(new Waypoint(1.5, 5.5, 0.0, 0.7, 0.9, 0.9, true));
-			// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
-			// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
+			waypointNav.clearWaypoints();
+			// Cargo ship to loading zone
+			// model.setPosition(2.9, 6.7, 0.0);
+			waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0));
+			waypointNav.addWaypoint(new Waypoint(2.9, 5.0, 0.0, 0.7, 0.9, 0.9, true));
+			waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
+			waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
 		}
 
 		Tuple out = PathFollower.driveToPoint2(goal, model.center);
