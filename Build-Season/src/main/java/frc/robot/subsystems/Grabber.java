@@ -27,44 +27,19 @@ public class Grabber extends Subsystem{
 
         hatchSwitch = new DigitalInput(8);
     }
-
-    // public void intake(){
-    //     extensionSolenoid.set(true);
-    //     if (hatchSwitch.get()) openClaw();
-    //     else closeClaw();
-    //     isPlacing = false;
-    // }
-
-    // public void place(){
-    //     extensionSolenoid.set(true);
-    //     halfClaw();
-    //     isPlacing = true;
-    // }
-
-    // public void defaultState(){
-    //     extensionSolenoid.set(false);
-    //     if (hatchSwitch.get()){
-    //         if (isPlacing) halfClaw();
-    //         else openClaw();
-    //     } else {
-    //         closeClaw();
-    //         isPlacing = false;
-    //     }
-    // }
-
     
     public void openClaw() {
-        clawSolenoid1.set(true);
+        clawSolenoid1.set(false);
         clawSolenoid2.set(true);
     }
 
     public void closeClaw() {
-        clawSolenoid1.set(false);
+        clawSolenoid1.set(true);
         clawSolenoid2.set(false);
     }
 
     public void halfClaw() {
-        clawSolenoid1.set(true);
+        clawSolenoid1.set(false);
         clawSolenoid2.set(false);
     }
 
