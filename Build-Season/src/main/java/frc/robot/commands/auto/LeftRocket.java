@@ -8,14 +8,21 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.commands.drive.LeftHab1ToLeftFarRocket;
+import frc.robot.commands.drive.DriveOffLevel1;
+import frc.robot.commands.drive.LeftFarRocketToLeftLoadingZone;
+import frc.robot.commands.drive.LeftHabToLeftFarRocket;
+import frc.robot.commands.drive.LeftLoadingZoneToLeftRocketClose;
 
 public class LeftRocket extends CommandGroup {
   /**
    * Add your docs here.
    */
   public LeftRocket() {
-    addSequential(new LeftHab1ToLeftFarRocket());
+    addSequential(new DriveOffLevel1());
+    addSequential(new LeftHabToLeftFarRocket());
+    addSequential(new LeftFarRocketToLeftLoadingZone());
+    addSequential(new LeftLoadingZoneToLeftRocketClose());
+    
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());

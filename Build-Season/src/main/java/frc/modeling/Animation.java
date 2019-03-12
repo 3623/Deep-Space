@@ -76,20 +76,11 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(4.7, 5.2, 0.0, 0.5, 0.9, 0.2, false));
 
 
-		// Left to rocket ship far
-		model.setPosition(2.85, 1.7, 0.0);
-		waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
-		waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
-		waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
-		waypointNav.addWaypoint(new Waypoint(0.3, 6.8, 0.0, 0.2, 0.5, 0.5, false));
-
-		// // Left to  rocket ship close OLD
-		// model.setPosition(3.0, 1.7, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(3.0, 1.7, 0.0));
-		// waypointNav.addWaypoint(new Waypoint(3.0, 3.5, 0.0, 0.6, 0.5));
-		// waypointNav.addWaypoint(new Waypoint(0.5, 4.4, 0.0, 0.4, 0.7));
-		// waypointNav.addWaypoint(new Waypoint(0.5, 4.7, 0.0, 0.4, 0.4));
-		// waypointNav.addWaypoint(new Waypoint(0.7, 5.0, 0.0, 0.5, 0.4));
+		// // Left to rocket ship far
+		// model.setPosition(2.85, 3.0, 0.0);
+		// waypointNav.addWaypoint(new Waypoint(2.85, 3.0, 0.0, 0.3, 0.5, 0.5, false));
+		// waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
+		// waypointNav.addWaypoint(new Waypoint(0.3, 6.8, 0.0, 0.2, 0.5, 0.5, false));
 
 		// // Cargo ship to loading zone
 		// model.setPosition(2.9, 6.7, 0.0);
@@ -105,11 +96,11 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
 		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
 
-		// // Loading zone to rocket close 
-		// model.setPosition(0.6, 0.4, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0));
-		// waypointNav.addWaypoint(new Waypoint(0.5, 4.9, 0.0, 0.1, 0.7));
-		// waypointNav.addWaypoint(new Waypoint(0.7, 5.1, 0.0, 0.5, 0.5));
+		// Loading zone to rocket close 
+		model.setPosition(0.6, 0.4, 0.0);
+		waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0));
+		waypointNav.addWaypoint(new Waypoint(0.5, 4.9, 0.0, 1.0, 1.2, 0.7, false));
+		waypointNav.addWaypoint(new Waypoint(0.7, 5.1, 0.0, 0.5, 0.7, 0.3, false));
 
 			
 		// Create and start the thread
@@ -126,11 +117,11 @@ public class Animation extends JPanel implements Runnable
 		Waypoint goal = waypointNav.updatePursuit(model.center);
 
 		if (waypointNav.getIsFinished()){
-			waypointNav.clearWaypoints();
-			waypointNav.addWaypoint(new Waypoint(model.center));
-			waypointNav.addWaypoint(new Waypoint(1.5, 5.5, 0.0, 0.7, 0.9, 0.9, true));
-			waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
-			waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
+			// waypointNav.clearWaypoints();
+			// waypointNav.addWaypoint(new Waypoint(model.center));
+			// waypointNav.addWaypoint(new Waypoint(1.5, 5.5, 0.0, 0.7, 0.9, 0.9, true));
+			// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
+			// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
 		}
 
 		Tuple out = PathFollower.driveToPoint2(goal, model.center);

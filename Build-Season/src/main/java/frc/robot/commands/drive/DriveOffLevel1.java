@@ -10,23 +10,19 @@ package frc.robot.commands.drive;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.controls.Waypoint;
 import frc.robot.Robot;
-import frc.robot.subsystems.Drivetrain;
 
-public class LeftHab1ToLeftFarRocket extends Command {
-  public LeftHab1ToLeftFarRocket() {
+public class DriveOffLevel1 extends Command {
+  public DriveOffLevel1() {
     requires(Robot.drivetrain);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    // We will only call this drive command first, so we set position to a standard value, not
-    // get postion and set
+    Robot.drivetrain.waypointNav.clearWaypoints();
     Robot.drivetrain.model.setPosition(2.85, 1.7, 0.0);
 		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
 		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.3, 6.8, 0.0, 0.2, 0.5, 0.5, false));
   }
 
   // Called repeatedly when this Command is scheduled to run
