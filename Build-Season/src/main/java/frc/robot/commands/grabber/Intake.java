@@ -20,7 +20,7 @@ public class Intake extends CommandGroup {
     addParallel(new GrabberExtend());
     addSequential(new GeneralTimer(0.2));
     addSequential(new GrabberOpen());
-    addSequential(new GeneralTimer(0.2));
+    addSequential(new GeneralTimer(0.1));
     addSequential(new GrabberRetract());
     
     // Add Commands here:

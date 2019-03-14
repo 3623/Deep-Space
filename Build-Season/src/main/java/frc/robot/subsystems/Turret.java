@@ -7,47 +7,45 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
-public class Turret {
+public class Turret extends PIDSubsystem{
     Spark turretMotor;
     // zeroing sensor ??
     AnalogPotentiometer pot;
 
     private double goal;
-    private double MAX_GOAL = 100.0;
-    private double MIN_GOAL = -1000.0;
+    private double MAX_GOAL = 280.0;
+    private double MIN_GOAL = 80.0;
 
-    private double kP = 1.0/180.0;
-    private double kD = 0.2/180.0;
+    private static final double kP = 1.0/180.0;
+    private static final double kI = 1.0/180.0;
+    private static final double kD = 0.2/180.0;
+    private static final double DEADBAND = 5;
 
     private Boolean isStopped;
-
-    private double error;
-    private double errorD;
-    private double output;
 
     private Pixy pixy;
 
     public Turret(){
+        super(kP, kI, kD);
+        setInputRange(MIN_GOAL, MAX_GOAL);
+		setOutputRange(-0.8, 0.8);
+        setAbsoluteTolerance(DEADBAND);
+        
         turretMotor = new Spark(6);
         pot = new AnalogPotentiometer(0, 180, -90);
-        goal = 0.0;
+
+        pixy = new Pixy();
     }
 
     public void update(){
-        if (!isStopped){
-            turretMotor.set(outputPD());
-        }
+        
         // monitor();
     }
 
-    private double outputPD(){
-        error = goal - pot.get();
-        // errorD = pot.getRate();
-        output = (error*kP) + (errorD*kD);
-        return output;
-    }
+
 
     public void setGoal(double goal){
         if (goal > MAX_GOAL){
@@ -59,21 +57,26 @@ public class Turret {
         }
     }
 
-    public void stop(){
-        isStopped = true;
-        turretMotor.stopMotor();
-    }
-
-    public void enable(){
-        isStopped = false;
-    }
-
 //     public void vision(){
 //         double x = pixy.getTargetX();   
 //     }
 
     public void manualControl(double speed){
         turretMotor.set(speed);
+    }
+
+    @Override
+    protected double returnPIDInput() {
+        return 0;
+    }
+
+    @Override
+    protected void usePIDOutput(double output) {
+
+    }
+
+    @Override
+    protected void initDefaultCommand() {
     }
 
 

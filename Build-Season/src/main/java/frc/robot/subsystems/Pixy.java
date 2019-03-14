@@ -13,13 +13,11 @@ public class Pixy {
 	PixyException pExc;
 	String print;
 
-	public Pixy(String id, I2C argPixy, PixyPacket[] argPixyPacket, PixyException argPixyException,
-			PixyPacket argValues) {
-		pixy = argPixy;
+	public Pixy(PixyPacket[] argPixyPacket) {
+		pixy = new I2C(Port.kOnboard, 0x54);
 		packets = argPixyPacket;
-		pExc = argPixyException;
-		values = argValues;
-		name = "Pixy_" + id;
+		pExc = new PixyException(print);
+		name = "Pixy";
 	}
 
 	// This method parses raw data from the pixy into readable integers

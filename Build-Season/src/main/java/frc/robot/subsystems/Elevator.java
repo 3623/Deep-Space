@@ -21,9 +21,7 @@ public class Elevator extends PIDSubsystem {
     private DigitalInput topLimit = new DigitalInput(7);
     private final double TOP_SOFT_LIMIT = 75.0;
 
-    private double goal;
-    private final double MAX_GOAL = 70.75
-    ;
+    private final double MAX_GOAL = 70.75;
     private final double MIN_GOAL = 20.0;
 
     private final static double kP = 0.12/60.0;
@@ -32,7 +30,6 @@ public class Elevator extends PIDSubsystem {
     private final double weightCompensation = 0.4/12.0;
     private final double DEADBAND = 3.0;
 
-    private double output;
     private double checkedOutput;
     private double limitedOutput;
 
@@ -71,7 +68,6 @@ public class Elevator extends PIDSubsystem {
 	}
 
 	protected void usePIDOutput(double output) {
-        this.output = output;
         checkedOutput = checkLimit(output) + weightCompensation;
         double motorSpeed = elevatorSpeedToMotorSpeed(elevatorEncoder.getRate());
         limitedOutput = limitCurrent(12.0*checkedOutput, motorSpeed)/12.0;

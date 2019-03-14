@@ -15,12 +15,12 @@ public class Place extends CommandGroup {
    * Add your docs here.
    */
   public Place() {
-    addSequential(new GrabberHalf());
-    addSequential(new GeneralTimer(0.15));
     addSequential(new GrabberExtend());
-    addSequential(new GeneralTimer(0.5));
+    addSequential(new GeneralTimer(0.4));
+    addSequential(new GrabberHalf());
+    addSequential(new GeneralTimer(0.1));
     addSequential(new GrabberRetract());
-    addSequential(new GeneralTimer(0.7));
+    addSequential(new GeneralTimer(0.3));
 
 
     // Add Commands here:
