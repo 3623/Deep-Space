@@ -63,14 +63,13 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(2.8, 3.5, 0.0, 0.0, 0.5, 0.5, false));
 		
 		// // Left to side of cargo ship
-		// model.setPosition(2.85, 1.7, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
-		// waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
+		// model.setPosition(2.85, 3.0, 0.0);
+		// waypointNav.addWaypoint(new Waypoint(2.85, 3.0, 0.0, 0.3, 0.5, 0.5, false));
 		// waypointNav.addWaypoint(new Waypoint(3.0, 6.7, 0.0, 1.0, 1.2, 0.2, false));
 
 		// // Left to front of cargo ship
-		// model.setPosition(2.85, 1.7, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
+		// model.setPosition(2.85, 3.0, 0.0);
+		// waypointNav.addWaypoint(new Waypoint(2.85, 3.0, 0.0, 0.5, 0.5, 0.5, false));
 		// waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
 		// waypointNav.addWaypoint(new Waypoint(3.4, 5.2, 0.0, 0.9, 1.1, 1.0, false));
 		// waypointNav.addWaypoint(new Waypoint(4.7, 5.2, 0.0, 0.5, 0.9, 0.2, false));
@@ -84,14 +83,13 @@ public class Animation extends JPanel implements Runnable
 
 		// // Cargo ship to loading zone
 		// model.setPosition(2.9, 6.7, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0));
 		// waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 0.7, 0.9, 0.9, true));
 		// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
 		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
 
 		// // Rocket far to loading zone
 		// model.setPosition(0.7, 6.7, -60.0);
-		// waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0));
+		// waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.5, 0.5, 0.5, true));
 		// waypointNav.addWaypoint(new Waypoint(1.5, 5.5, 0.0, 0.7, 0.9, 0.9, true));
 		// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
 		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
@@ -102,12 +100,11 @@ public class Animation extends JPanel implements Runnable
 		// waypointNav.addWaypoint(new Waypoint(0.5, 4.9, 0.0, 1.0, 1.2, 0.7, false));
 		// waypointNav.addWaypoint(new Waypoint(0.7, 5.1, 0.0, 0.5, 0.7, 0.3, false));
 
-		// Loading Zone to Cargo Ship
-		model.setPosition(0.6, 0.4, 0.0);
-		waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0));
-		waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.5, 0.7, 0.3, false));
-		waypointNav.addWaypoint(new Waypoint(3.0, 5.0, 0.0, 1.0, 1.2, 0.9, false));
-		waypointNav.addWaypoint(new Waypoint(3.0, 7.3, 0.0, 0.6, 0.9, 0.3, false));
+		// // Loading Zone to Cargo Ship
+		// model.setPosition(0.6, 0.4, 0.0);
+		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.5, 0.7, 0.3, false));
+		// waypointNav.addWaypoint(new Waypoint(3.0, 5.0, 0.0, 1.0, 1.2, 0.9, false));
+		// waypointNav.addWaypoint(new Waypoint(3.0, 7.3, 0.0, 0.6, 0.9, 0.3, false));
 
 
 			
@@ -124,10 +121,8 @@ public class Animation extends JPanel implements Runnable
 
 		Waypoint goal = waypointNav.updatePursuit(model.center);
 
-		if (waypointNav.getIsFinished()){
+		if (waypointNav.getIsFinished() && false){
 			waypointNav.clearWaypoints();
-			// Cargo ship to loading zone
-			// model.setPosition(2.9, 6.7, 0.0);
 			waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0));
 			waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 0.7, 0.9, 0.9, true));
 			waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));

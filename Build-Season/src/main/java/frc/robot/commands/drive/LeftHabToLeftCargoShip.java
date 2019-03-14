@@ -20,9 +20,8 @@ public class LeftHabToLeftCargoShip extends Command {
   @Override
   protected void initialize() {
     Robot.drivetrain.waypointNav.clearWaypoints();
-    Robot.drivetrain.model.setPosition(2.85, 1.7, 0.0);
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
+    Robot.drivetrain.model.setPosition(2.85, 3.0, 0.0);
+		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.0, 0.0, 0.3, 0.5, 0.5, false));
 		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 6.7, 0.0, 1.0, 1.2, 0.2, false));
   }
 

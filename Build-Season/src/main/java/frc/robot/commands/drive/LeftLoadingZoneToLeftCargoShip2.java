@@ -21,7 +21,6 @@ public class LeftLoadingZoneToLeftCargoShip2 extends Command {
   protected void initialize() {
     Robot.drivetrain.waypointNav.clearWaypoints();
     Robot.drivetrain.model.setPosition(0.6, 0.4, 0.0);
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0));
 		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.5, 0.7, 0.3, false));
 		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 5.0, 0.0, 1.0, 1.2, 0.9, false));
 		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(3.0, 7.3, 0.0, 0.6, 0.9, 0.3, false));
