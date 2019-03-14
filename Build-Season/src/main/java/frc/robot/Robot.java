@@ -150,9 +150,11 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
       // drivetrain.driveToWaypoint();
-      Scheduler.getInstance().run();
       
       if (driverControl) teleopInit();
+      else{
+        Scheduler.getInstance().run();
+      }
 
   }
 

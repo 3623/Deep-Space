@@ -15,20 +15,21 @@ public class Elevator extends PIDSubsystem {
 
     private Encoder elevatorEncoder;
     private static final double DISTANCE_PER_PULSE = Math.PI*1.125*2.0/2024.0;
-    private final double OFFSET = 19.0;
+    private final double OFFSET = 20.0;
     private DigitalInput bottomLimit = new DigitalInput(6);
-    private final double BOTTOM_SOFT_LIMIT = 19.5;
+    private final double BOTTOM_SOFT_LIMIT = 20.5;
     private DigitalInput topLimit = new DigitalInput(7);
     private final double TOP_SOFT_LIMIT = 75.0;
 
     private double goal;
     private final double MAX_GOAL = 70.75
     ;
-    private final double MIN_GOAL = 19.5;
+    private final double MIN_GOAL = 20.0;
 
-    private final static double kP = 0.15/60.0;
-    private final static double kD = 0.0/60.0;
-    private final double weightCompensation = 0.3/12.0;
+    private final static double kP = 0.12/60.0;
+    private final static double kI = 0.005/60.0;
+    private final static double kD = 0.01/60.0;
+    private final double weightCompensation = 0.4/12.0;
     private final double DEADBAND = 3.0;
 
     private double output;
@@ -45,9 +46,9 @@ public class Elevator extends PIDSubsystem {
 	
 
 	public Elevator() {
-		super("Lift", kP, kD, 0.0);
+        super("Lift", kP, kI, kD);
 		setInputRange(MIN_GOAL, MAX_GOAL);
-		setOutputRange(-0.2, 0.2);
+		setOutputRange(-0.1, 0.1);
         setAbsoluteTolerance(DEADBAND);
 
         elevatorMotor1  = new Spark(2);
@@ -94,11 +95,11 @@ public class Elevator extends PIDSubsystem {
     }
 
     private Boolean atBottomLimit(){
-        return (!bottomLimit.get() || elevatorEncoder.getDistance() < BOTTOM_SOFT_LIMIT);
+        return (!bottomLimit.get() || this.getPosition() < BOTTOM_SOFT_LIMIT);
     }
 
     private Boolean atTopLimit(){
-        return (!topLimit.get() || elevatorEncoder.getDistance() > TOP_SOFT_LIMIT);
+        return (!topLimit.get() || this.getPosition() > TOP_SOFT_LIMIT);
     }
 
     private void zeroEncoder(){
