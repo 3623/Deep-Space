@@ -13,9 +13,9 @@ public class Pixy {
 	PixyException pExc;
 	String print;
 
-	public Pixy(PixyPacket[] argPixyPacket) {
+	public Pixy() {
 		pixy = new I2C(Port.kOnboard, 0x54);
-		packets = argPixyPacket;
+		packets = new PixyPacket[2];
 		pExc = new PixyException(print);
 		name = "Pixy";
 	}

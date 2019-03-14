@@ -104,7 +104,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 	  drivetrain.update(timer.getFPGATimestamp());
     elevator.updateStuff(); 
-
+    turret.updateStuff();
   }
 
   /**
@@ -205,7 +205,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    
+    turret.enable();
   }
 
 
@@ -214,11 +214,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    // elevator.calibrate(operatorController.getY(GenericHID.Hand.kRight));
+    turret.setSetpoint(220.0);
   }
 
   @Override
   public void disabledInit() {
     elevator.disable();
+    turret.disable();
   }
 }
