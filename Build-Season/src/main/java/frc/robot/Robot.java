@@ -23,6 +23,10 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Turret;
+import edu.wpi.cscore.AxisCamera;
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -62,6 +66,7 @@ public class Robot extends TimedRobot {
 
   Command autoCommand;
 
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -88,6 +93,7 @@ public class Robot extends TimedRobot {
 
     driverControl = false;
 
+    AxisCamera maxCamera = CameraServer.getInstance().addAxisCamera("Max Cam","10.36.23.11");
 
     drivetrain.zeroSensors();
   }
@@ -201,6 +207,8 @@ public class Robot extends TimedRobot {
     // Turret
     // Manual Control w/o Potentiometer
     turret.manualControl(operatorController.getRawAxis(4));
+
+    
   }
 
   @Override
