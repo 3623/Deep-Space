@@ -37,6 +37,7 @@ public class Elevator extends PIDSubsystem {
     private static final double MAX_CURRENT = 15.0;
     private static final double MOTORS_PER_SIDE = 4.0;
     private static final double GEAR_RATIO = 20.8;
+    private static final double MAX_TORQUE = 0;
 
 
     private Boolean isInverted = true;
@@ -126,6 +127,19 @@ public class Elevator extends PIDSubsystem {
         double maxVoltage = A775Pro.currentToVoltage(MAX_CURRENT, motorSpeed);
         double minVoltage = A775Pro.currentToVoltage(-MAX_CURRENT, motorSpeed);
 
+        double limitedVoltage;
+        if (outputVoltage > maxVoltage) limitedVoltage = maxVoltage;
+        else if (outputVoltage < minVoltage) limitedVoltage = minVoltage;
+        else limitedVoltage = outputVoltage;
+
+//         System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
+
+        return limitedVoltage;
+    }
+
+    protected static double limitAcceleration(double outputVoltage, double motorSpeed){
+        double maxVoltage = A775Pro.torqueToVoltage(MAX_TORQUE, motorSpeed);
+        double minVoltage = A775Pro.currentToVoltage(-MAX_TORQUE, motorSpeed);
 
         double limitedVoltage;
         if (outputVoltage > maxVoltage) limitedVoltage = maxVoltage;
@@ -134,7 +148,6 @@ public class Elevator extends PIDSubsystem {
 
 //         System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
 
-        
         return limitedVoltage;
     }
 

@@ -4,9 +4,7 @@ package frc.robot.subsystems;
 import java.io.IOException;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,7 +35,7 @@ public class Turret extends PIDSubsystem{
         
         turretMotor = new Spark(6);
         turretMotor.setInverted(true);
-        pot = new AnalogPotentiometer(0, 540, -245);
+        pot = new AnalogPotentiometer(0, 540, -225);
 
         pixy = new Pixy();
     }
@@ -66,9 +64,9 @@ public class Turret extends PIDSubsystem{
         return (this.getPosition() > TOP_SOFT_LIMIT);
     }
 
-//     public void vision(){
-//         double x = pixy.getTargetX();   
-//     }
+    public void vision(){
+		PixyPacket[] blocks = pixy.readBlocks();
+    }
 
     public void manualControl(double speed){
         turretMotor.set(speed);
@@ -92,7 +90,7 @@ public class Turret extends PIDSubsystem{
     }
 
     public void monitor(){
-        SmartDashboard.putNumber("Angle", this.getPosition());
-        SmartDashboard.putNumber("Turret Angle", this.getSetpoint());
+        SmartDashboard.putNumber("Turret Angle", this.getPosition());
+        SmartDashboard.putNumber("Turret Goal", this.getSetpoint());
     }
 }

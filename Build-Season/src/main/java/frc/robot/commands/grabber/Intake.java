@@ -18,9 +18,9 @@ public class Intake extends CommandGroup {
     addSequential(new GrabberClose());
     addSequential(new GeneralTimer(0.05));
     addParallel(new GrabberExtend());
-    addSequential(new GeneralTimer(0.2));
+    addSequential(new GeneralTimer(0.23));
     addSequential(new GrabberOpen());
-    addSequential(new GeneralTimer(0.1));
+    addSequential(new GeneralTimer(0.13));
     addSequential(new GrabberRetract());
     
     // Add Commands here:

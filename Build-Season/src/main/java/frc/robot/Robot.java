@@ -209,6 +209,7 @@ public class Robot extends TimedRobot {
     elevator.enable();
     elevator.setSetpoint(elevator.elevatorPosition());
     turret.enable();
+    Scheduler.getInstance().removeAll();
   }
 
 
@@ -220,24 +221,24 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().run();
 
     // Drivetrain
-	Boolean noSpeed;
-    if (Math.abs(driverController.getRawAxis(1)) < 0.1) noSpeed = true;
-    else noSpeed = false;
+	  Boolean quickTurn;
+    if (Math.abs(driverController.getRawAxis(1)) < 0.1) quickTurn = true;
+    else quickTurn = false;
+    quickTurn = true;
 
     if (driverController.getRawButton(9)){
       drivetrain.openLoopControl(-driverController.getRawAxis(1)/2.0, 
       driverController.getRawAxis(4)/2.0,
-      noSpeed);
+      quickTurn);
     } else{
       drivetrain.openLoopControl(-driverController.getRawAxis(1)*Math.abs(driverController.getRawAxis(1)), 
       driverController.getRawAxis(4)/2.0, 
-      noSpeed);
+      quickTurn);
     }
     
     // Grabber
     if (operatorController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
     else if (operatorController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
-
 
     // Elevator
     if (operatorController.getPOV() == 180) elevator.setSetpoint(19.0);
