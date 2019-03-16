@@ -15,7 +15,7 @@ public class Place extends CommandGroup {
    * Add your docs here.
    */
   public Place() {
-    aaddSequential(new GrabberExtend());
+    addSequential(new GrabberExtend());
     addSequential(new GeneralTimer(0.4));
     addSequential(new GrabberHalf());
     addSequential(new GeneralTimer(0.15));

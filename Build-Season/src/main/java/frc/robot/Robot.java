@@ -263,7 +263,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    turret.setSetpoint(220.0);
+    turret.setSetpoint(180.0);
   }
 
   @Override

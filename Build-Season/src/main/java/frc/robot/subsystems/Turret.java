@@ -35,7 +35,7 @@ public class Turret extends PIDSubsystem{
         
         turretMotor = new Spark(6);
         turretMotor.setInverted(true);
-        pot = new AnalogPotentiometer(0, 540, -225);
+        pot = new AnalogPotentiometer(0, 540, -315);
 
         pixy = new Pixy();
     }
