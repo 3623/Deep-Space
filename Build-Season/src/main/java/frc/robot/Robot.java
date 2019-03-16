@@ -247,7 +247,8 @@ public class Robot extends TimedRobot {
 
     // Turret
     // Manual Control w/o Potentiometer
-    turret.manualControl(operatorController.getRawAxis(4));
+    turret.setSetpoint(Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), operatorController.getRawAxis(5))))
+    ;
 
     
   }

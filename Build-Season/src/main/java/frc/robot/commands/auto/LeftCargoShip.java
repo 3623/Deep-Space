@@ -9,10 +9,12 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.commands.GeneralTimer;
+import frc.robot.commands.TurretAngle;
 import frc.robot.commands.drive.DriveOffLevel1;
 import frc.robot.commands.drive.LeftCargoShipToLeftLoadingZone;
 import frc.robot.commands.drive.LeftHabToLeftCargoShip;
 import frc.robot.commands.drive.LeftLoadingZoneToLeftCargoShip2;
+import frc.robot.commands.grabber.Place;
 
 public class LeftCargoShip extends CommandGroup {
   /**
@@ -21,7 +23,10 @@ public class LeftCargoShip extends CommandGroup {
   public LeftCargoShip() {
     addSequential(new DriveOffLevel1());
     addSequential(new GeneralTimer(1));
+    addParallel(new TurretAngle(90));
     addSequential(new LeftHabToLeftCargoShip());
+    addSequential(new GeneralTimer(1));
+    addSequential(new Place());
     addSequential(new GeneralTimer(1));
     addSequential(new LeftCargoShipToLeftLoadingZone());
     addSequential(new GeneralTimer(1));

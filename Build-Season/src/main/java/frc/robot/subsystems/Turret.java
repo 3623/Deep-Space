@@ -18,8 +18,9 @@ public class Turret extends PIDSubsystem{
     private double MAX_GOAL = 260.0;
     private double MIN_GOAL = 100.0;
 
-    private static final double kP = 2.0/180.0;
-    private static final double kI = 0.0/180.0;
+    private static final double kP = 6.0/180.0;
+    private static final double kI = 0.0
+    /180.0;
     private static final double kD = 0.2/180.0;
     private static final double DEADBAND = 5;
     private static final double TOP_SOFT_LIMIT = 260.0;
@@ -35,13 +36,14 @@ public class Turret extends PIDSubsystem{
         
         turretMotor = new Spark(6);
         turretMotor.setInverted(true);
-        pot = new AnalogPotentiometer(0, 540, -315);
+        pot = new AnalogPotentiometer(0, 360, 25);
 
         pixy = new Pixy();
     }
 
     public void updateStuff(){
         monitor();
+        // vision();
     }
 
     private double checkLimit(double motorOutput){
@@ -65,7 +67,8 @@ public class Turret extends PIDSubsystem{
     }
 
     public void vision(){
-		PixyPacket[] blocks = pixy.readBlocks();
+        PixyPacket[] blocks = pixy.readBlocks();
+        SmartDashboard.putNumber("Targets", blocks.length);
     }
 
     public void manualControl(double speed){
