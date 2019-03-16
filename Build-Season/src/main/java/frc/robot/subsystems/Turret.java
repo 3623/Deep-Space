@@ -36,7 +36,7 @@ public class Turret extends PIDSubsystem{
         
         turretMotor = new Spark(6);
         turretMotor.setInverted(true);
-        pot = new AnalogPotentiometer(0, 360, 20);
+        pot = new AnalogPotentiometer(0, 360, 25);
 
         pixy = new Pixy();
     }
@@ -84,7 +84,7 @@ public class Turret extends PIDSubsystem{
     protected void usePIDOutput(double output) {
         double checkedOutput = checkLimit(output);
 
-        turretMotor.set(checkedOutput);
+        // turretMotor.set(checkedOutput);
         SmartDashboard.putNumber("Turret Output", checkedOutput);
     }
 

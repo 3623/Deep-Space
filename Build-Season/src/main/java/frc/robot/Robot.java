@@ -256,10 +256,16 @@ public class Robot extends TimedRobot {
 
     // Turret
     // Manual Control w/o Potentiometer
-    if (Math.abs(operatorController.getRawAxis(4)) > 0.3 ||
-     Math.abs(operatorController.getRawAxis(5)) > 0.3){
-    turret.setSetpoint((Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360)%360);}
-
+    // if (Math.abs(operatorController.getRawAxis(0))> 0.04){
+    //   turret.setSetpoint(turret.getPosition() + operatorController.getRawAxis(0)*17.0);
+    // }
+    // else if (Math.abs(operatorController.getRawAxis(4)) > 0.3 ||
+    //  Math.abs(operatorController.getRawAxis(5)) > 0.3){
+    //    double goalAngle = (Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360.0)%360.0;
+    //    double robotAngle = drivetrain.model.center.heading;
+    //   turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
+    // }
+    turret.manualControl(operatorController.getRawAxis(0)/2.0);
     
   }
 

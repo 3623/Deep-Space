@@ -24,9 +24,9 @@ public class Elevator extends PIDSubsystem {
     private final double MAX_GOAL = 70.75;
     private final double MIN_GOAL = 20.0;
 
-    private final static double kP = 0.12/60.0;
-    private final static double kI = 0.005/60.0;
-    private final static double kD = 0.01/60.0;
+    private final static double kP = 0.15/60.0;
+    private final static double kI = 0.01/60.0;
+    private final static double kD = 0.05/60.0;
     private final double weightCompensation = 0.4/12.0;
     private final double DEADBAND = 3.0;
 
@@ -46,7 +46,7 @@ public class Elevator extends PIDSubsystem {
 	public Elevator() {
         super("Lift", kP, kI, kD);
 		setInputRange(MIN_GOAL, MAX_GOAL);
-		setOutputRange(-0.1, 0.1);
+		setOutputRange(-0.15, 0.15);
         setAbsoluteTolerance(DEADBAND);
 
         elevatorMotor1  = new Spark(2);
@@ -69,7 +69,7 @@ public class Elevator extends PIDSubsystem {
 	}
 
 	protected void usePIDOutput(double output) {
-        checkedOutput = checkLimit(output) + weightCompensation;
+        checkedOutput = checkLimit(output + weightCompensation);
         double motorSpeed = elevatorSpeedToMotorSpeed(elevatorEncoder.getRate());
         limitedOutput = limitCurrent(12.0*checkedOutput, motorSpeed)/12.0;
 
@@ -155,7 +155,7 @@ public class Elevator extends PIDSubsystem {
         SmartDashboard.putNumber("Goal", this.getSetpoint());
         SmartDashboard.putNumber("Position", this.getPosition());
         SmartDashboard.putNumber("Speed", elevatorEncoder.getRate());
- 	SmartDashboard.putBoolean("At Bottom", atBottomLimit());
+ 	    SmartDashboard.putBoolean("At Bottom", atBottomLimit());
         SmartDashboard.putBoolean("At Top", atTopLimit());
     }
 
