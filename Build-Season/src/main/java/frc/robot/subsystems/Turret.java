@@ -15,8 +15,8 @@ public class Turret extends PIDSubsystem{
     AnalogPotentiometer pot;
 
     private double goal;
-    private double MAX_GOAL = 260.0;
-    private double MIN_GOAL = 100.0;
+    private double MAX_GOAL = 275.0;
+    private double MIN_GOAL = 85.0;
 
     private static final double kP = 6.0/180.0;
     private static final double kI = 0.0
@@ -24,7 +24,7 @@ public class Turret extends PIDSubsystem{
     private static final double kD = 0.2/180.0;
     private static final double DEADBAND = 1;
     private static final double TOP_SOFT_LIMIT = 260.0;
-    private static final double BOTTOM_SOFT_LIMIT = 100.0;
+    private static final double BOTTOM_SOFT_LIMIT = 80.0;
 
     private Pixy pixy;
 
@@ -36,7 +36,7 @@ public class Turret extends PIDSubsystem{
         
         turretMotor = new Spark(6);
         turretMotor.setInverted(true);
-        pot = new AnalogPotentiometer(0, 360, 25);
+        pot = new AnalogPotentiometer(0, 360, 20);
 
         pixy = new Pixy();
     }

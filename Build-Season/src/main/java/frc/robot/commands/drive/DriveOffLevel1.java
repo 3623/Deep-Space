@@ -22,7 +22,7 @@ public class DriveOffLevel1 extends Command {
     Robot.drivetrain.waypointNav.clearWaypoints();
     Robot.drivetrain.model.setPosition(2.85, 1.7, 0.0);
 		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
+    Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.2, 0.5, 0.5, false));
   }
 
   // Called repeatedly when this Command is scheduled to run

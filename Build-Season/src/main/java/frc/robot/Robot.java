@@ -218,6 +218,7 @@ public class Robot extends TimedRobot {
     elevator.setSetpoint(elevator.elevatorPosition());
     turret.enable();
     Scheduler.getInstance().removeAll();
+    turret.setSetpoint(180);
   }
 
 
@@ -258,8 +259,6 @@ public class Robot extends TimedRobot {
     if (Math.abs(operatorController.getRawAxis(4)) > 0.3 ||
      Math.abs(operatorController.getRawAxis(5)) > 0.3){
     turret.setSetpoint((Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360)%360);}
-    else turret.setSetpoint(180);
-
 
     
   }
