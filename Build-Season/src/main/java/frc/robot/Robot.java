@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controls.Waypoint;
 import frc.robot.commands.auto.LeftRocket;
 import frc.robot.commands.drive.DriveOffLevel1;
+import frc.robot.commands.GeneralTimer;
 import frc.robot.commands.auto.LeftCargoShip;
 import frc.robot.commands.grabber.Intake;
 import frc.robot.commands.grabber.Place;
@@ -168,6 +169,9 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     drivetrain.zeroSensors();
     autoSelected = autoChooser.getSelected();
+    Scheduler.getInstance().removeAll();
+
+    turret.enable();
 
     switch(autoSelected){
       case CrossLine:
@@ -183,10 +187,14 @@ public class Robot extends TimedRobot {
       break;
 
       case DriverControl:
+        autoCommand = new GeneralTimer(0.0);
         driverControl = true;
+      break;
     }
 
     autoCommand.start();
+
+    if (driverControl) teleopInit();
 
   }
 
@@ -197,8 +205,8 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
       // drivetrain.driveToWaypoint();
       
-      if (driverControl) teleopInit();
-      else{
+      if (driverControl) teleopPeriodic();
+      else if (!operatorController.getRawButton(5)){
         Scheduler.getInstance().run();
       }
 
@@ -247,8 +255,11 @@ public class Robot extends TimedRobot {
 
     // Turret
     // Manual Control w/o Potentiometer
-    turret.setSetpoint(Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), operatorController.getRawAxis(5))))
-    ;
+    if (Math.abs(operatorController.getRawAxis(4)) > 0.3 ||
+     Math.abs(operatorController.getRawAxis(5)) > 0.3){
+    turret.setSetpoint((Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360)%360);}
+    else turret.setSetpoint(180);
+
 
     
   }

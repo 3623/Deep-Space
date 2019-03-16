@@ -22,7 +22,7 @@ public class Turret extends PIDSubsystem{
     private static final double kI = 0.0
     /180.0;
     private static final double kD = 0.2/180.0;
-    private static final double DEADBAND = 5;
+    private static final double DEADBAND = 1;
     private static final double TOP_SOFT_LIMIT = 260.0;
     private static final double BOTTOM_SOFT_LIMIT = 100.0;
 
