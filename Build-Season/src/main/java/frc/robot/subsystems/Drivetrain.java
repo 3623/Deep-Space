@@ -97,11 +97,11 @@ public class Drivetrain extends Subsystem{
 	}
  
 	public void monitor(){
-		SmartDashboard.putNumber("Left Encoder", encLeft.getDistance());
-		SmartDashboard.putNumber("Rights Encoder", encRight.getDistance());
-		SmartDashboard.putNumber("model X", model.center.x);
-		SmartDashboard.putNumber("model Y", model.center.y);
-		SmartDashboard.putNumber("Heading", navx.getAngle());
+		// SmartDashboard.putNumber("Left Encoder", encLeft.getDistance());
+		// SmartDashboard.putNumber("Rights Encoder", encRight.getDistance());
+		SmartDashboard.putNumber("Drivetrain Model X", model.center.x);
+		SmartDashboard.putNumber("Drivetrain Model Y", model.center.y);
+		SmartDashboard.putNumber("Drivetrain Heading", navx.getAngle());
 	}
     
     public static void main(String[] args) throws IOException{}

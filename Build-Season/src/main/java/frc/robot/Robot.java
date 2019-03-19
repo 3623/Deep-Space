@@ -190,21 +190,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
 
-    // Drivetrain
-	  Boolean quickTurn;
-    if (Math.abs(driverController.getRawAxis(1)) < 0.1) quickTurn = true;
-    else quickTurn = false;
-    quickTurn = true;
-
-    if (driverController.getRawButton(9)){
-      drivetrain.openLoopControl(-driverController.getRawAxis(1)/2.0, 
-      driverController.getRawAxis(4)/2.0,
-      quickTurn);
-    } else{
-      drivetrain.openLoopControl(-driverController.getRawAxis(1)*Math.abs(driverController.getRawAxis(1)), 
-      driverController.getRawAxis(4)/2.0, 
-      quickTurn);
-    }
+    // Drivetrain is now a default command
     
     // Grabber
     if (operatorController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
@@ -219,8 +205,7 @@ public class Robot extends TimedRobot {
     // Manual Control w/o Potentiometer
     if (Math.abs(operatorController.getRawAxis(0))> 0.1){
       turret.setSetpoint(turret.getPosition() + operatorController.getRawAxis(0)*17.0);
-    }
-    else if (Math.abs(operatorController.getRawAxis(4)) > 0.3 ||
+    } else if (Math.abs(operatorController.getRawAxis(4)) > 0.3 ||
      Math.abs(operatorController.getRawAxis(5)) > 0.3){
        double goalAngle = (Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360.0)%360.0;
        double robotAngle = drivetrain.model.center.heading;

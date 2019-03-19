@@ -21,9 +21,9 @@ public class Elevator extends PIDSubsystem {
     private DigitalInput bottomLimit = new DigitalInput(6);
     private final double BOTTOM_SOFT_LIMIT = 20.5;
     private DigitalInput topLimit = new DigitalInput(7);
-    private final double TOP_SOFT_LIMIT = 75.0;
+    private final double TOP_SOFT_LIMIT = 76.0;
 
-    private final double MAX_GOAL = 70.75;
+    private final double MAX_GOAL = 75.0;
     private final double MIN_GOAL = 20.0;
 
     private final static double kP = 0.15/60.0;
@@ -31,9 +31,6 @@ public class Elevator extends PIDSubsystem {
     private final static double kD = 0.05/60.0;
     private final double weightCompensation = 0.4/12.0;
     private final double DEADBAND = 3.0;
-
-    private double checkedOutput;
-    private double limitedOutput;
 
     private A775Pro  a775Pro = new A775Pro();
     private static final double MAX_CURRENT = 15.0;
@@ -103,13 +100,13 @@ public class Elevator extends PIDSubsystem {
 	}
 
 	protected void usePIDOutput(double output) {
-        checkedOutput = checkLimit(output);
+        double checkedOutput = checkLimit(output);
         double motorSpeed = elevatorSpeedToMotorSpeed(elevatorEncoder.getRate());
-        limitedOutput = limitAcceleration(12.0*checkedOutput, motorSpeed)/12.0;
+        double limitedOutput = limitAcceleration(12.0*checkedOutput, motorSpeed)/12.0;
 
-        SmartDashboard.putNumber("Checked Output", checkedOutput);
-        SmartDashboard.putNumber("Motor Speed", motorSpeed);
-        SmartDashboard.putNumber("Limited Output", limitedOutput);
+        SmartDashboard.putNumber("Elevator Checked Output", checkedOutput);
+        SmartDashboard.putNumber("Elevator Motor Speed", motorSpeed);
+        SmartDashboard.putNumber("Elevator Limited Output", limitedOutput);
 
         if (onTarget()){
             elevatorMotors.set(weightCompensation); // this is where the computed output value from the PIDController is applied to the motor
@@ -124,11 +121,11 @@ public class Elevator extends PIDSubsystem {
     }
 
     private void monitor(){
-        SmartDashboard.putNumber("Goal", this.getSetpoint());
-        SmartDashboard.putNumber("Position", this.getPosition());
-        SmartDashboard.putNumber("Speed", elevatorEncoder.getRate());
- 	    SmartDashboard.putBoolean("At Bottom", atBottomLimit());
-        SmartDashboard.putBoolean("At Top", atTopLimit());
+        SmartDashboard.putNumber("Elevator Goal", this.getSetpoint());
+        SmartDashboard.putNumber("Elevator Position", this.getPosition());
+        SmartDashboard.putNumber("Elevator Speed", elevatorEncoder.getRate());
+ 	    SmartDashboard.putBoolean("Elevator At Bottom", atBottomLimit());
+        SmartDashboard.putBoolean("Elevator At Top", atTopLimit());
     }
 
     private void zeroEncoder(){
