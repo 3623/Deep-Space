@@ -41,9 +41,32 @@ public class Turret extends PIDSubsystem{
         pixy = new Pixy();
     }
 
+    public void vision(){
+        PixyPacket[] blocks = pixy.readBlocks();
+        SmartDashboard.putNumber("Targets", blocks.length);
+    }
+
+    @Override
+    protected double returnPIDInput() {
+        return pot.get();
+    }
+
+    @Override
+    protected void usePIDOutput(double output) {
+        double checkedOutput = checkLimit(output);
+
+        // turretMotor.set(checkedOutput);
+        SmartDashboard.putNumber("Turret Output", checkedOutput);
+    }
+
     public void updateStuff(){
         monitor();
         // vision();
+    }
+
+    public void monitor(){
+        SmartDashboard.putNumber("Turret Angle", this.getPosition());
+        SmartDashboard.putNumber("Turret Goal", this.getSetpoint());
     }
 
     private double checkLimit(double motorOutput){
@@ -66,34 +89,11 @@ public class Turret extends PIDSubsystem{
         return (this.getPosition() > TOP_SOFT_LIMIT);
     }
 
-    public void vision(){
-        PixyPacket[] blocks = pixy.readBlocks();
-        SmartDashboard.putNumber("Targets", blocks.length);
-    }
-
     public void manualControl(double speed){
         turretMotor.set(speed);
     }
 
     @Override
-    protected double returnPIDInput() {
-        return pot.get();
-    }
-
-    @Override
-    protected void usePIDOutput(double output) {
-        double checkedOutput = checkLimit(output);
-
-        // turretMotor.set(checkedOutput);
-        SmartDashboard.putNumber("Turret Output", checkedOutput);
-    }
-
-    @Override
     protected void initDefaultCommand() {
-    }
-
-    public void monitor(){
-        SmartDashboard.putNumber("Turret Angle", this.getPosition());
-        SmartDashboard.putNumber("Turret Goal", this.getSetpoint());
     }
 }
