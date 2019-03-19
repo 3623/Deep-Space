@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.modeling.motors.A775Pro;
 
 public class Elevator extends PIDSubsystem {
-	private Spark elevatorMotor1, elevatorMotor2, elevatorMotor3, elevatorMotor4;
-    private SpeedControllerGroup elevatorMotors;
+	private Spark elevatorMotors;
 
     private Encoder elevatorEncoder;
     private static final double DISTANCE_PER_PULSE = Math.PI*1.125*2.0/2024.0;
@@ -59,16 +58,11 @@ public class Elevator extends PIDSubsystem {
 		setOutputRange(-0.15, 0.15);
         setAbsoluteTolerance(DEADBAND);
 
-        elevatorMotor1  = new Spark(2);
-        elevatorMotor2  = new Spark(3);
-        elevatorMotor3  = new Spark(4);
-        elevatorMotor4  = new Spark(5);
-        elevatorMotors = new SpeedControllerGroup(elevatorMotor1, elevatorMotor2, elevatorMotor3, elevatorMotor4);
+        elevatorMotors = new Spark(2);
         elevatorMotors.setInverted(isInverted);
 
         elevatorEncoder = new Encoder(4, 5, isInverted, Encoder.EncodingType.k1X);
         elevatorEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
-
 	}
 
      /** 
@@ -109,18 +103,17 @@ public class Elevator extends PIDSubsystem {
 	}
 
 	protected void usePIDOutput(double output) {
-        if (onTarget()){
-            elevatorMotors.set(OFFSET); // this is where the computed output value from the PIDController is applied to the motor
-        }
-        else{
-            checkedOutput = checkLimit(output);
-            double motorSpeed = elevatorSpeedToMotorSpeed(elevatorEncoder.getRate());
-            limitedOutput = limitAcceleration(12.0*checkedOutput, motorSpeed)/12.0;
-    
-            SmartDashboard.putNumber("Checked Output", checkedOutput);
-            SmartDashboard.putNumber("Motor Speed", motorSpeed);
-            SmartDashboard.putNumber("Limited Output", limitedOutput);
+        checkedOutput = checkLimit(output);
+        double motorSpeed = elevatorSpeedToMotorSpeed(elevatorEncoder.getRate());
+        limitedOutput = limitAcceleration(12.0*checkedOutput, motorSpeed)/12.0;
 
+        SmartDashboard.putNumber("Checked Output", checkedOutput);
+        SmartDashboard.putNumber("Motor Speed", motorSpeed);
+        SmartDashboard.putNumber("Limited Output", limitedOutput);
+
+        if (onTarget()){
+            elevatorMotors.set(weightCompensation); // this is where the computed output value from the PIDController is applied to the motor
+        } else{
             elevatorMotors.set(checkedOutput); // this is where the computed output value from the PIDController is applied to the motor
         }        
 	}
@@ -145,7 +138,7 @@ public class Elevator extends PIDSubsystem {
     }
 
     private static double elevatorSpeedToMotorSpeed(double elevatorSpeed){
-        return elevatorSpeed/(Math.PI*1.125)*60.0*GEAR_RATIO;
+        return elevatorSpeed/(Math.PI*1.125*2.0)*60.0*GEAR_RATIO;
     }
 
    
@@ -174,8 +167,8 @@ public class Elevator extends PIDSubsystem {
     
     public static void main ( String[] args ) throws IOException {
         new A775Pro();
-        limitCurrent(0, 0.0);
-        limitAcceleration(0.0, 0.0);
+        limitCurrent(12.0, 0.0);
+        limitAcceleration(12.0, 0.0);
     }
 
 }

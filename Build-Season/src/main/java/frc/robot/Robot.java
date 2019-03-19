@@ -13,34 +13,26 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import frc.controls.Waypoint;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.commands.auto.LeftRocket;
 import frc.robot.commands.drive.DriveOffLevel1;
+import frc.robot.commands.drive.ManualControl;
 import frc.robot.commands.GeneralTimer;
 import frc.robot.commands.auto.LeftCargoShip;
 import frc.robot.commands.grabber.Intake;
 import frc.robot.commands.grabber.Place;
+import frc.robot.subsystems.AxisCameraStream;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Turret;
 
-import org.opencv.core.Point;
-import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-
-import edu.wpi.cscore.AxisCamera;
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
 
 
 /**
@@ -58,6 +50,8 @@ public class Robot extends TimedRobot {
   public static Elevator elevator;
   public static Turret turret;
 
+  AxisCameraStream axisCam;
+
   public static XboxController driverController, operatorController;
   
   Timer timer;
@@ -73,7 +67,6 @@ public class Robot extends TimedRobot {
 
   Command autoCommand;
 
-  Thread m_visionThread;
 
 
   /**
@@ -89,53 +82,20 @@ public class Robot extends TimedRobot {
     grabber = new Grabber();
     elevator = new Elevator();
     turret = new Turret();
+
+    axisCam = new AxisCameraStream();
   
     driverController = new XboxController(0);
     operatorController = new XboxController(1);
 
     autoChooser = new SendableChooser<String>();
-    autoChooser.setDefaultOption(CrossLine, CrossLine);
+    autoChooser.setDefaultOption(DriverControl, DriverControl);
     autoChooser.addOption(LeftCargoShip, LeftCargoShip);
     autoChooser.addOption(LeftRocket, LeftRocket);
-    autoChooser.addOption(DriverControl, DriverControl);
+    autoChooser.addOption(CrossLine, CrossLine);
     SmartDashboard.putData("Auto choices", autoChooser);
 
     driverControl = false;
-
-    m_visionThread = new Thread(() -> {
-      // Get the Axis camera from CameraServer
-      AxisCamera camera
-          = CameraServer.getInstance().addAxisCamera("axis-camera.local");
-      // Set the resolution
-      camera.setResolution(320, 240);
-      camera.setFPS(15);
-
-      // Get a CvSink. This will capture Mats from the camera
-      CvSink cvSink = CameraServer.getInstance().getVideo();
-      // Setup a CvSource. This will send images back to the Dashboard
-      CvSource outputStream
-          = CameraServer.getInstance().putVideo("Rectangle", 320, 240);
-
-      // Mats are very memory expensive. Lets reuse this Mat.
-      Mat mat = new Mat();
-
-      // This cannot be 'true'. The program will never exit if it is. This
-      // lets the robot stop this thread when restarting robot code or
-      // deploying.
-      while (!Thread.interrupted()) {
-        // Tell the CvSink to grab a frame from the camera and put it
-        // in the source mat.  If there is an error notify the output.
-        if (cvSink.grabFrame(mat) == 0) {
-          // Send the output the error.
-          outputStream.notifyError(cvSink.getError());
-          // skip the rest of the current iteration
-          continue;
-        }
-        outputStream.putFrame(mat);
-      }
-    });
-    m_visionThread.setDaemon(true);
-    m_visionThread.start();
   }
 
   /**
@@ -215,9 +175,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     elevator.enable();
-    elevator.setSetpoint(elevator.elevatorPosition());
     turret.enable();
     Scheduler.getInstance().removeAll();
+
+    elevator.setSetpoint(elevator.getPosition());
     turret.setSetpoint(180);
   }
 
@@ -256,15 +217,15 @@ public class Robot extends TimedRobot {
 
     // Turret
     // Manual Control w/o Potentiometer
-    // if (Math.abs(operatorController.getRawAxis(0))> 0.04){
-    //   turret.setSetpoint(turret.getPosition() + operatorController.getRawAxis(0)*17.0);
-    // }
-    // else if (Math.abs(operatorController.getRawAxis(4)) > 0.3 ||
-    //  Math.abs(operatorController.getRawAxis(5)) > 0.3){
-    //    double goalAngle = (Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360.0)%360.0;
-    //    double robotAngle = drivetrain.model.center.heading;
-    //   turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
-    // }
+    if (Math.abs(operatorController.getRawAxis(0))> 0.1){
+      turret.setSetpoint(turret.getPosition() + operatorController.getRawAxis(0)*17.0);
+    }
+    else if (Math.abs(operatorController.getRawAxis(4)) > 0.3 ||
+     Math.abs(operatorController.getRawAxis(5)) > 0.3){
+       double goalAngle = (Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360.0)%360.0;
+       double robotAngle = drivetrain.model.center.heading;
+      turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
+    }
     turret.manualControl(operatorController.getRawAxis(0)/2.0);
     
   }
@@ -273,7 +234,6 @@ public class Robot extends TimedRobot {
   public void testInit() {
     turret.enable();
   }
-
 
   /**
    * This function is called periodically during test mode.
@@ -287,5 +247,6 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     elevator.disable();
     turret.disable();
+    drivetrain.stop();
   }
 }

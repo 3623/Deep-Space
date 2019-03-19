@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.controls.PathFollower;
 import frc.controls.Waypoint;
 import frc.controls.WaypointNavigator;
+import frc.robot.commands.drive.ManualControl;
 import frc.util.Pose;
 import frc.util.Tuple;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,12 +50,13 @@ public class Drivetrain extends Subsystem{
 		waypointNav = new WaypointNavigator();
 	}
 
-	public void initDefaultCommand(){}
+	public void initDefaultCommand(){
+		setDefaultCommand(new ManualControl());
+	}
 
     public void stop() {
     	leftMotors.disable();
 		rightMotors.disable();
-	
 	}
 
 	public void updatePosition(double time) {
