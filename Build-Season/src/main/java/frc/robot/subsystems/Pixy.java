@@ -183,7 +183,7 @@ public class Pixy {
 
 	public PixyPacket[] readBlocks() {
 		// This has to match the max block setting in pixymon?
-		int maxBlocks = 2;
+		int maxBlocks = 4;
 		PixyPacket[] blocks = new PixyPacket[maxBlocks];
 
 		if (!skipStart) {

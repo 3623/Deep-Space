@@ -61,7 +61,7 @@ public class Geometry {
 	      Pose left = new Pose(6, 5);
 	      Pose right = new Pose(5, 4);
 
-				System.out.println(Geometry.distance(left,  right));
-				System.out.println((Math.toDegrees(Math.atan2(0,-1))+360)%360);
+				// System.out.println(Geometry.distance(left,  right));
+				System.out.println(((180 - (-90))+360.0)%360.0);
 	  }
 }

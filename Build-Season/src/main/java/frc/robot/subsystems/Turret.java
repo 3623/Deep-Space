@@ -26,8 +26,8 @@ public class Turret extends PIDSubsystem{
     private static final double kD = 0.2/180.0;
     private static final double DEADBAND = 1.0;
 
-
     private Pixy pixy;
+    private PixyPacket[] pixyBlocks;
 
     public Turret(){
         super(kP, kI, kD);
@@ -44,8 +44,15 @@ public class Turret extends PIDSubsystem{
     }
 
     public void vision(){
-        PixyPacket[] blocks = pixy.readBlocks();
-        SmartDashboard.putNumber("Targets", blocks.length);
+        pixyBlocks = pixy.readBlocks();
+        SmartDashboard.putNumber("Targets", pixyBlocks.length);
+    }
+
+    public void checkPixyBlocks(){
+        double xTotal = 0.0;
+        for(int i = 0; i<pixyBlocks.length; i++){
+            
+        }
     }
 
     @Override

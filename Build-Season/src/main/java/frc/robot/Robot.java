@@ -20,6 +20,7 @@ import frc.robot.commands.drive.DriveOffLevel1;
 import frc.robot.commands.drive.ManualControl;
 import frc.robot.commands.GeneralTimer;
 import frc.robot.commands.auto.LeftCargoShip;
+import frc.robot.commands.grabber.Hold;
 import frc.robot.commands.grabber.Intake;
 import frc.robot.commands.grabber.Place;
 import frc.robot.subsystems.AxisCameraStream;
@@ -27,7 +28,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Turret;
-
+import frc.util.Utils;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -202,16 +203,18 @@ public class Robot extends TimedRobot {
     else if (operatorController.getPOV() == 0) elevator.setSetpoint(75.0);
 
     // Turret
-    // Manual Control w/o Potentiometer
-    if (Math.abs(operatorController.getRawAxis(0))> 0.1){
+    if (Utils.outsideDeadband(operatorController.getRawAxis(0), 0.0, 0.1)){
+        // Manual control with pot
       turret.setSetpoint(turret.getPosition() + operatorController.getRawAxis(0)*17.0);
-    } else if (Math.abs(operatorController.getRawAxis(4)) > 0.3 ||
-     Math.abs(operatorController.getRawAxis(5)) > 0.3){
+    } else if (Utils.outsideDeadband(operatorController.getRawAxis(4), 0.0, 0.3) ||
+    Utils.outsideDeadband(operatorController.getRawAxis(5), 0.0, 0.3)){
+        // Setpoint control
        double goalAngle = (Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360.0)%360.0;
        double robotAngle = drivetrain.model.center.heading;
       turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
     }
-    turret.manualControl(operatorController.getRawAxis(0)/2.0);
+    // Manual Control w/o Potentiometer
+    // turret.manualControl(operatorController.getRawAxis(0)/2.0);
     
   }
 

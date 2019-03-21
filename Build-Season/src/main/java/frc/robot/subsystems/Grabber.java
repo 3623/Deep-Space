@@ -11,7 +11,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.commands.grabber.DefaultState;
+import frc.robot.commands.grabber.Hold;
 
 
 public class Grabber extends Subsystem{
@@ -54,6 +54,6 @@ public class Grabber extends Subsystem{
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new DefaultState());
+        setDefaultCommand(new Hold());
     }
 }

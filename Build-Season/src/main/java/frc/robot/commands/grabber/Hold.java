@@ -10,8 +10,8 @@ package frc.robot.commands.grabber;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class DefaultState extends Command {
-  public DefaultState() {
+public class Hold extends Command {
+  public Hold() {
     requires(Robot.grabber);
   }
 

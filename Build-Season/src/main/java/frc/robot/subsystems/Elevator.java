@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.modeling.motors.A775Pro;
 
 public class Elevator extends PIDSubsystem {
-	private Spark elevatorMotors;
+    private Spark elevatorMotors;
+    private Boolean isInverted = true;
 
     private Encoder elevatorEncoder;
     private static final double DISTANCE_PER_PULSE = Math.PI*1.125*2.0/2024.0;
@@ -32,7 +33,6 @@ public class Elevator extends PIDSubsystem {
     private final double weightCompensation = 0.4/12.0;
     private final double DEADBAND = 3.0;
 
-    private A775Pro  a775Pro = new A775Pro();
     private static final double MAX_CURRENT = 15.0;
     private static final double MOTORS = 4.0;
     private static final double GEAR_RATIO = 20.8;
@@ -43,10 +43,6 @@ public class Elevator extends PIDSubsystem {
     private static final double MAX_FORCE_NEGATIVE = (-MAX_ACCELERATION+10.0)*MASS;
     private static final double MAX_TORQUE_POSITIVE = MAX_FORCE_POSITIVE*SPOOL_RADIUS;
     private static final double MAX_TORQUE_NEGATIVE = MAX_FORCE_NEGATIVE*SPOOL_RADIUS;
-
-
-
-    private Boolean isInverted = true;
 	
 
 	public Elevator() {
@@ -60,6 +56,8 @@ public class Elevator extends PIDSubsystem {
 
         elevatorEncoder = new Encoder(4, 5, isInverted, Encoder.EncodingType.k1X);
         elevatorEncoder.setDistancePerPulse(DISTANCE_PER_PULSE);
+
+        new A775Pro();
 	}
 
      /** 
@@ -107,11 +105,13 @@ public class Elevator extends PIDSubsystem {
         SmartDashboard.putNumber("Elevator Checked Output", checkedOutput);
         SmartDashboard.putNumber("Elevator Motor Speed", motorSpeed);
         SmartDashboard.putNumber("Elevator Limited Output", limitedOutput);
-
-        if (onTarget()){
-            elevatorMotors.set(weightCompensation); // this is where the computed output value from the PIDController is applied to the motor
+       
+        if (onTarget() && atBottomLimit()){
+            elevatorMotors.set(0.0);
+        } else if (onTarget()){
+            elevatorMotors.set(weightCompensation); 
         } else{
-            elevatorMotors.set(checkedOutput); // this is where the computed output value from the PIDController is applied to the motor
+            elevatorMotors.set(checkedOutput); 
         }        
 	}
 
@@ -164,8 +164,9 @@ public class Elevator extends PIDSubsystem {
     
     public static void main ( String[] args ) throws IOException {
         new A775Pro();
-        limitCurrent(12.0, 0.0);
-        limitAcceleration(12.0, 0.0);
+        double speed = 0.0;
+        limitCurrent(12.0, speed);
+        limitAcceleration(12.0, speed);
     }
 
 }
