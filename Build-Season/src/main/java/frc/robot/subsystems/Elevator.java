@@ -101,18 +101,21 @@ public class Elevator extends PIDSubsystem {
         double checkedOutput = checkLimit(output);
         double motorSpeed = elevatorSpeedToMotorSpeed(elevatorEncoder.getRate());
         double limitedOutput = limitAcceleration(12.0*checkedOutput, motorSpeed)/12.0;
+       
+        double finalOutput;
+        if (onTarget() && atBottomLimit()){
+            finalOutput = 0.0;
+        } else if (onTarget()){
+            finalOutput = weightCompensation; 
+        } else{
+            finalOutput = checkedOutput; 
+        }      
+        elevatorMotors.set(finalOutput); 
 
         SmartDashboard.putNumber("Elevator Checked Output", checkedOutput);
+        SmartDashboard.putNumber("Elevator Final Output", finalOutput);
         SmartDashboard.putNumber("Elevator Motor Speed", motorSpeed);
         SmartDashboard.putNumber("Elevator Limited Output", limitedOutput);
-       
-        if (onTarget() && atBottomLimit()){
-            elevatorMotors.set(0.0);
-        } else if (onTarget()){
-            elevatorMotors.set(weightCompensation); 
-        } else{
-            elevatorMotors.set(checkedOutput); 
-        }        
 	}
 
     public void updateStuff(){

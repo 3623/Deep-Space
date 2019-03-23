@@ -13,15 +13,15 @@ public class Turret extends PIDSubsystem{
     Spark turretMotor;
     // zeroing sensor ??
     AnalogPotentiometer pot;
-    private static final double SCALE_FACTOR = 340.0;
-    private static final double OFFSET = 25.0;
+    private static final double SCALE_FACTOR = 360.0;
+    private static final double OFFSET = 5.0;
 
     private double MAX_GOAL = 275.0;
     private double MIN_GOAL = 85.0;
     private static final double TOP_SOFT_LIMIT = 260.0;
     private static final double BOTTOM_SOFT_LIMIT = 80.0;
 
-    private static final double kP = 6.0/180.0;
+    private static final double kP = 4.0/180.0;
     private static final double kI = 0.001/180.0;
     private static final double kD = 0.2/180.0;
     private static final double DEADBAND = 1.0;
@@ -35,8 +35,8 @@ public class Turret extends PIDSubsystem{
 		setOutputRange(-1.0, 1.0);
         setAbsoluteTolerance(DEADBAND);
         
-        turretMotor = new Spark(6);
-        turretMotor.setInverted(true);
+        turretMotor = new Spark(3);
+        turretMotor.setInverted(false);
 
         pot = new AnalogPotentiometer(0, SCALE_FACTOR, OFFSET);
 
@@ -45,7 +45,7 @@ public class Turret extends PIDSubsystem{
 
     public void vision(){
         pixyBlocks = pixy.readBlocks();
-        SmartDashboard.putNumber("Targets", pixyBlocks.length);
+        // SmartDashboard.putNumber("Targets", pixyBlocks.length);
     }
 
     public void checkPixyBlocks(){
@@ -70,7 +70,7 @@ public class Turret extends PIDSubsystem{
 
     public void updateStuff(){
         monitor();
-        // vision();
+        vision();
     }
 
     public void monitor(){
