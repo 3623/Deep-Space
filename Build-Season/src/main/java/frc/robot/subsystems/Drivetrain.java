@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.controls.PathFollower;
 import frc.controls.Waypoint;
@@ -42,7 +43,7 @@ public class Drivetrain extends Subsystem{
 		encLeft.setDistancePerPulse(DISTANCE_PER_PULSE);
 		encRight.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-		navx = new AHRS(SerialPort.Port.kMXP);
+		navx = new AHRS(SPI.Port.kMXP);
 
 		model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);

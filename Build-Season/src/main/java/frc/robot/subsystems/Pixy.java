@@ -8,7 +8,6 @@ public class Pixy {
 	String name;
 	PixyPacket values;
 	I2C pixy;
-	Port port = Port.kOnboard;
 	PixyPacket[] packets;
 	PixyException pExc;
 	String print;
@@ -198,11 +197,7 @@ public class Pixy {
 			// null in callers?
 			blocks[i] = null;
 			int checksum = readWord();
-			if (checksum == START_WORD) {
-				// we've reached the beginning of the next frame
-				skipStart = true;
-				return blocks;
-			} else if (checksum == START_WORD_CC) {
+			if (checksum == START_WORD || checksum == START_WORD_CC) {
 				// we've reached the beginning of the next frame
 				skipStart = true;
 				return blocks;
@@ -213,4 +208,10 @@ public class Pixy {
 		}
 		return blocks;
 	}
+
+	public static void main ( String[] args )
+	  {
+		PixyPacket[] pixyBlocks = new PixyPacket[4];
+		System.out.println(pixyBlocks.length);
+	  }
 }

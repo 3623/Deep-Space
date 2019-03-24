@@ -203,7 +203,7 @@ public class Robot extends TimedRobot {
     else if (operatorController.getPOV() == 0) elevator.setSetpoint(75.0);
 
     // Turret
-    if (Math.abs(operatorController.getRawAxis(0)) > 0.1){
+    if (Utils.outsideDeadband(operatorController.getRawAxis(0), 0.0, 0.1)){
         // Manual control with pot
       turret.setSetpoint(turret.getPosition() + operatorController.getRawAxis(0)*17.0);
       System.out.println("SHAT");

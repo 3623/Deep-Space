@@ -197,7 +197,7 @@ public class DrivetrainModel {
 			
 			double totalTorque = CIMMotor.outputTorque(voltage, motorSpeed) * GEAR_RATIO * CIMS_PER_SIDE;
 
-			if (coast && Utils.threshold(voltage, 0.0, 0.05)) totalTorque = 0.0;
+			if (coast && Utils.withinThreshold(voltage, 0.0, 0.05)) totalTorque = 0.0;
 			double wheelForce = (totalTorque / WHEEL_RADIUS);
 			
 			double wheelnetForce = frictionModel(wheelForce, this.velocity);
