@@ -14,6 +14,10 @@ import java.util.List;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
+/**
+ * From http://www.cmucam.org/boards/9/topics/3120
+ */
+
 public class Pixy2 {
     private static final int FRAME_SIZE = 14;
     private static final int MAX_FRAMES = 20;

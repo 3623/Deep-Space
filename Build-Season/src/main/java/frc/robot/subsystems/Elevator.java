@@ -169,7 +169,7 @@ public class Elevator extends PIDSubsystem {
         new A775Pro();
         double speed = 0.0;
         limitCurrent(12.0, speed);
-        limitAcceleration(12.0, speed);
+        limitAcceleration(12.0, 10000);
     }
 
 }
