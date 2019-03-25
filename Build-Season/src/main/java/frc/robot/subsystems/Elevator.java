@@ -22,15 +22,15 @@ public class Elevator extends PIDSubsystem {
     private DigitalInput bottomLimit = new DigitalInput(6);
     private final double BOTTOM_SOFT_LIMIT = 20.5;
     private DigitalInput topLimit = new DigitalInput(7);
-    private final double TOP_SOFT_LIMIT = 76.0;
+    private final double TOP_SOFT_LIMIT = 60.0;
 
     private final double MAX_GOAL = 75.0;
     private final double MIN_GOAL = 20.0;
 
-    private final static double kP = 0.15/60.0;
-    private final static double kI = 0.01/60.0;
-    private final static double kD = 0.05/60.0;
-    private final double weightCompensation = 0.4/12.0;
+    private final static double kP = 1.0/60.0;
+    private final static double kI = 0.0/60.0;
+    private final static double kD = 0.0/60.0;
+    private final double weightCompensation = 0.25;
     private final double DEADBAND = 3.0;
 
     private static final double MAX_CURRENT = 15.0;
@@ -48,7 +48,7 @@ public class Elevator extends PIDSubsystem {
 	public Elevator() {
         super("Lift", kP, kI, kD);
 		setInputRange(MIN_GOAL, MAX_GOAL);
-		setOutputRange(-0.15, 0.15);
+		setOutputRange(-0.4, 0.4);
         setAbsoluteTolerance(DEADBAND);
 
         elevatorMotors = new Spark(2);
@@ -108,7 +108,7 @@ public class Elevator extends PIDSubsystem {
         } else if (onTarget()){
             finalOutput = weightCompensation; 
         } else{
-            finalOutput = checkedOutput; 
+            finalOutput = checkedOutput+weightCompensation; 
         }      
         elevatorMotors.set(finalOutput); 
 
@@ -164,6 +164,12 @@ public class Elevator extends PIDSubsystem {
     }
 
     public void initDefaultCommand() {}
+
+    public void calibrate(double val){
+        double checkedOutput = checkLimit(val);
+        SmartDashboard.putNumber("Elevator Checked Output", checkedOutput);
+        elevatorMotors.set(checkedOutput);
+    }
     
     public static void main ( String[] args ) throws IOException {
         new A775Pro();
