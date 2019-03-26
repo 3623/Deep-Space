@@ -29,8 +29,8 @@ public class Turret extends PIDSubsystem{
     private static final double kD = 0.2/180.0;
     private static final double DEADBAND = 1.0;
 
-    private Pixy pixy;
-    private List<PixyPacket> pixyBlocks;
+    private Pixy2 pixy;
+    private List<Frame> pixyBlocks;
     private static final double X = 315;
     private static final double Y = 217;
 
@@ -46,11 +46,11 @@ public class Turret extends PIDSubsystem{
 
         pot = new AnalogPotentiometer(0, SCALE_FACTOR, OFFSET);
 
-        pixy = new Pixy();
+        pixy = new Pixy2();
     }
 
     public void vision() throws IOException {
-        pixyBlocks = pixy.readBlocks();
+        pixyBlocks = pixy.getFrames();
         SmartDashboard.putNumber("Targets", pixyBlocks.size());
     }
 
