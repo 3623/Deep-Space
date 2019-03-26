@@ -112,12 +112,12 @@ public class Robot extends TimedRobot {
 	  drivetrain.update(timer.getFPGATimestamp());
     elevator.updateStuff(); 
     turret.updateStuff();
-    
   }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
+   * between different autonomous mode
+   * s using the dashboard. The sendable
    * chooser code works with the Java SmartDashboard. If you prefer the
    * LabVIEW Dashboard, remove all of the chooser code and uncomment the
    * getString line to get the auto name from the text box below the Gyro
@@ -221,7 +221,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    turret.enable();
   }
 
   /**
@@ -229,7 +228,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    turret.setSetpoint(180.0);
+    elevator.calibrate(operatorController.getRawAxis(0)*0.5);
   }
 
   @Override
