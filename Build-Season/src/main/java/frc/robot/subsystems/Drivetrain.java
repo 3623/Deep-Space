@@ -15,6 +15,7 @@ import frc.controls.WaypointNavigator;
 import frc.robot.commands.drive.ManualControl;
 import frc.util.Pose;
 import frc.util.Tuple;
+import frc.util.Utils;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -87,7 +88,29 @@ public class Drivetrain extends Subsystem{
 
    	public void directMotorControl(double leftSpeed, double rightSpeed){
 	  	drivetrain.tankDrive(leftSpeed, rightSpeed, false);
-   	}
+	   }
+	   
+	private double turnToAngle(double goal, double heading) {
+		double error;
+		double ROTATION_kP = 2.5;
+		
+		double difference = heading-goal;
+		if(difference > 180){
+			// When the values cross to and from 0 & 360, the gross difference is greater than 180
+			error = difference-360;
+		} else if(difference < -180){
+			error = difference+360;
+		} else{
+			error = difference;
+		}
+
+		// Sets output rotation to inverted dif as a factor of the given magnitude
+		// Uses cbrt to give greater output at mid to low differences
+		double output = 0.4*Math.cbrt(-1*error/180*ROTATION_kP);
+		// Deadband-ish
+		if(Utils.withinThreshold(error, 0.0, 4.0)) output = error/-180*ROTATION_kP;
+		return output;
+	}
 
 	public void update(double time){
 		double deltaTime = time - this.time;

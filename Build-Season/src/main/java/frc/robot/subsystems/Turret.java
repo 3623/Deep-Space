@@ -60,6 +60,12 @@ public class Turret extends PIDSubsystem{
     //     Boolean widthGood = Utils.withinThreshold(block.Width, TARGET_WIDTH, epsilon);
     // }
 
+        public void setSpeed(double speed){
+            this.setSetpoint(this.getPosition() + speed*20.0);
+            this.getPIDController().reset();
+            this.enable();
+        }
+
     @Override
     protected double returnPIDInput() {
         return pot.get();
