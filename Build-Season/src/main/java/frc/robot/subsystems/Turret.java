@@ -52,6 +52,11 @@ public class Turret extends PIDSubsystem{
     public void vision() throws IOException {
         pixyBlocks = pixy.getFrames();
         SmartDashboard.putNumber("Targets", pixyBlocks.size());
+        double xTotal = 0.0;
+        for(Frame frame : pixyBlocks){
+            xTotal += frame.xCenter;
+        }
+        SmartDashboard.putNumber("X Center", xTotal/2.0);
     }
 
     // public Boolean checkPixyBlock(PixyPacket block){
