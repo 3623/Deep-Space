@@ -21,11 +21,11 @@ import edu.wpi.first.wpilibj.I2C.Port;
 public class Pixy2 {
     private static final int FRAME_SIZE = 14;
     private static final int MAX_FRAMES = 20;
-    private I2C magDevice;
+    private I2C i2cDevice;
 
     public void setup() throws IOException {
         // create I2C device instance
-        magDevice = new I2C(Port.kOnboard, 0x54);
+        i2cDevice = new I2C(Port.kOnboard, 0x54);
 
     }
 
@@ -73,7 +73,7 @@ public class Pixy2 {
         byte[] bytes = new byte[FRAME_SIZE * MAX_FRAMES];
 
         // read data from pixy
-        Boolean bytesReadSuccesful = magDevice.readOnly(bytes, bytes.length);
+        Boolean bytesReadSuccesful = i2cDevice.readOnly(bytes, bytes.length);
 
         System.out.println("Bytes read " + bytesReadSuccesful);
 
