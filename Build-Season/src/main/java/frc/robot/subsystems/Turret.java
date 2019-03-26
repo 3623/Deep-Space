@@ -29,8 +29,8 @@ public class Turret extends PIDSubsystem{
     private static final double kD = 0.2/180.0;
     private static final double DEADBAND = 1.0;
 
-    private Pixy2 pixy;
-    private List<Frame> pixyBlocks;
+    private Pixy pixy;
+    private List<PixyPacket> pixyBlocks;
     private static final double X = 315;
     private static final double Y = 217;
 
@@ -46,11 +46,11 @@ public class Turret extends PIDSubsystem{
 
         pot = new AnalogPotentiometer(0, SCALE_FACTOR, OFFSET);
 
-        pixy = new Pixy2();
+        pixy = new Pixy();
     }
 
     public void vision() throws IOException {
-        pixyBlocks = pixy.getFrames();
+        pixyBlocks = pixy.readBlocks();
         SmartDashboard.putNumber("Targets", pixyBlocks.size());
     }
 
@@ -60,11 +60,11 @@ public class Turret extends PIDSubsystem{
     //     Boolean widthGood = Utils.withinThreshold(block.Width, TARGET_WIDTH, epsilon);
     // }
 
-        public void setSpeed(double speed){
-            this.setSetpoint(this.getPosition() + speed*20.0);
-            this.getPIDController().reset();
-            this.enable();
-        }
+    public void setSpeed(double speed){
+        this.setSetpoint(this.getPosition() + speed*20.0);
+        this.getPIDController().reset();
+        this.enable();
+    }
 
     @Override
     protected double returnPIDInput() {

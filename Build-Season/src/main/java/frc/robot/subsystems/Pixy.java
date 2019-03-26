@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -180,10 +183,10 @@ public class Pixy {
 
 	private boolean skipStart = false;
 
-	public PixyPacket[] readBlocks() {
+	public List<PixyPacket> readBlocks() {
 		// This has to match the max block setting in pixymon?
 		int maxBlocks = 4;
-		PixyPacket[] blocks = new PixyPacket[maxBlocks];
+		List<PixyPacket> blocks = new LinkedList<PixyPacket>();
 
 		if (!skipStart) {
 			if (getStart() == false) {
@@ -195,7 +198,7 @@ public class Pixy {
 		for (int i = 0; i < maxBlocks; i++) {
 			// Should we set to empty PixyPacket? To avoid having to check for
 			// null in callers?
-			blocks[i] = null;
+			// blocks[i] = null;
 			int checksum = readWord();
 			if (checksum == START_WORD || checksum == START_WORD_CC) {
 				// we've reached the beginning of the next frame
@@ -204,7 +207,7 @@ public class Pixy {
 			} else if (checksum == 0) {
 				return blocks;
 			}
-			blocks[i] = readBlock(checksum);
+			blocks.add(readBlock(checksum));
 		}
 		return blocks;
 	}

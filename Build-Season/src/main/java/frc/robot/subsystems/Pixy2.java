@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 
 public class Pixy2 {
     private static final int FRAME_SIZE = 14;
-    private static final int MAX_FRAMES = 20;
+    private static final int MAX_FRAMES = 4;
     private I2C i2cDevice;
 
     public Pixy2(){
@@ -79,6 +79,7 @@ public class Pixy2 {
         for (int byteOffset = 0; byteOffset < bytes.length - (FRAME_SIZE - 1);) {
 
             int b1 = bytes[byteOffset];
+            // System.out.println(b1);
             if (b1 < 0) b1+=256;
         
             int b2 = bytes[byteOffset+1];
@@ -86,6 +87,7 @@ public class Pixy2 {
 
             if (b1 == 0x55 && b2 == 0xaa) {
                 // found sync
+                System.out.println("FOUND SYNC");
                 byte[] tempBytes = new byte[FRAME_SIZE];
                 for (int tempByteOffset = 0; tempByteOffset < FRAME_SIZE; tempByteOffset++) {
                     tempBytes[tempByteOffset] = bytes[byteOffset
@@ -96,6 +98,7 @@ public class Pixy2 {
                 if (frame != null) {
                     // it was a valid frame!
                     frames.add(frame);
+                    System.out.println("YASSS");
                     // skip to next frame -1 as byteOffset will be incremented
                     // at the end
                     // of the loop block
