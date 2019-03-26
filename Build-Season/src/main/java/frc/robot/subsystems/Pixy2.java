@@ -23,10 +23,8 @@ public class Pixy2 {
     private static final int MAX_FRAMES = 20;
     private I2C i2cDevice;
 
-    public void setup() throws IOException {
-        // create I2C device instance
+    public Pixy2(){
         i2cDevice = new I2C(Port.kOnboard, 0x54);
-
     }
 
     public class Frame {
@@ -124,6 +122,11 @@ public class Pixy2 {
         }
         value += lsb;
         return value;
+    }
+
+    public static void main ( String[] args ) {
+        List<Frame> frames = new LinkedList<Frame>();
+        System.out.println(frames.size());
     }
 
 }

@@ -24,7 +24,7 @@ public class Turret extends PIDSubsystem{
     private static final double TOP_SOFT_LIMIT = 275.0;
     private static final double BOTTOM_SOFT_LIMIT = 85.0;
 
-    private static final double kP = 6.0/180.0;
+    private static final double kP = 1/20.0;
     private static final double kI = 0.001/180.0;
     private static final double kD = 0.2/180.0;
     private static final double DEADBAND = 1.0;
@@ -75,12 +75,11 @@ public class Turret extends PIDSubsystem{
 
     public void updateStuff() {
         monitor();
-        // try {
-        //     vision();
-        // } catch (IOException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
+        try {
+            vision();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void monitor(){

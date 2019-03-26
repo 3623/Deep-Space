@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - Pixy2",
+      "request": "launch",
+      "mainClass": "frc.robot.subsystems.Pixy2",
+      "projectName": "Build-Season"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - Pixy",
       "request": "launch",
       "mainClass": "frc.robot.subsystems.Pixy",
