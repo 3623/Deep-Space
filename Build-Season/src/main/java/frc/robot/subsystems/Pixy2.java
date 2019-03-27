@@ -72,14 +72,12 @@ public class Pixy2 {
 
         // read data from pixy
         Boolean bytesReadSuccesful = i2cDevice.readOnly(bytes, bytes.length);
-
-        System.out.println("Bytes read " + bytesReadSuccesful);
+        // System.out.println("Bytes read " + bytesReadSuccesful);
 
         // search for sync
         for (int byteOffset = 0; byteOffset < bytes.length - (FRAME_SIZE - 1);) {
 
             int b1 = bytes[byteOffset];
-            // System.out.println(b1);
             if (b1 < 0) b1+=256;
         
             int b2 = bytes[byteOffset+1];

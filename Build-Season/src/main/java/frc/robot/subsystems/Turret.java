@@ -7,7 +7,6 @@ import java.util.List;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Pixy2.Frame;
 import frc.util.Utils;
@@ -33,6 +32,8 @@ public class Turret extends PIDSubsystem{
     private List<Frame> pixyBlocks;
     private static final double X = 315;
     private static final double Y = 217;
+    private static final double TARGET_Y = 0;
+    private static final double EPSILON_Y = 0;
 
 
     public Turret(){
@@ -59,11 +60,10 @@ public class Turret extends PIDSubsystem{
         SmartDashboard.putNumber("X Center", xTotal/2.0);
     }
 
-    // public Boolean checkPixyBlock(PixyPacket block){
-    //     Boolean centerYGood = Utils.withinThreshold(block.Y, TARGET_Y, epsilon);
-    //     Boolean widthGood = Utils.withinThreshold(block.Width, TARGET_WIDTH, epsilon);
-    //     Boolean widthGood = Utils.withinThreshold(block.Width, TARGET_WIDTH, epsilon);
-    // }
+    public Boolean checkPixyBlock(Frame block){
+        Boolean centerYGood = Utils.withinThreshold(block.yCenter, TARGET_Y, EPSILON_Y);
+        return centerYGood;
+    }
 
     public void setSpeed(double speed){
         this.setSetpoint(this.getPosition() + speed*20.0);
