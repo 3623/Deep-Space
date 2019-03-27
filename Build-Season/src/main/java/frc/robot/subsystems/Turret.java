@@ -30,10 +30,14 @@ public class Turret extends PIDSubsystem{
 
     private Pixy2 pixy;
     private List<Frame> pixyBlocks;
-    private static final double X = 315;
-    private static final double Y = 217;
+    private static final double FRAME_X = 315;
+    private static final double FRAME_Y = 217;
+    private static final double FOV = 60.0;
     private static final double TARGET_Y = 0;
     private static final double EPSILON_Y = 0;
+
+    private double targetCount = 0.0;
+    private double visionOffset = 0.0;
 
 
     public Turret(){
@@ -52,12 +56,25 @@ public class Turret extends PIDSubsystem{
 
     public void vision() throws IOException {
         pixyBlocks = pixy.getFrames();
-        SmartDashboard.putNumber("Targets", pixyBlocks.size());
         double xTotal = 0.0;
+        targetCount = 0;
         for(Frame frame : pixyBlocks){
-            xTotal += frame.xCenter;
+            if(checkPixyBlock(frame)){
+                targetCount++;
+                xTotal += frame.xCenter;
+            }
         }
-        SmartDashboard.putNumber("X Center", xTotal/2.0);
+
+        if (targetCount > 0) {
+        double xCenter = xTotal/targetCount;
+        double xOffset = xCenter-(FRAME_X/2);
+        visionOffset = xOffset/FOV;
+        } else {
+            visionOffset = 0.0;
+        }
+
+        SmartDashboard.putNumber("Targets", targetCount);
+        SmartDashboard.putNumber("X Center", visionOffset);
     }
 
     public Boolean checkPixyBlock(Frame block){
@@ -69,6 +86,12 @@ public class Turret extends PIDSubsystem{
         this.setSetpoint(this.getPosition() + speed*20.0);
         this.getPIDController().reset();
         this.enable();
+    }
+
+    public void setVisionControlled(){
+        if (targetCount > 0){
+            this.setSetpoint(this.getPosition() + visionOffset);
+        }
     }
 
     @Override

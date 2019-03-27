@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.Encoder;
 
@@ -22,7 +21,7 @@ public class Elevator extends PIDSubsystem {
     private DigitalInput bottomLimit = new DigitalInput(6);
     private final double BOTTOM_SOFT_LIMIT = 20.5;
     private DigitalInput topLimit = new DigitalInput(7);
-    private final double TOP_SOFT_LIMIT = 60.0;
+    private final double TOP_SOFT_LIMIT = 78.0;
 
     private final double MAX_GOAL = 75.0;
     private final double MIN_GOAL = 20.0;
@@ -107,9 +106,13 @@ public class Elevator extends PIDSubsystem {
             finalOutput = 0.0;
         } else if (onTarget()){
             finalOutput = weightCompensation; 
-        } else{
+        } else if (this.getSetpoint() > this.getPosition()){
             finalOutput = checkedOutput+weightCompensation; 
-        }      
+        } else if (this.getSetpoint() < this.getPosition()){
+            finalOutput = checkedOutput;
+        } else {
+            finalOutput = 0.0;
+        }
         elevatorMotors.set(finalOutput); 
 
         SmartDashboard.putNumber("Elevator Checked Output", checkedOutput);
