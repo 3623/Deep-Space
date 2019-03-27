@@ -20,7 +20,7 @@ public class Place extends CommandGroup {
     addSequential(new GrabberHalf());
     addSequential(new GeneralTimer(0.15));
     addSequential(new GrabberRetract());
-    addSequential(new GeneralTimer(0.5));
+    addSequential(new GeneralTimer(0.3));
 
 
     // Add Commands here:

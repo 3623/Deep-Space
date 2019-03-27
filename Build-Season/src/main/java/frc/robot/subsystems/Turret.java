@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Pixy2.Frame;
 import frc.util.Utils;
 
-public class Turret extends PIDSubsystem{
+public class Turret extends PIDSubsystem {
     Spark turretMotor;
     // zeroing sensor ??
     AnalogPotentiometer pot;

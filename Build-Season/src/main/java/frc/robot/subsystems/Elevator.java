@@ -29,7 +29,7 @@ public class Elevator extends PIDSubsystem {
     private final static double kP = 1.0/60.0;
     private final static double kI = 0.0/60.0;
     private final static double kD = 0.0/60.0;
-    private final double weightCompensation = 0.25;
+    private final double weightCompensation = 0.27;
     private final double DEADBAND = 3.0;
 
     private static final double MAX_CURRENT = 15.0;

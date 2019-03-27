@@ -204,12 +204,12 @@ public class Robot extends TimedRobot {
 
     // Turret
     if (Utils.outsideDeadband(operatorController.getRawAxis(4), 0.0, 0.3) ||
-        Utils.outsideDeadband(operatorController.getRawAxis(5), 0.0, 0.3)){
+        Utils.outsideDeadband(operatorController.getRawAxis(5), 0.0, 0.3)) {
         // Setpoint control
        double goalAngle = (Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360.0)%360.0;
        double robotAngle = drivetrain.model.center.heading;
       turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
-    } else if (Utils.outsideDeadband(operatorController.getRawAxis(0), 0.0, 0.1)){
+    } else if (Utils.outsideDeadband(operatorController.getRawAxis(0), 0.0, 0.1)) {
         // Manual control with pot
       turret.setSpeed(operatorController.getRawAxis(0));
     }  
@@ -227,7 +227,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    elevator.calibrate(operatorController.getRawAxis(0)*0.5);
+    // elevator.calibrate(operatorController.getRawAxis(0)*0.5);
+    turret.setVisionControlled();
   }
 
   @Override

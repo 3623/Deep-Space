@@ -1,23 +1,19 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj.Spark;
+import frc.util.Tuple;
+import frc.util.Utils;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.Encoder;
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import frc.controls.PathFollower;
 import frc.controls.Waypoint;
 import frc.controls.WaypointNavigator;
-import frc.robot.commands.drive.ManualControl;
-import frc.util.Pose;
-import frc.util.Tuple;
-import frc.util.Utils;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.commands.drive.DriverControl;
 
 public class Drivetrain extends Subsystem{
 	Spark rightMotors, leftMotors;
@@ -53,7 +49,7 @@ public class Drivetrain extends Subsystem{
 	}
 
 	public void initDefaultCommand(){
-		setDefaultCommand(new ManualControl());
+		setDefaultCommand(new DriverControl());
 	}
 
     public void stop() {
