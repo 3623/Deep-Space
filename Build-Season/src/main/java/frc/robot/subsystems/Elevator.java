@@ -19,9 +19,9 @@ public class Elevator extends PIDSubsystem {
     private static final double DISTANCE_PER_PULSE = Math.PI*1.125*2.0/2024.0;
     private final double OFFSET = 20.0;
     private DigitalInput bottomLimit = new DigitalInput(6);
-    private final double BOTTOM_SOFT_LIMIT = 20.5;
+    private final double BOTTOM_SOFT_LIMIT = 24.5;
     private DigitalInput topLimit = new DigitalInput(7);
-    private final double TOP_SOFT_LIMIT = 78.0;
+    private final double TOP_SOFT_LIMIT = 77.0;
 
     private final double MAX_GOAL = 75.0;
     private final double MIN_GOAL = 20.0;
@@ -29,8 +29,8 @@ public class Elevator extends PIDSubsystem {
     private final static double kP = 1.0/60.0;
     private final static double kI = 0.0/60.0;
     private final static double kD = 0.0/60.0;
-    private final double weightCompensation = 0.27;
-    private final double DEADBAND = 3.0;
+    private final double weightCompensation = 0.16;
+    private final double DEADBAND = 4.0;
 
     private static final double MAX_CURRENT = 15.0;
     private static final double MOTORS = 4.0;
@@ -73,7 +73,7 @@ public class Elevator extends PIDSubsystem {
         else if (outputVoltage < minVoltage) limitedVoltage = minVoltage;
         else limitedVoltage = outputVoltage;
 
-        System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
+        // System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
 
         return limitedVoltage;
     }
@@ -87,7 +87,7 @@ public class Elevator extends PIDSubsystem {
         else if (outputVoltage < minVoltage) limitedVoltage = minVoltage;
         else limitedVoltage = outputVoltage;
 
-        System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
+        // System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
 
         return limitedVoltage;
     }

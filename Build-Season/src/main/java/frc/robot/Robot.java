@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.commands.auto.LeftRocket;
 import frc.robot.commands.drive.DriveOffLevel1;
-import frc.robot.commands.drive.ManualControl;
+import frc.robot.commands.drive.DriverControl;
 import frc.robot.commands.GeneralTimer;
 import frc.robot.commands.auto.LeftCargoShip;
 import frc.robot.commands.grabber.Hold;
@@ -34,6 +34,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+
+import edu.wpi.first.wpilibj.Solenoid;
 
 
 /**
@@ -68,6 +70,7 @@ public class Robot extends TimedRobot {
 
   Command autoCommand;
 
+  Solenoid climber;
 
 
   /**
@@ -97,6 +100,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", autoChooser);
 
     driverControl = false;
+
+    climber = new Solenoid(4);
   }
 
   /**
@@ -212,14 +217,19 @@ public class Robot extends TimedRobot {
     } else if (Utils.outsideDeadband(operatorController.getRawAxis(0), 0.0, 0.1)) {
         // Manual control with pot
       turret.setSpeed(operatorController.getRawAxis(0));
-    }  
+    } else {
+      turret.setVisionControlled();
+    }
     // Manual Control w/o Potentiometer
     // turret.manualControl(operatorController.getRawAxis(0)/2.0);
     
+    climber.set(operatorController.getYButton());
+
   }
 
   @Override
   public void testInit() {
+    turret.enable();
   }
 
   /**
@@ -228,7 +238,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     // elevator.calibrate(operatorController.getRawAxis(0)*0.5);
-    turret.setVisionControlled();
   }
 
   @Override

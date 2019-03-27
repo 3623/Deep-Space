@@ -33,8 +33,8 @@ public class Turret extends PIDSubsystem {
     private static final double FRAME_X = 315;
     private static final double FRAME_Y = 217;
     private static final double FOV = 60.0;
-    private static final double TARGET_Y = 0;
-    private static final double EPSILON_Y = 0;
+    private static final double TARGET_Y = 20;
+    private static final double EPSILON_Y = 1000;
 
     private double targetCount = 0.0;
     private double visionOffset = 0.0;
@@ -66,9 +66,11 @@ public class Turret extends PIDSubsystem {
         }
 
         if (targetCount > 0) {
-        double xCenter = xTotal/targetCount;
-        double xOffset = xCenter-(FRAME_X/2);
-        visionOffset = xOffset/FOV;
+            double xCenter = xTotal/targetCount;
+            double xOffset = xCenter-(FRAME_X/2.0);
+            visionOffset = xOffset/FRAME_X*FOV;
+            System.out.println(xCenter);
+            System.out.println(xOffset);
         } else {
             visionOffset = 0.0;
         }
@@ -84,8 +86,6 @@ public class Turret extends PIDSubsystem {
 
     public void setSpeed(double speed){
         this.setSetpoint(this.getPosition() + speed*20.0);
-        this.getPIDController().reset();
-        this.enable();
     }
 
     public void setVisionControlled(){
