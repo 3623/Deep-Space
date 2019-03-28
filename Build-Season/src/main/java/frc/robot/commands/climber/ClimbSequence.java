@@ -5,23 +5,22 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.grabber;
+package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.commands.general.GeneralTimer;
+import frc.robot.commands.drive.DriveDeadReckoning;
 
-public class Place extends CommandGroup {
+public class ClimbSequence extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public Place() {
-    addSequential(new GrabberExtend());
-    addSequential(new GeneralTimer(0.4));
-    addSequential(new GrabberHalf());
-    addSequential(new GeneralTimer(0.15));
-    addSequential(new GrabberRetract());
-    addSequential(new GeneralTimer(0.3));
-
+  public ClimbSequence() {
+    addSequential(new DriveDeadReckoning(-0.2, 0.3, 0.0, true));
+    addSequential(new FrontLift());
+    addSequential(new DriveDeadReckoning(0.4, 0.3, 0.0, true));
+    addParallel(new FrontRetract());
+    addSequential(new BackLift());
+    addSequential(new DriveDeadReckoning(0.9, 0.5, 0.0, true));
 
     // Add Commands here:
     // e.g. addSequential(new Command1());

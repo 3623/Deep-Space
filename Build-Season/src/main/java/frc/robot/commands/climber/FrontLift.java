@@ -5,32 +5,27 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.commands.climber;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.command.InstantCommand;
+import frc.robot.Robot;
 
 /**
  * Add your docs here.
  */
-public class Climber extends Subsystem {
-  private Solenoid frontPistons, backPistons;
-
-  public Climber(){
-    frontPistons = new Solenoid(4);
-    backPistons = new Solenoid(5);
+public class FrontLift extends InstantCommand {
+  /**
+   * Add your docs here.
+   */
+  public FrontLift() {
+    super();
+    requires(Robot.climber);
   }
 
-  public void setFront(Boolean extended){
-    frontPistons.set(extended);
-  }
-
-  public void setBack(Boolean extended){
-    backPistons.set(extended);
-  }
-
+  // Called once when the command executes
   @Override
-  public void initDefaultCommand() {
-    
+  protected void initialize() {
+    Robot.climber.setFront(true);
   }
+
 }

@@ -8,7 +8,7 @@
 package frc.robot.commands.grabber;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.commands.GeneralTimer;
+import frc.robot.commands.general.GeneralTimer;
 
 public class Intake extends CommandGroup {
   /**

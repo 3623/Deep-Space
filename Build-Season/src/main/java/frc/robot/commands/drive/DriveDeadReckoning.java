@@ -5,21 +5,28 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.TimedCommand;
+import frc.robot.Robot;
 
 /**
  * Add your docs here.
  */
-public class GeneralTimer extends TimedCommand {
+public class DriveDeadReckoning extends TimedCommand {
   /**
    * Add your docs here.
    */
-  public GeneralTimer(double timeout) {
+  double xSpeed;
+  double rSpeed;
+  Boolean quickTurn;
+
+  public DriveDeadReckoning(double timeout, double xSpeed, double rSpeed, Boolean quickTurn) {
     super(timeout);
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.drivetrain);
+    this.xSpeed = xSpeed;
+    this.rSpeed = rSpeed;
+    this.quickTurn = quickTurn;
   }
 
   // Called just before this Command runs the first time
@@ -30,11 +37,13 @@ public class GeneralTimer extends TimedCommand {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.drivetrain.openLoopControl(xSpeed, rSpeed, quickTurn);
   }
 
   // Called once after timeout
   @Override
   protected void end() {
+    Robot.drivetrain.openLoopControl(0.0, 0.0, false);
   }
 
   // Called when another command which requires one or more of the same

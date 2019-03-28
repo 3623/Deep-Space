@@ -8,7 +8,7 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.commands.GeneralTimer;
+import frc.robot.commands.general.GeneralTimer;
 import frc.robot.commands.turret.TurretTurnToAngle;
 import frc.robot.commands.drive.DriveOffLevel1;
 import frc.robot.commands.drive.LeftCargoShipToLeftLoadingZone;

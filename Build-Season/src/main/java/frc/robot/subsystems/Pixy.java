@@ -189,7 +189,7 @@ public class Pixy {
 		List<PixyPacket> blocks = new LinkedList<PixyPacket>();
 
 		if (!skipStart) {
-			if (getStart() == false) {
+			if (!getStart()) {
 				return null;
 			}
 		} else {
