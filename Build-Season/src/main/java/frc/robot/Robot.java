@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.commands.auto.LeftRocket;
 import frc.robot.commands.drive.DriveOffLevel1;
 import frc.robot.commands.drive.DriverControl;
-import frc.robot.commands.GeneralTimer;
+import frc.robot.commands.general.GeneralTimer;
 import frc.robot.commands.auto.LeftCargoShip;
 import frc.robot.commands.grabber.Hold;
 import frc.robot.commands.grabber.Intake;
@@ -203,6 +203,8 @@ public class Robot extends TimedRobot {
     // Drivetrain is now a default command
     
     // Grabber is now a default command
+    if (Robot.operatorController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
+    else if (Robot.operatorController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
     
 
     // Elevator

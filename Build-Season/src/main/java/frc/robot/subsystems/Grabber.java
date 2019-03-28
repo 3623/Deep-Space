@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.commands.grabber.GrabberManualControl;
+import frc.robot.commands.grabber.Hold;
 
 public class Grabber extends Subsystem{
     private Solenoid clawSolenoid1, clawSolenoid2, extensionSolenoid;
@@ -51,6 +52,6 @@ public class Grabber extends Subsystem{
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new GrabberManualControl());
+        setDefaultCommand(new Hold());
     }
 }

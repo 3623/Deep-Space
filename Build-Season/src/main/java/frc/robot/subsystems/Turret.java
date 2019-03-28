@@ -28,7 +28,7 @@ public class Turret extends PIDSubsystem {
     private static final double kD = 0.2/180.0;
     private static final double DEADBAND = 1.0;
 
-    private Pixy pixy;
+    private Pixy2 pixy;
     private List<PixyPacket> pixyBlocks;
     private static final double FRAME_X = 315;
     private static final double FRAME_Y = 217;
@@ -51,16 +51,17 @@ public class Turret extends PIDSubsystem {
 
         pot = new AnalogPotentiometer(0, SCALE_FACTOR, OFFSET);
 
-        pixy = new Pixy();
+        pixy = new Pixy2();
     }
 
     public void vision() throws IOException {
         pixyBlocks = pixy.readBlocks();
         if(pixyBlocks == null){
-            SmartDashboard.putString("Targets", "Null");
+            // SmartDashboard.putString("Targets", "Null");
         } else {
             double xTotal = 0.0;
             targetCount = 0;
+            System.out.println(pixyBlocks.size());
             for(PixyPacket block : pixyBlocks){
                 if(checkPixyBlock(block)){
                     targetCount++;
@@ -68,16 +69,13 @@ public class Turret extends PIDSubsystem {
                 }
             }
 
-            if (targetCount > 0) {
+            if (targetCount == 2) {
                 double xCenter = xTotal/targetCount;
                 double xOffset = xCenter-(FRAME_X/2.0);
                 visionOffset = xOffset/FRAME_X*FOV;
-            } else {
-                visionOffset = 0.0;
+                SmartDashboard.putNumber("Targets", targetCount);
+                SmartDashboard.putNumber("X Center", visionOffset);
             }
-
-            SmartDashboard.putNumber("Targets", targetCount);
-            SmartDashboard.putNumber("X Center", visionOffset);
         }
     }
 

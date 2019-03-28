@@ -64,6 +64,12 @@ public class Drivetrain extends Subsystem{
 		Thread t = new Thread(() -> {
             while (!Thread.interrupted()) {
 				this.update();
+				try {
+					Thread.sleep(20);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
         });
         t.start();
