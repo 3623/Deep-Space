@@ -24,6 +24,7 @@ import frc.robot.commands.grabber.Hold;
 import frc.robot.commands.grabber.Intake;
 import frc.robot.commands.grabber.Place;
 import frc.robot.subsystems.AxisCameraStream;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
@@ -34,8 +35,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-
-import edu.wpi.first.wpilibj.Solenoid;
 
 
 /**
@@ -52,6 +51,7 @@ public class Robot extends TimedRobot {
   public static Grabber grabber;
   public static Elevator elevator;
   public static Turret turret;
+  public static Climber climber;
 
   AxisCameraStream axisCam;
 
@@ -69,9 +69,6 @@ public class Robot extends TimedRobot {
   Boolean driverControl;
 
   Command autoCommand;
-
-  Solenoid climber;
-
 
   /**
    * This function is run when the robot is first started up and should be
@@ -101,7 +98,7 @@ public class Robot extends TimedRobot {
 
     driverControl = false;
 
-    climber = new Solenoid(4);
+    climber = new Climber();
   }
 
   /**
@@ -114,9 +111,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-	  drivetrain.update(timer.getFPGATimestamp());
-    elevator.updateStuff(); 
-    turret.updateStuff();
+    elevator.update(); 
+    turret.update();
   }
 
   /**
@@ -134,10 +130,16 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     drivetrain.zeroSensors();
-    autoSelected = autoChooser.getSelected();
     Scheduler.getInstance().removeAll();
 
     turret.enable();
+    elevator.enable();
+
+    Scheduler.getInstance().add(new Hold());
+    elevator.setSetpoint(elevator.getPosition());
+    turret.setSetpoint(180);
+
+    autoSelected = autoChooser.getSelected();
 
     switch(autoSelected){
       case CrossLine:
@@ -180,12 +182,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Scheduler.getInstance().removeAll();
+
     elevator.enable();
     turret.enable();
-    Scheduler.getInstance().removeAll();
 
     elevator.setSetpoint(elevator.getPosition());
     turret.setSetpoint(180);
+    Scheduler.getInstance().add(new Hold());
   }
 
 
@@ -198,32 +202,20 @@ public class Robot extends TimedRobot {
 
     // Drivetrain is now a default command
     
-    // Grabber
-    if (operatorController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
-    else if (operatorController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
+    // Grabber is now a default command
+    
 
     // Elevator
     if (operatorController.getPOV() == 180) elevator.setSetpoint(19.0);
     else if (operatorController.getPOV() == 90) elevator.setSetpoint(49.0);
     else if (operatorController.getPOV() == 0) elevator.setSetpoint(75.0);
 
-    // Turret
-    if (Utils.outsideDeadband(operatorController.getRawAxis(4), 0.0, 0.3) ||
-        Utils.outsideDeadband(operatorController.getRawAxis(5), 0.0, 0.3)) {
-        // Setpoint control
-       double goalAngle = (Math.toDegrees(Math.atan2(operatorController.getRawAxis(4), -operatorController.getRawAxis(5)))+360.0)%360.0;
-       double robotAngle = drivetrain.model.center.heading;
-      turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
-    } else if (Utils.outsideDeadband(operatorController.getRawAxis(0), 0.0, 0.1)) {
-        // Manual control with pot
-      turret.setSpeed(operatorController.getRawAxis(0));
-    } else {
-      turret.setVisionControlled();
-    }
-    // Manual Control w/o Potentiometer
-    // turret.manualControl(operatorController.getRawAxis(0)/2.0);
+    // Turret is now a default command
+      // Manual Control w/o Potentiometer
+      // turret.manualControl(operatorController.getRawAxis(0)/2.0);
     
-    climber.set(operatorController.getYButton());
+    climber.setFront(operatorController.getYButton());
+    climber.setBack(operatorController.getXButton());
 
   }
 

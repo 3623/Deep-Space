@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.Pixy2.Frame;
+import frc.robot.commands.turret.TurretManualControl;
 import frc.util.Utils;
 
 public class Turret extends PIDSubsystem {
@@ -28,15 +28,15 @@ public class Turret extends PIDSubsystem {
     private static final double kD = 0.2/180.0;
     private static final double DEADBAND = 1.0;
 
-    private Pixy2 pixy;
-    private List<Frame> pixyBlocks;
+    private Pixy pixy;
+    private List<PixyPacket> pixyBlocks;
     private static final double FRAME_X = 315;
     private static final double FRAME_Y = 217;
     private static final double FOV = 60.0;
-    private static final double TARGET_Y = 20;
-    private static final double EPSILON_Y = 1000;
+    private static final double TARGET_Y = 170.0;
+    private static final double EPSILON_Y = 40.0;
 
-    private double targetCount = 0.0;
+    private int targetCount = 0;
     private double visionOffset = 0.0;
 
 
@@ -51,35 +51,37 @@ public class Turret extends PIDSubsystem {
 
         pot = new AnalogPotentiometer(0, SCALE_FACTOR, OFFSET);
 
-        pixy = new Pixy2();
+        pixy = new Pixy();
     }
 
     public void vision() throws IOException {
-        pixyBlocks = pixy.getFrames();
-        double xTotal = 0.0;
-        targetCount = 0;
-        for(Frame frame : pixyBlocks){
-            if(checkPixyBlock(frame)){
-                targetCount++;
-                xTotal += frame.xCenter;
-            }
-        }
-
-        if (targetCount > 0) {
-            double xCenter = xTotal/targetCount;
-            double xOffset = xCenter-(FRAME_X/2.0);
-            visionOffset = xOffset/FRAME_X*FOV;
-            System.out.println(xCenter);
-            System.out.println(xOffset);
+        pixyBlocks = pixy.readBlocks();
+        if(pixyBlocks == null){
+            SmartDashboard.putString("Targets", "Null");
         } else {
-            visionOffset = 0.0;
-        }
+            double xTotal = 0.0;
+            targetCount = 0;
+            for(PixyPacket block : pixyBlocks){
+                if(checkPixyBlock(block)){
+                    targetCount++;
+                    xTotal += block.xCenter;
+                }
+            }
 
-        SmartDashboard.putNumber("Targets", targetCount);
-        SmartDashboard.putNumber("X Center", visionOffset);
+            if (targetCount > 0) {
+                double xCenter = xTotal/targetCount;
+                double xOffset = xCenter-(FRAME_X/2.0);
+                visionOffset = xOffset/FRAME_X*FOV;
+            } else {
+                visionOffset = 0.0;
+            }
+
+            SmartDashboard.putNumber("Targets", targetCount);
+            SmartDashboard.putNumber("X Center", visionOffset);
+        }
     }
 
-    public Boolean checkPixyBlock(Frame block){
+    public Boolean checkPixyBlock(PixyPacket block){
         Boolean centerYGood = Utils.withinThreshold(block.yCenter, TARGET_Y, EPSILON_Y);
         return centerYGood;
     }
@@ -89,7 +91,7 @@ public class Turret extends PIDSubsystem {
     }
 
     public void setVisionControlled(){
-        if (targetCount > 0){
+        if (targetCount == 2.0){
             this.setSetpoint(this.getPosition() + visionOffset);
         }
     }
@@ -107,7 +109,7 @@ public class Turret extends PIDSubsystem {
         SmartDashboard.putNumber("Turret Output", checkedOutput);
     }
 
-    public void updateStuff() {
+    public void update() {
         monitor();
         try {
             vision();
@@ -147,5 +149,6 @@ public class Turret extends PIDSubsystem {
 
     @Override
     protected void initDefaultCommand() {
+        setDefaultCommand(new TurretManualControl());
     }
 }

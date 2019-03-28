@@ -1,4 +1,4 @@
-package old;
+package frc.robot.subsystems;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class Pixy {
 	// object
 	// in
 	// pixymon you are trying to get data for
-	public PixyPacket readPacket(int Signature) throws PixyException {
+	public PixyPacket readPacket(int signature) throws PixyException {
 		int Checksum;
 		int Sig;
 		byte[] rawData = new byte[32];
@@ -75,14 +75,14 @@ public class Pixy {
 				}
 
 				packets[Sig - 1] = new PixyPacket();
-				packets[Sig - 1].X = cvt(rawData[i + 9], rawData[i + 8]);
-				packets[Sig - 1].Y = cvt(rawData[i + 11], rawData[i + 10]);
-				packets[Sig - 1].Width = cvt(rawData[i + 13], rawData[i + 12]);
-				packets[Sig - 1].Height = cvt(rawData[i + 15], rawData[i + 14]);
+				packets[Sig - 1].xCenter = cvt(rawData[i + 9], rawData[i + 8]);
+				packets[Sig - 1].yCenter = cvt(rawData[i + 11], rawData[i + 10]);
+				packets[Sig - 1].width = cvt(rawData[i + 13], rawData[i + 12]);
+				packets[Sig - 1].height = cvt(rawData[i + 15], rawData[i + 14]);
 				// Checks whether the data is valid using the checksum *This if
 				// block should never be entered*
-				if (Checksum != Sig + packets[Sig - 1].X + packets[Sig - 1].Y + packets[Sig - 1].Width
-						+ packets[Sig - 1].Height) {
+				if (Checksum != Sig + packets[Sig - 1].xCenter + packets[Sig - 1].yCenter + packets[Sig - 1].width
+						+ packets[Sig - 1].height) {
 					packets[Sig - 1] = null;
 					throw pExc;
 				}
@@ -92,8 +92,8 @@ public class Pixy {
 		}
 		// Assigns our packet to a temp packet, then deletes data so that we
 		// dont return old data
-		PixyPacket pkt = packets[Signature - 1];
-		packets[Signature - 1] = null;
+		PixyPacket pkt = packets[signature - 1];
+		packets[signature - 1] = null;
 		return pkt;
 	}
 
@@ -132,23 +132,23 @@ public class Pixy {
 			return null;
 		}
 		PixyPacket block = new PixyPacket();
-		block.Signature = cvt(data[1], data[0]);
-		if (block.Signature <= 0 || block.Signature > 7) {
+		block.signature = cvt(data[1], data[0]);
+		if (block.signature <= 0 || block.signature > 7) {
 			return null;
 		}
-		block.X = cvt(data[3], data[2]);
-		block.Y = cvt(data[5], data[4]);
-		block.Width = cvt(data[7], data[6]);
-		block.Height = cvt(data[9], data[8]);
+		block.xCenter = cvt(data[3], data[2]);
+		block.yCenter = cvt(data[5], data[4]);
+		block.width = cvt(data[7], data[6]);
+		block.height = cvt(data[9], data[8]);
 
-		int sum = block.Signature + block.X + block.Y + block.Width + block.Height;
+		int sum = block.signature + block.xCenter + block.yCenter + block.width + block.height;
 		if (sum != checksum) {
 			return null;
 		}
 		return block;
 	}
 
-	private final int MAX_SIGNATURES = 7;
+	private final int MAX_signatureS = 7;
 	private final int OBJECT_SIZE = 14;
 	private final int START_WORD = 0xaa55;
 	private final int START_WORD_CC = 0xaa5;
@@ -163,7 +163,7 @@ public class Pixy {
 		// can have a chance to run. What number of bytes to choose? Maybe size
 		// of a block * max number of signatures that can be detected? Or how
 		// about size of block and max number of blocks we are looking for?
-		while (numBytesRead < (OBJECT_SIZE * MAX_SIGNATURES)) {
+		while (numBytesRead < (OBJECT_SIZE * MAX_signatureS)) {
 			int word = readWord();
 			numBytesRead += 2;
 			if (word == 0 && lastWord == 0) {
@@ -195,6 +195,7 @@ public class Pixy {
 		} else {
 			skipStart = false;
 		}
+
 		for (int i = 0; i < maxBlocks; i++) {
 			// Should we set to empty PixyPacket? To avoid having to check for
 			// null in callers?
@@ -210,6 +211,12 @@ public class Pixy {
 			blocks.add(readBlock(checksum));
 		}
 		return blocks;
+	}
+
+	public class PixyException extends Exception{
+		public PixyException(String message){
+			super(message);
+		}
 	}
 
 	public static void main ( String[] args ) {

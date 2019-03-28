@@ -6,6 +6,7 @@ import frc.util.Utils;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Encoder;
 import com.kauailabs.navx.frc.AHRS;
@@ -46,6 +47,8 @@ public class Drivetrain extends Subsystem{
 		model.setPosition(0.0, 0.0, 0.0);
 
 		waypointNav = new WaypointNavigator();
+
+		this.updateThreadStart();
 	}
 
 	public void initDefaultCommand(){
@@ -55,6 +58,15 @@ public class Drivetrain extends Subsystem{
     public void stop() {
     	leftMotors.disable();
 		rightMotors.disable();
+	}
+
+	public void updateThreadStart(){
+		Thread t = new Thread(() -> {
+            while (!Thread.interrupted()) {
+				this.update();
+			}
+        });
+        t.start();
 	}
 
 	public void updatePosition(double time) {
@@ -108,7 +120,8 @@ public class Drivetrain extends Subsystem{
 		return output;
 	}
 
-	public void update(double time){
+	public void update(){
+		double time = Timer.getFPGATimestamp();
 		double deltaTime = time - this.time;
 		this.time = time;
 		this.updatePosition(deltaTime);

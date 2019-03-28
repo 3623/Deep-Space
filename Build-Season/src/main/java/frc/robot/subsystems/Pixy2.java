@@ -27,47 +27,29 @@ public class Pixy2 {
         i2cDevice = new I2C(Port.kOnboard, 0x54);
     }
 
-    public class Frame {
-        // 0, 1 0 sync (0xaa55)
-        // 2, 3 1 checksum (sum of all 16-bit words 2-6)
-        // 4, 5 2 signature number
-        // 6, 7 3 x center of object
-        // 8, 9 4 y center of object
-        // 10, 11 5 width of object
-        // 12, 13 6 height of object
-
-        int sync = 0;
-        int checksum = 0;
-        public int signature;
-        public int xCenter;
-        public int yCenter;
-        public int width;
-        public int height;
-    }
-
-    public Frame getFrame(byte[] bytes) {
-        Frame frame = new Frame();
-        frame.sync = convertBytesToInt(bytes[1], bytes[0]);
-        // System.out.println("\nsync: "+Integer.toHexString(frame.sync));
-        frame.checksum = convertBytesToInt(bytes[3], bytes[2]);
+    public PixyPacket getFrame(byte[] bytes) {
+        PixyPacket PixyPacket = new PixyPacket();
+        PixyPacket.sync = convertBytesToInt(bytes[1], bytes[0]);
+        // System.out.println("\nsync: "+Integer.toHexString(PixyPacket.sync));
+        PixyPacket.checksum = convertBytesToInt(bytes[3], bytes[2]);
 
         // if the checksum is 0 or the checksum is a sync byte, then there
         // are no more frames.
-        if (frame.checksum == 0 || frame.checksum == 0xaa55) {
+        if (PixyPacket.checksum == 0 || PixyPacket.checksum == 0xaa55) {
             return null;
         }
-        frame.signature = convertBytesToInt(bytes[5], bytes[4]);
-        frame.xCenter = convertBytesToInt(bytes[7], bytes[6]);
-        frame.yCenter = convertBytesToInt(bytes[9], bytes[8]);
-        frame.width = convertBytesToInt(bytes[11], bytes[10]);
-        frame.height = convertBytesToInt(bytes[13], bytes[12]);
+        PixyPacket.signature = convertBytesToInt(bytes[5], bytes[4]);
+        PixyPacket.xCenter = convertBytesToInt(bytes[7], bytes[6]);
+        PixyPacket.yCenter = convertBytesToInt(bytes[9], bytes[8]);
+        PixyPacket.width = convertBytesToInt(bytes[11], bytes[10]);
+        PixyPacket.height = convertBytesToInt(bytes[13], bytes[12]);
 
-        return frame;
+        return PixyPacket;
     }
 
-    public List<Frame> getFrames() throws IOException {
+    public List<PixyPacket> readBlocks() throws IOException {
 
-        List<Frame> frames = new LinkedList<Frame>();
+        List<PixyPacket> frames = new LinkedList<PixyPacket>();
         byte[] bytes = new byte[FRAME_SIZE * MAX_FRAMES];
 
         // read data from pixy
@@ -92,17 +74,17 @@ public class Pixy2 {
                             + tempByteOffset];
                 }
 
-                Frame frame = getFrame(tempBytes);
-                if (frame != null) {
-                    // it was a valid frame!
-                    frames.add(frame);
+                PixyPacket PixyPacket = getFrame(tempBytes);
+                if (PixyPacket != null) {
+                    // it was a valid PixyPacket!
+                    frames.add(PixyPacket);
                     System.out.println("YASSS");
-                    // skip to next frame -1 as byteOffset will be incremented
+                    // skip to next PixyPacket -1 as byteOffset will be incremented
                     // at the end
                     // of the loop block
                     byteOffset += FRAME_SIZE - 1;
                 } else {
-                    // it wasn't a valid frame, we can skip 2 bytes
+                    // it wasn't a valid PixyPacket, we can skip 2 bytes
                     byteOffset++;
                 }
             }
@@ -126,7 +108,7 @@ public class Pixy2 {
     }
 
     public static void main ( String[] args ) {
-        List<Frame> frames = new LinkedList<Frame>();
+        List<PixyPacket> frames = new LinkedList<PixyPacket>();
         System.out.println(frames.size());
     }
 

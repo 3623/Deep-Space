@@ -30,7 +30,7 @@ public class Elevator extends PIDSubsystem {
     private final static double kI = 0.0/60.0;
     private final static double kD = 0.0/60.0;
     private final double weightCompensation = 0.16;
-    private final double DEADBAND = 4.0;
+    private final double DEADBAND = 2.0;
 
     private static final double MAX_CURRENT = 15.0;
     private static final double MOTORS = 4.0;
@@ -47,7 +47,7 @@ public class Elevator extends PIDSubsystem {
 	public Elevator() {
         super("Lift", kP, kI, kD);
 		setInputRange(MIN_GOAL, MAX_GOAL);
-		setOutputRange(-0.4, 0.4);
+		setOutputRange(-0.6, 0.6);
         setAbsoluteTolerance(DEADBAND);
 
         elevatorMotors = new Spark(2);
@@ -121,7 +121,7 @@ public class Elevator extends PIDSubsystem {
         SmartDashboard.putNumber("Elevator Limited Output", limitedOutput);
 	}
 
-    public void updateStuff(){
+    public void update(){
         zeroEncoder();
         monitor();
     }
