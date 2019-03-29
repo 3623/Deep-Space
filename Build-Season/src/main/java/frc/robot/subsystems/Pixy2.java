@@ -53,10 +53,14 @@ public class Pixy2 {
         byte[] bytes = new byte[FRAME_SIZE * MAX_FRAMES];
 
         // read data from pixy
-        Boolean bytesReadSuccesful = i2cDevice.readOnly(bytes, bytes.length);
-        // System.out.println("Bytes read " + bytesReadSuccesful);
+        Boolean bytesReadAborted = i2cDevice.readOnly(bytes, bytes.length);
+
+        if(bytesReadAborted){
+            System.out.println("i2c read aborted");
+        }
 
         // search for sync
+        Boolean foundSync = false;
         for (int byteOffset = 0; byteOffset < bytes.length - (FRAME_SIZE - 1);) {
 
             int b1 = bytes[byteOffset];
@@ -67,8 +71,10 @@ public class Pixy2 {
 
             if (b1 == 0x55 && b2 == 0xaa) {
                 // found sync
-                System.out.println("FOUND SYNC");
-                byte[] tempBytes = new byte[FRAME_SIZE];
+                System.out.println("FOUND SYNC AT: " + byteOffset);
+                foundSync = true;
+
+                byte[] tempBytes = new byte[FRAME_SIZE]; //Creates a temp array for reading block
                 for (int tempByteOffset = 0; tempByteOffset < FRAME_SIZE; tempByteOffset++) {
                     tempBytes[tempByteOffset] = bytes[byteOffset
                             + tempByteOffset];
@@ -78,13 +84,12 @@ public class Pixy2 {
                 if (PixyPacket != null) {
                     // it was a valid PixyPacket!
                     frames.add(PixyPacket);
-                    System.out.println("YASSS");
-                    // skip to next PixyPacket -1 as byteOffset will be incremented
-                    // at the end
-                    // of the loop block
+                    System.out.println("Valid Packet Found");
+                    // skip to next PixyPacket -1 as byteOffset will be incremented at the end of the loop block
                     byteOffset += FRAME_SIZE - 1;
                 } else {
                     // it wasn't a valid PixyPacket, we can skip 2 bytes
+                    System.out.println("Invalid Packet Found");
                     byteOffset++;
                 }
             }

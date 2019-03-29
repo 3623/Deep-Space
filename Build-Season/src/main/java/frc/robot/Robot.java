@@ -66,6 +66,8 @@ public class Robot extends TimedRobot {
   final String LeftRocket = "Left Rocket Ship";
   final String DriverControl = "Driver Control";
 
+  SendableChooser<Boolean> driveReverse;
+
   Boolean driverControl;
 
   Command autoCommand;

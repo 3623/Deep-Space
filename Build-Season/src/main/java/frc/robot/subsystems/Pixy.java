@@ -104,9 +104,6 @@ public class Pixy {
 		} catch (RuntimeException e) {
 			SmartDashboard.putString(name + "Status", e.toString());
 			System.out.println(name + "  " + e);
-		}
-		if (rawData.length < len) {
-			SmartDashboard.putString(name + "Status", "raw data length " + rawData.length);
 			System.out.println("byte array length is broken length=" + rawData.length);
 			return null;
 		}
@@ -151,7 +148,7 @@ public class Pixy {
 	private final int MAX_signatureS = 7;
 	private final int OBJECT_SIZE = 14;
 	private final int START_WORD = 0xaa55;
-	private final int START_WORD_CC = 0xaa5;
+	private final int START_WORD_CC = 0xaa56;
 	private final int START_WORD_X = 0x55aa;
 
 	public boolean getStart() {
@@ -167,8 +164,10 @@ public class Pixy {
 			int word = readWord();
 			numBytesRead += 2;
 			if (word == 0 && lastWord == 0) {
+				System.out.println("DID NOT FIND FRAME START");
 				return false;
 			} else if (word == START_WORD && lastWord == START_WORD) {
+				System.out.println("Found frame start");
 				return true;
 			} else if (word == START_WORD_CC && lastWord == START_WORD) {
 				return true;
@@ -178,6 +177,7 @@ public class Pixy {
 			}
 			lastWord = word;
 		}
+		System.out.println("DID NOT FIND FRAME START");
 		return false;
 	}
 
@@ -188,12 +188,12 @@ public class Pixy {
 		int maxBlocks = 4;
 		List<PixyPacket> blocks = new LinkedList<PixyPacket>();
 
-		if (!skipStart) {
+		if (skipStart) {
+			skipStart = false;
+		} else {
 			if (!getStart()) {
 				return null;
 			}
-		} else {
-			skipStart = false;
 		}
 
 		for (int i = 0; i < maxBlocks; i++) {
