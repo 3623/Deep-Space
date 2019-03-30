@@ -33,8 +33,8 @@ public class Turret extends PIDSubsystem {
     private static final double FRAME_X = 315;
     private static final double FRAME_Y = 217;
     private static final double FOV = 60.0;
-    private static final double TARGET_Y = 170.0;
-    private static final double EPSILON_Y = 40.0;
+    private static final double TARGET_Y = 190.0;
+    private static final double EPSILON_Y = 30.0;
 
     private int targetCount = 0;
     private double visionOffset = 0.0;
@@ -52,6 +52,7 @@ public class Turret extends PIDSubsystem {
         pot = new AnalogPotentiometer(0, SCALE_FACTOR, OFFSET);
 
         pixy = new Pixy2();
+        this.updateThreadStart();
     }
 
     public void vision() throws IOException {
@@ -61,7 +62,6 @@ public class Turret extends PIDSubsystem {
         } else {
             double xTotal = 0.0;
             targetCount = 0;
-            System.out.println(pixyBlocks.size());
             for(PixyPacket block : pixyBlocks){
                 if(checkPixyBlock(block)){
                     targetCount++;
@@ -78,6 +78,21 @@ public class Turret extends PIDSubsystem {
             }
         }
     }
+
+    public void updateThreadStart(){
+		Thread v = new Thread(() -> {
+            while (!Thread.interrupted()) {
+				this.update();
+				try {
+					Thread.sleep(30);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+        });
+        v.start();
+	}
 
     public Boolean checkPixyBlock(PixyPacket block){
         Boolean centerYGood = Utils.withinThreshold(block.yCenter, TARGET_Y, EPSILON_Y);

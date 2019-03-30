@@ -8,7 +8,7 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.I2C;
@@ -20,10 +20,12 @@ import edu.wpi.first.wpilibj.I2C;
 public class Pixy2 {
     private static final int FRAME_SIZE = 14;
     private static final int MAX_FRAMES = 4;
-    private I2C i2cDevice;
+    private GhettoI2C i2cDevice;
+    List<PixyPacket> frames;
 
     public Pixy2(){
-        i2cDevice = new I2C(I2C.Port.kOnboard, 0x54);
+        i2cDevice = new GhettoI2C(GhettoI2C.Port.kMXP, 0x54);
+        List<PixyPacket> frames = new ArrayList<PixyPacket>();
     }
 
     public PixyPacket getFrame(byte[] bytes) {
@@ -48,16 +50,26 @@ public class Pixy2 {
 
     public List<PixyPacket> readBlocks() throws IOException {
 
-        List<PixyPacket> frames = new LinkedList<PixyPacket>();
         byte[] bytes = new byte[FRAME_SIZE * MAX_FRAMES];
-
+        if (frames == null){
+            frames = new ArrayList<PixyPacket>();
+            System.out.println("LIST NOT INITIALIZED COCKSUCKER");
+        }
+        frames.clear();
         // read data from pixy
-        Boolean bytesReadAborted = i2cDevice.readOnly(bytes, bytes.length);
 
+        Boolean bytesReadAborted = true;
+
+        try {
+            bytesReadAborted = i2cDevice.readOnly(bytes, bytes.length);
+        } catch (Exception e) {
+            System.out.println("==================" + e);
+        }
         if(bytesReadAborted){
-            System.out.println("i2c read aborted");
-            i2cDevice.close();
-            i2cDevice = new I2C(I2C.Port.kOnboard, 0x54);
+            System.out.println("==================" + "i2c read aborted");
+            i2cDevice.restart();
+        } else{
+            System.out.println("New Frame Received");
         }
 
         // search for sync
@@ -85,7 +97,7 @@ public class Pixy2 {
                 if (PixyPacket != null) {
                     // it was a valid PixyPacket!
                     frames.add(PixyPacket);
-                    System.out.println("Valid Packet Found");
+                    System.out.println("Valid Packet Found: " + PixyPacket.toString());
                     // skip to next PixyPacket -1 as byteOffset will be incremented at the end of the loop block
                     byteOffset += FRAME_SIZE - 1;
                 } else {
@@ -95,7 +107,9 @@ public class Pixy2 {
                 }
             }
             byteOffset++;
-        }
+        } 
+
+        System.out.println("Targets Found: " + frames.size());
 
         return frames;
     }
@@ -114,7 +128,7 @@ public class Pixy2 {
     }
 
     public static void main ( String[] args ) {
-        List<PixyPacket> frames = new LinkedList<PixyPacket>();
+        List<PixyPacket> frames = new ArrayList<PixyPacket>();
         System.out.println(frames.size());
     }
 
