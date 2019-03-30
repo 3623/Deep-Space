@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.I2C.Port;
 
 /**
  * From http://www.cmucam.org/boards/9/topics/3120
@@ -24,7 +23,7 @@ public class Pixy2 {
     private I2C i2cDevice;
 
     public Pixy2(){
-        i2cDevice = new I2C(Port.kOnboard, 0x54);
+        i2cDevice = new I2C(I2C.Port.kOnboard, 0x54);
     }
 
     public PixyPacket getFrame(byte[] bytes) {
@@ -57,6 +56,8 @@ public class Pixy2 {
 
         if(bytesReadAborted){
             System.out.println("i2c read aborted");
+            i2cDevice.close();
+            i2cDevice = new I2C(I2C.Port.kOnboard, 0x54);
         }
 
         // search for sync

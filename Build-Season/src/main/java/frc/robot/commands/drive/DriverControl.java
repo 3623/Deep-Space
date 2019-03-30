@@ -24,13 +24,13 @@ public class DriverControl extends Command {
   @Override
   protected void execute() {
     Boolean quickTurn;
-    if (Math.abs(Robot.driverController.getRawAxis(1)) < 0.5) quickTurn = true;
+    if (Math.abs(Robot.driverController.getRawAxis(1)) < 0.9) quickTurn = true;
     else quickTurn = false;
     // quickTurn = true;
 
     if (quickTurn){
       Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)/2.0, 
-      Robot.driverController.getRawAxis(4),
+      Robot.driverController.getRawAxis(4)*0.7,
       quickTurn);
     } else{
       Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)*Math.abs(Robot.driverController.getRawAxis(1)), 

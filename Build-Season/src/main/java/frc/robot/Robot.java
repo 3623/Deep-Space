@@ -212,7 +212,7 @@ public class Robot extends TimedRobot {
     // Elevator
     if (operatorController.getPOV() == 180) elevator.setSetpoint(19.0);
     else if (operatorController.getPOV() == 90) elevator.setSetpoint(49.0);
-    else if (operatorController.getPOV() == 0) elevator.setSetpoint(75.0);
+    else if (operatorController.getPOV() == 0) elevator.setSetpoint(77.0);
 
     // Turret is now a default command
       // Manual Control w/o Potentiometer

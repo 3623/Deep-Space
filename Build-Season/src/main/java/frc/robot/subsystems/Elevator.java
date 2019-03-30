@@ -23,14 +23,14 @@ public class Elevator extends PIDSubsystem {
     private DigitalInput topLimit = new DigitalInput(7);
     private final double TOP_SOFT_LIMIT = 77.0;
 
-    private final double MAX_GOAL = 75.0;
+    private final double MAX_GOAL = 77.0;
     private final double MIN_GOAL = 20.0;
 
     private final static double kP = 1.0/60.0;
     private final static double kI = 0.0/60.0;
     private final static double kD = 0.0/60.0;
     private final double weightCompensation = 0.16;
-    private final double DEADBAND = 2.0;
+    private final double DEADBAND = 1.0;
 
     private static final double MAX_CURRENT = 15.0;
     private static final double MOTORS = 4.0;
