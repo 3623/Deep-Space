@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Encoder;
 // import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import frc.controls.PathFollower;
+import frc.controls.DrivetrainControls;
 import frc.controls.Waypoint;
 import frc.controls.WaypointNavigator;
 import frc.robot.commands.drive.DriverControl;
@@ -83,7 +83,7 @@ public class Drivetrain extends Subsystem{
 
 	public void driveToWaypoint(){
 		Waypoint goal = waypointNav.updatePursuit(model.center);
-		Tuple out = PathFollower.driveToPoint2(goal, model.center);
+		Tuple out = DrivetrainControls.driveToPoint2(goal, model.center);
 		Tuple limitedOut = model.limitAcceleration(out);
 		double leftSpeed = limitedOut.left;
 		double rightSpeed = limitedOut.right;

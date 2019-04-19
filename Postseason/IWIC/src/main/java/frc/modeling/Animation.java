@@ -4,7 +4,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import frc.controls.CubicSplineFollower;
-import frc.controls.PathFollower;
+import frc.controls.DrivetrainControls;
+import frc.controls.DrivetrainControls;
 import frc.controls.Waypoint;
 import frc.controls.WaypointNavigator;
 import frc.robot.subsystems.DrivetrainModel;
@@ -92,9 +93,9 @@ public class Animation extends JPanel implements Runnable
 		
 		Pose goalPoint = new Pose(5.0, 5.0, 0.0);
 		double goalAngle = cubes.stuff(model.center, goalPoint);
-		double ptrOutput = PathFollower.turnToAngle(goalAngle, model.center.heading);
+		double ptrOutput = DrivetrainControls.turnToAngle(goalAngle, model.center.heading);
 		System.out.println(goalAngle);
-		Tuple driveOutput = PathFollower.arcadeDrive(0.45, ptrOutput);
+		Tuple driveOutput = DrivetrainControls.arcadeDrive(0.45, ptrOutput);
 		double leftVoltage = driveOutput.left*12.0;
 		double rightVoltage = driveOutput.right*12.0;
 
