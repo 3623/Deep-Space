@@ -5,37 +5,25 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.turret;
+package frc.robot.commands.grabber;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.util.Utils;
 
-public class TurretManualControl extends Command {
-  public TurretManualControl() {
-    requires(Robot.turret);
+public class Hold extends Command {
+  public Hold() {
+    requires(Robot.grabber);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.grabber.openClaw();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (Utils.outsideDeadband(Robot.operatorController.getRawAxis(4), 0.0, 0.3) ||
-    Utils.outsideDeadband(Robot.operatorController.getRawAxis(5), 0.0, 0.3)) {
-        // Setpoint control
-      double goalAngle = (Math.toDegrees(Math.atan2(Robot.operatorController.getRawAxis(4), -Robot.operatorController.getRawAxis(5)))+360.0)%360.0;
-      double robotAngle = Robot.drivetrain.model.center.heading;
-      Robot.turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
-    } else if (Utils.outsideDeadband(Robot.operatorController.getRawAxis(0), 0.0, 0.2)) {
-      // Manual control with pot
-      Robot.turret.setSpeed(Robot.operatorController.getRawAxis(0));
-    } else {
-      Robot.turret.setVisionControlled();
-    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

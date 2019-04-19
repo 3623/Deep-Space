@@ -3,6 +3,7 @@ package frc.modeling;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import frc.controls.CubicSplineFollower;
 import frc.controls.PathFollower;
 import frc.controls.Waypoint;
 import frc.controls.WaypointNavigator;
@@ -38,6 +39,7 @@ public class Animation extends JPanel implements Runnable
 	protected int dt = 20;          // interval between frames in millisec
 	private DrivetrainModel model;
 	private frc.controls.WaypointNavigator waypointNav;
+	private CubicSplineFollower cubes;
 
 	protected double time = 0.0;
 
@@ -56,63 +58,18 @@ public class Animation extends JPanel implements Runnable
 		
 		model = new DrivetrainModel();
 		waypointNav = new WaypointNavigator();
+		cubes = new CubicSplineFollower();
 
 		// // start pos
-		model.setPosition(2.9, 0.7, 0.0);
+		model.setPosition(3.0, 3.0, 0.0);
 		waypointNav.addWaypoint(new Waypoint(2.9, 0.7, 0.0));
 		waypointNav.addWaypoint(new Waypoint(2.9, 3.3, 0.0, 0.15, 0.4, 0.5, false));
     	waypointNav.addWaypoint(new Waypoint(3.8, 3.3, 0.0, 0.6, 0.7, 2.0, false));
     	waypointNav.addWaypoint(new Waypoint(3.8, 5.4, 0.0, 0.2, 0.5, 0.5, false));
 		
-		
-		// // Left to side of cargo ship
-		// model.setPosition(2.85, 3.0, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(2.85, 3.0, 0.0, 0.3, 0.5, 0.5, false));
-		// waypointNav.addWaypoint(new Waypoint(3.0, 6.7, 0.0, 1.0, 1.2, 0.2, false));
-
-		// // Left to front of cargo ship
-		// model.setPosition(2.85, 3.0, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(2.85, 3.0, 0.0, 0.5, 0.5, 0.5, false));
-		// waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.3, 0.5, 0.5, false));
-		// waypointNav.addWaypoint(new Waypoint(3.4, 5.2, 0.0, 0.9, 1.1, 1.0, false));
-		// waypointNav.addWaypoint(new Waypoint(4.7, 5.2, 0.0, 0.5, 0.9, 0.2, false));
-
-
-		// // Left to rocket ship far
-		// model.setPosition(2.85, 3.0, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(2.85, 3.0, 0.0, 0.3, 0.5, 0.5, false));
-		// waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
-		// waypointNav.addWaypoint(new Waypoint(0.3, 6.8, 0.0, 0.2, 0.5, 0.5, false));
-
-		// // Cargo ship to loading zone
-		// model.setPosition(2.9, 6.7, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 0.7, 0.9, 0.9, true));
-		// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
-		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
-
-		// // Rocket far to loading zone
-		// model.setPosition(0.7, 6.7, -60.0);
-		// waypointNav.addWaypoint(new Waypoint(0.7, 6.7, 0.0, 0.5, 0.5, 0.5, true));
-		// waypointNav.addWaypoint(new Waypoint(1.5, 5.5, 0.0, 0.7, 0.9, 0.9, true));
-		// waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
-		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
-
-		// // Loading zone to rocket close 
-		// model.setPosition(0.6, 0.4, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0));
-		// waypointNav.addWaypoint(new Waypoint(0.5, 4.9, 0.0, 1.0, 1.2, 0.7, false));
-		// waypointNav.addWaypoint(new Waypoint(0.7, 5.1, 0.0, 0.5, 0.7, 0.3, false));
-
-		// // Loading Zone to Cargo Ship
-		// model.setPosition(0.6, 0.4, 0.0);
-		// waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.5, 0.7, 0.3, false));
-		// waypointNav.addWaypoint(new Waypoint(3.0, 5.0, 0.0, 1.0, 1.2, 0.9, false));
-		// waypointNav.addWaypoint(new Waypoint(3.0, 7.3, 0.0, 0.6, 0.9, 0.3, false));
-
-
+	
 			
-		// Create and start the thread
-		sim = new Thread ( this );
+		sim = new Thread ( this );	// Create and start the thread
 		sim.start();
 	}
 
@@ -124,55 +81,55 @@ public class Animation extends JPanel implements Runnable
 
 		Waypoint goal = waypointNav.updatePursuit(model.center);
 
-		if (waypointNav.getIsFinished() && false){
-			waypointNav.clearWaypoints();
-			waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0));
-			waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 0.7, 0.9, 0.9, true));
-			waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
-			waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
-		}
+		// if (waypointNav.getIsFinished()){
+		// }
 
-		Tuple out = PathFollower.driveToPoint2(goal, model.center);
-		Tuple limitedVoltage = model.limitAcceleration(out);
-		// out = Drivetrain.driveToPoint(goal, model.center);
-		// out = Drivetrain.deadReckoningCurveLeft(time);
-		// out = Drivetrain.deadReckoningStraight(time);
+		// Tuple out = PathFollower.driveToPoint2(goal, model.center);
+		// Tuple limitedVoltage = model.limitAcceleration(out);
 
-		double leftVoltage = limitedVoltage.left*12.0;
-		double rightVoltage = limitedVoltage.right*12.0;
+		// double leftVoltage = limitedVoltage.left*12.0;
+		// double rightVoltage = limitedVoltage.right*12.0;
 		
+		Pose goalPoint = new Pose(5.0, 5.0, 0.0);
+		double goalAngle = cubes.stuff(model.center, goalPoint);
+		double ptrOutput = PathFollower.turnToAngle(goalAngle, model.center.heading);
+		System.out.println(goalAngle);
+		Tuple driveOutput = PathFollower.arcadeDrive(0.45, ptrOutput);
+		double leftVoltage = driveOutput.left*12.0;
+		double rightVoltage = driveOutput.right*12.0;
+
 		System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
-		
-		// leftVoltage = 4.0;
-		// rightVoltage = 3.0;
+
 		model.updateVoltage(leftVoltage, rightVoltage, simTime);
 		model.updatePosition(simTime);
 
-		// Get the size of the viewing area
-		size = this.getSize();
-		// Create the off-screen image buffer if it is the first time
-		if ( image == null ) {
+		size = this.getSize(); // Get the size of the viewing area
+		if ( image == null ) { 	// Create the off-screen image buffer if it is the first time
 			image = createImage ( size.width, size.height);
 			offScreen = image.getGraphics();
 		}
 
-		// Draw background field
-		offScreen.drawImage(field, 0, 0, this);
+		offScreen.drawImage(field, 0, 0, this);	// Draw background field
 
-		// Draw robot
+		/// Draw robot
 		int xCoord = x + (int) Math.round(model.center.x * scale)-(robotWidth/2);
 		int yCoord = y - (int) Math.round(model.center.y * scale)-(robotHeight/2);
 		AffineTransform tx = AffineTransform.getRotateInstance(model.center.r, robotWidth/2, robotHeight/2);
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 
-		// Draw Pursuit Point
-		xCoord = x + (int) Math.round(goal.x * scale);
-		yCoord = y - (int) Math.round(goal.y * scale);
+		/// Draw Pursuit Point
+		// xCoord = x + (int) Math.round(startPoint.x * scale);
+		// yCoord = y - (int) Math.round(startPoint.y * scale);
+		// offScreen.setColor ( Color.yellow );
+		// offScreen.drawOval(xCoord, yCoord, 6, 6);
+
+		xCoord = x + (int) Math.round(goalPoint.x * scale);
+		yCoord = y - (int) Math.round(goalPoint.y * scale);
 		offScreen.setColor ( Color.yellow );
 		offScreen.drawOval(xCoord, yCoord, 6, 6);
 
-		// Copy the off-screen image to the screen
+		/// Copy the off-screen image to the screen
 		g.drawImage ( image, 0, 0, this );     
 	}
 

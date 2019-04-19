@@ -9,39 +9,29 @@ package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.util.Utils;
 
-public class TurretManualControl extends Command {
-  public TurretManualControl() {
+public class TurretTurnToAngle extends Command {
+  double angle = 180.0;
+  public TurretTurnToAngle(double angle) {
     requires(Robot.turret);
+    this.angle = angle;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.turret.setSetpoint(angle);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (Utils.outsideDeadband(Robot.operatorController.getRawAxis(4), 0.0, 0.3) ||
-    Utils.outsideDeadband(Robot.operatorController.getRawAxis(5), 0.0, 0.3)) {
-        // Setpoint control
-      double goalAngle = (Math.toDegrees(Math.atan2(Robot.operatorController.getRawAxis(4), -Robot.operatorController.getRawAxis(5)))+360.0)%360.0;
-      double robotAngle = Robot.drivetrain.model.center.heading;
-      Robot.turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
-    } else if (Utils.outsideDeadband(Robot.operatorController.getRawAxis(0), 0.0, 0.2)) {
-      // Manual control with pot
-      Robot.turret.setSpeed(Robot.operatorController.getRawAxis(0));
-    } else {
-      Robot.turret.setVisionControlled();
-    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return Robot.turret.onTarget();
   }
 
   // Called once after isFinished returns true
