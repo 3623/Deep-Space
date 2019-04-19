@@ -1,35 +1,7 @@
 package frc.util;
 
 public class Geometry {
-	
-	public static Pose center(Pose left, Pose right) {
 		
-		double x = (left.x + right.x)/2;
-		double y = (left.y + right.y)/2;
-		
-		double xDif = -(left.x-right.x);
-		double yDif = left.y - right.y;
-		double angle = Math.atan2(yDif, xDif);
-		double r = angle;
-		
-		Pose coordinate = new Pose(x, y, Math.toDegrees(r));
-		return coordinate;
-	}
-	
-	public static Pose inverseCenterLeft(Pose center, double drivebase) {
-		double x = center.x - drivebase/2.0 * Math.cos(center.r);
-		double y = center.y + drivebase/2.0 * Math.sin(center.r);
-		Pose left = new Pose(x, y);
-		return left;
-	}
-	
-	public static Pose inverseCenterRight(Pose center, double drivebase) {
-		double x = center.x + drivebase/2.0 * Math.cos(center.r);
-		double y = center.y - drivebase/2.0 * Math.sin(center.r);
-		Pose right = new Pose(x, y);
-		return right;
-	}
-	
 	/**
 	 * Returns side b, calculated using law of sines
 	 * @param a length of side a

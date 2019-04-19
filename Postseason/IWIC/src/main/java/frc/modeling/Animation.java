@@ -5,9 +5,8 @@ import javax.swing.*;
 
 import frc.controls.CubicSplineFollower;
 import frc.controls.DrivetrainControls;
+import frc.controls.CubicSplineFollower.Waypoint;
 import frc.controls.DrivetrainControls;
-import frc.controls.Waypoint;
-import frc.controls.WaypointNavigator;
 import frc.robot.subsystems.DrivetrainModel;
 import frc.util.Pose;
 import frc.util.Tuple;
@@ -39,8 +38,7 @@ public class Animation extends JPanel implements Runnable
 
 	protected int dt = 20;          // interval between frames in millisec
 	private DrivetrainModel model;
-	private frc.controls.WaypointNavigator waypointNav;
-	private CubicSplineFollower cubes;
+	private CubicSplineFollower nav;
 
 	protected double time = 0.0;
 
@@ -58,18 +56,15 @@ public class Animation extends JPanel implements Runnable
 		y = height-offsetY;
 		
 		model = new DrivetrainModel();
-		waypointNav = new WaypointNavigator();
-		cubes = new CubicSplineFollower();
+		nav = new CubicSplineFollower();
 
 		// // start pos
 		model.setPosition(3.0, 3.0, 0.0);
-		waypointNav.addWaypoint(new Waypoint(2.9, 0.7, 0.0));
-		waypointNav.addWaypoint(new Waypoint(2.9, 3.3, 0.0, 0.15, 0.4, 0.5, false));
-    	waypointNav.addWaypoint(new Waypoint(3.8, 3.3, 0.0, 0.6, 0.7, 2.0, false));
-    	waypointNav.addWaypoint(new Waypoint(3.8, 5.4, 0.0, 0.2, 0.5, 0.5, false));
-		
+		nav.addWaypoint(new Waypoint(3.0, 5.0, 90.0, 0.7, 0.1, false));
+		nav.addWaypoint(new Waypoint(5.0, 5.0, 0.0, 0.7, 0.1, false));
+		nav.addWaypoint(new Waypoint(5.0, 7.0, 0.0, 0.7, 0.1, false));
+
 	
-			
 		sim = new Thread ( this );	// Create and start the thread
 		sim.start();
 	}
@@ -79,25 +74,10 @@ public class Animation extends JPanel implements Runnable
 	public void paintComponent (Graphics g) {  
 		double simTime = dt*1.0/1000.0/speed;
 		time += simTime;
-
-		Waypoint goal = waypointNav.updatePursuit(model.center);
-
-		// if (waypointNav.getIsFinished()){
-		// }
-
-		// Tuple out = PathFollower.driveToPoint2(goal, model.center);
-		// Tuple limitedVoltage = model.limitAcceleration(out);
-
-		// double leftVoltage = limitedVoltage.left*12.0;
-		// double rightVoltage = limitedVoltage.right*12.0;
 		
-		Pose goalPoint = new Pose(5.0, 5.0, 0.0);
-		double goalAngle = cubes.stuff(model.center, goalPoint);
-		double ptrOutput = DrivetrainControls.turnToAngle(goalAngle, model.center.heading);
-		System.out.println(goalAngle);
-		Tuple driveOutput = DrivetrainControls.arcadeDrive(0.45, ptrOutput);
-		double leftVoltage = driveOutput.left*12.0;
-		double rightVoltage = driveOutput.right*12.0;
+		Tuple output = nav.updatePursuit(model.center);
+		double leftVoltage = output.left*12.0;
+		double rightVoltage = output.right*12.0;
 
 		System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
 
@@ -125,8 +105,8 @@ public class Animation extends JPanel implements Runnable
 		// offScreen.setColor ( Color.yellow );
 		// offScreen.drawOval(xCoord, yCoord, 6, 6);
 
-		xCoord = x + (int) Math.round(goalPoint.x * scale);
-		yCoord = y - (int) Math.round(goalPoint.y * scale);
+		xCoord = x + (int) Math.round(nav.getCurrentWaypoint().x * scale);
+		yCoord = y - (int) Math.round(nav.getCurrentWaypoint().y * scale);
 		offScreen.setColor ( Color.yellow );
 		offScreen.drawOval(xCoord, yCoord, 6, 6);
 
