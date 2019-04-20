@@ -32,7 +32,8 @@ public class Animation extends JPanel implements Runnable
 	protected final double speed = 1.0;
 	protected final double scale = 65; // pixels per meter
 	protected static final int offsetX = 5;
-	protected static final int offsetY = 15; 
+	protected static final int offsetY = 15;
+	private static final int SPEED = 10;
 	protected final int x;
 	protected final int y;
 	protected int robotWidth, robotHeight;
@@ -60,14 +61,14 @@ public class Animation extends JPanel implements Runnable
 		model = new DrivetrainModel();
 		nav = new CubicSplineFollower();
 
-		// model.setPosition(3.0, 3.0, 90.0);
-		// nav.addWaypoint(new Waypoint(5.0, 4.0, 90.0, 0.7));
+		model.setPosition(5.0, 5.0, 90.0);
+		nav.addWaypoint(new Waypoint(7.0, 6.0, 90.0, 0.7));
 
-		model.setPosition(2.0, 5.0, 90.0);
-		nav.addWaypoint(new Waypoint(3.0, 5.0, 90.0, 0.7));
-		nav.addWaypoint(new Waypoint(5.0, 5.0, 0.0, 0.7));
-		nav.addWaypoint(new Waypoint(7.0, 6.0, 0.0, 0.7));
-		// nav.addWaypoint(new Waypoint(5.5, 7.5, 10.0, 0.7));
+		// model.setPosition(3.0, 3.0, 0.0);
+		// nav.addWaypoint(new Waypoint(3.3, 4.7, 45.0, 0.7));
+		// // nav.addWaypoint(new Waypoint(5.0, 5.0, 90.0, 0.7));
+		// nav.addWaypoint(new Waypoint(5.0, 6.0, 0.0, 0.7));
+		// // nav.addWaypoint(new Waypoint(5.5, 7.5, 10.0, 0.7));
 	
 		sim = new Thread ( this );	// Create and start the thread
 		sim.start();
@@ -137,7 +138,7 @@ public class Animation extends JPanel implements Runnable
 		while ( Thread.currentThread() == sim ) {
 			repaint ();
 			try {
-				Thread.sleep ( dt );
+				Thread.sleep ( dt*SPEED );
 			} catch (InterruptedException e) {
 				System.out.println ("Exception: " + e.getMessage());
 			}        

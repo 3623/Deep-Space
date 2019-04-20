@@ -18,7 +18,7 @@ import frc.util.Utils;
  * Add your docs here.
  */
 public class CubicSplineFollower {
-    private static final double ROTATION_RATE = 15.0;
+    private static final double ROTATION_RATE = 22.0;
     private static final double MAX_SPEED = 4.0;
     private static final double SAMPLE_RATE = 50.0;
 
@@ -31,7 +31,7 @@ public class CubicSplineFollower {
     private double kRadiusPath = 0.5;
     private double kRadiusFinal = 0.1;
     private double kEpsilonPath = 20.0;
-    private double kEpsilonFinal = 3.0;
+    private double kEpsilonFinal = 1.0;
 
 
     private Pose position;
@@ -87,9 +87,9 @@ public class CubicSplineFollower {
 
         Pose relativeFeedForwardPose = new Pose(deltaX, y2, Math.toDegrees(relativeFeedForwardAngle));
 
+        double feedForwardAngle = position.r + relativeFeedForwardPose.r;
         double rotationSpeed = relativeFeedForwardPose.heading/ROTATION_RATE;
-        System.out.println();
-
+        rotationSpeed = DrivetrainControls.turnToAngle(Math.toDegrees(feedForwardAngle), position.heading);
         return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, false);
     }
 
@@ -112,9 +112,9 @@ public class CubicSplineFollower {
 
         double feedForwardAngle = position.r + relativeFeedForwardPose.r;
         double rotationSpeed = relativeFeedForwardPose.heading/ROTATION_RATE;
-        System.out.println();
-
-        return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, false);
+        rotationSpeed = DrivetrainControls.turnToAngle(Math.toDegrees(feedForwardAngle), position.heading);
+        System.out.println(rotationSpeed);
+        return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, true);
     }
 
     public void generateSpline(double x, double y, double dx) {

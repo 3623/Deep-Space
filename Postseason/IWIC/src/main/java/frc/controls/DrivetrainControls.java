@@ -8,9 +8,17 @@ import frc.util.Tuple;
 import frc.util.Utils;
 
 public class DrivetrainControls {
+	static double error = 0.0;
+	static double lastError = 0.0;
+	static final double ROTATION_kP = 12.0;
+	static final double ROTATION_kD = 20.0;
+
 	public static double turnToAngle(double goal, double heading) {
-		double error;
-		double ROTATION_kP = 4.0;
+		
+		heading = ((heading%360.0)+360.0)%360.0;
+		goal = ((goal%360.0)+360.0)%360.0;
+
+		System.out.println(Math.round(heading) + " " + Math.round(goal));
 
 		double difference = heading - goal;
 		if (difference > 180) {
@@ -29,6 +37,11 @@ public class DrivetrainControls {
 		// Deadband-ish
 		if (Utils.withinThreshold(error, 0.0, 4.0))
 			output = error / -180 * ROTATION_kP;
+		double pVal = (error / -180 * ROTATION_kP);
+		double dVal = - ((heading - lastError) * ROTATION_kD / 180.0);
+		output = pVal + dVal;
+		System.out.print(pVal + " ++++ " + dVal);
+		lastError = heading;
 		return output;
 	}
 
@@ -131,5 +144,6 @@ public class DrivetrainControls {
 	}
 
 	public static void main(String[] args) throws IOException {
+		System.out.println(((-730.0%360.0)+360.0)%360.0);
 	}
 }

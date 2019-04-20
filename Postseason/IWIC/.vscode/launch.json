@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - DrivetrainControls",
+      "request": "launch",
+      "mainClass": "frc.controls.DrivetrainControls",
+      "projectName": "IWIC"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - CubicSplineFollower",
       "request": "launch",
       "mainClass": "frc.controls.CubicSplineFollower",
