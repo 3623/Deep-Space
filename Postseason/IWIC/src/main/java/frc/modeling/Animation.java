@@ -18,6 +18,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Animation extends JPanel implements Runnable
 {
@@ -35,6 +36,7 @@ public class Animation extends JPanel implements Runnable
 	protected final int x;
 	protected final int y;
 	protected int robotWidth, robotHeight;
+	protected ArrayList<Tuple> trajectory;
 
 	protected int dt = 20;          // interval between frames in millisec
 	private DrivetrainModel model;
@@ -60,13 +62,15 @@ public class Animation extends JPanel implements Runnable
 
 		// // start pos
 		model.setPosition(3.0, 3.0, 0.0);
-		nav.addWaypoint(new Waypoint(3.0, 5.0, 90.0, 0.7, 0.1, false));
-		nav.addWaypoint(new Waypoint(5.0, 5.0, 0.0, 0.7, 0.1, false));
-		nav.addWaypoint(new Waypoint(5.0, 7.0, 0.0, 0.7, 0.1, false));
-
+		nav.addWaypoint(new Waypoint(3.0, 5.0, 45.0, 0.7));
+		// nav.addWaypoint(new Waypoint(5.0, 5.0, 0.0, 0.7));
+		// nav.addWaypoint(new Waypoint(5.0, 7.0, 45.0, 0.7));
+		// nav.addWaypoint(new Waypoint(6.0, 8.0, 0.0, 0.7));
 	
 		sim = new Thread ( this );	// Create and start the thread
 		sim.start();
+
+		trajectory = new ArrayList<Tuple>();
 	}
 
 
@@ -79,7 +83,7 @@ public class Animation extends JPanel implements Runnable
 		double leftVoltage = output.left*12.0;
 		double rightVoltage = output.right*12.0;
 
-		System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
+		// System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
 
 		model.updateVoltage(leftVoltage, rightVoltage, simTime);
 		model.updatePosition(simTime);
@@ -95,6 +99,7 @@ public class Animation extends JPanel implements Runnable
 		/// Draw robot
 		int xCoord = x + (int) Math.round(model.center.x * scale)-(robotWidth/2);
 		int yCoord = y - (int) Math.round(model.center.y * scale)-(robotHeight/2);
+		trajectory.add(new Tuple(xCoord + (robotWidth/2), yCoord + (robotHeight/2)));
 		AffineTransform tx = AffineTransform.getRotateInstance(model.center.r, robotWidth/2, robotHeight/2);
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
@@ -110,8 +115,14 @@ public class Animation extends JPanel implements Runnable
 		offScreen.setColor ( Color.yellow );
 		offScreen.drawOval(xCoord, yCoord, 6, 6);
 
+		for(Tuple point : trajectory){
+			offScreen.setColor ( Color.yellow );
+			offScreen.drawOval((int) point.left, (int) point.right, 1, 1);
+		}
+
 		/// Copy the off-screen image to the screen
 		g.drawImage ( image, 0, 0, this );     
+
 	}
 
 	@Override

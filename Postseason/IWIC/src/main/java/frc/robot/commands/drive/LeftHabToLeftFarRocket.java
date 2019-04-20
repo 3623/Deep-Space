@@ -8,7 +8,7 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.controls.Waypoint;
+// import frc.controls.Waypoint;
 import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain;
 
@@ -21,17 +21,17 @@ public class LeftHabToLeftFarRocket extends Command {
   @Override
   protected void initialize() {
     // We will only call this after driving off the hab, so we want to rezero
-    Robot.drivetrain.waypointNav.clearWaypoints();
-    Robot.drivetrain.model.setPosition(2.85, 3.0, 0.0);
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.0, 0.0, 0.3, 0.5, 0.5, false));
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.3, 6.8, 0.0, 0.2, 0.5, 0.5, false));
+    // Robot.drivetrain.waypointNav.clearWaypoints();
+    // Robot.drivetrain.model.setPosition(2.85, 3.0, 0.0);
+		// Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.0, 0.0, 0.3, 0.5, 0.5, false));
+		// Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(1.2, 6.4, 0.0, 1.0, 1.2, 0.4, false));
+		// Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.3, 6.8, 0.0, 0.2, 0.5, 0.5, false));
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.drivetrain.driveToWaypoint();
+    // Robot.drivetrain.driveToWaypoint();
   }
 
   // Make this return true when this Command no longer needs to run execute()

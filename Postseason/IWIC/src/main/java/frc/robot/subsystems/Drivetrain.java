@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Encoder;
 // import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import frc.controls.CubicSplineFollower;
 import frc.controls.DrivetrainControls;
-import frc.controls.Waypoint;
-import frc.controls.WaypointNavigator;
+import frc.controls.CubicSplineFollower;
 import frc.robot.commands.drive.DriverControl;
 
 public class Drivetrain extends Subsystem{
@@ -27,7 +27,7 @@ public class Drivetrain extends Subsystem{
 	public DrivetrainModel model;
 	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS*Math.PI*2/2048.0;
 
-	public WaypointNavigator waypointNav;
+	public CubicSplineFollower waypointNav;
 
 	double time;
 
@@ -46,7 +46,7 @@ public class Drivetrain extends Subsystem{
 		model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);
 
-		waypointNav = new WaypointNavigator();
+		waypointNav = new CubicSplineFollower();
 
 		this.updateThreadStart();
 	}
@@ -81,10 +81,9 @@ public class Drivetrain extends Subsystem{
 		model.updatePosition(time);
 	}
 
-	public void driveToWaypoint(){
-		Waypoint goal = waypointNav.updatePursuit(model.center);
-		Tuple out = DrivetrainControls.driveToPoint2(goal, model.center);
-		Tuple limitedOut = model.limitAcceleration(out);
+	public void driveWaypointNavigator(){
+		Tuple output = waypointNav.updatePursuit(model.center);
+		Tuple limitedOut = model.limitAcceleration(output);
 		double leftSpeed = limitedOut.left;
 		double rightSpeed = limitedOut.right;
 		directMotorControl(leftSpeed, rightSpeed);

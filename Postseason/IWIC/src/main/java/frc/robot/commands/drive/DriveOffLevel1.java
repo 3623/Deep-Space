@@ -8,7 +8,7 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.controls.Waypoint;
+// import frc.controls.Waypoint;
 import frc.robot.Robot;
 
 public class DriveOffLevel1 extends Command {
@@ -19,16 +19,16 @@ public class DriveOffLevel1 extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.drivetrain.waypointNav.clearWaypoints();
-    Robot.drivetrain.model.setPosition(2.85, 1.7, 0.0);
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
-    Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.2, 0.5, 0.5, false));
+    // Robot.drivetrain.waypointNav.clearWaypoints();
+    // Robot.drivetrain.model.setPosition(2.85, 1.7, 0.0);
+		// Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 1.7, 0.0));
+    // Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.85, 3.5, 0.0, 0.2, 0.5, 0.5, false));
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.drivetrain.driveToWaypoint();
+    // Robot.drivetrain.driveToWaypoint();
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -70,7 +70,7 @@ public class DrivetrainControls {
 
 	private static double m_quickStopThreshold = kDefaultQuickStopThreshold;
 	private static double m_quickStopAlpha = kDefaultQuickStopAlpha;
-	private static double m_quickStopAccumulator;
+	private static double m_quickStopAccumulator = 0.0;
 	private static double m_rightSideInvertMultiplier = -1.0;
 
 	public static Tuple curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
@@ -83,8 +83,7 @@ public class DrivetrainControls {
 
 		if (isQuickTurn) {
 			if (Math.abs(xSpeed) < m_quickStopThreshold) {
-				m_quickStopAccumulator = (1 - m_quickStopAlpha) * m_quickStopAccumulator
-						+ m_quickStopAlpha * Math.max(-1.0, Math.min(1.0, zRotation)) * 2;
+				m_quickStopAccumulator = (1 - m_quickStopAlpha) * m_quickStopAccumulator + m_quickStopAlpha * zRotation * 2;
 			}
 			overPower = true;
 			angularPower = zRotation;
@@ -128,7 +127,7 @@ public class DrivetrainControls {
 			rightMotorOutput /= maxMagnitude;
 		}
 
-		return new Tuple(leftMotorOutput, rightMotorOutput * m_rightSideInvertMultiplier);
+		return new Tuple(leftMotorOutput, rightMotorOutput );
 	}
 
 	public static void main(String[] args) throws IOException {

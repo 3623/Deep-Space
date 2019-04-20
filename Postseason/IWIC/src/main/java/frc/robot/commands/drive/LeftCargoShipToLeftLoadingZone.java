@@ -8,7 +8,7 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.controls.Waypoint;
+// import frc.controls.Waypoint;
 import frc.robot.Robot;
 
 public class LeftCargoShipToLeftLoadingZone extends Command {
@@ -19,17 +19,17 @@ public class LeftCargoShipToLeftLoadingZone extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.drivetrain.waypointNav.clearWaypoints();
-    Robot.drivetrain.model.setPosition(2.9, 6.7, 0.0);
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 0.7, 0.9, 0.9, true));
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
-		Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
+    // Robot.drivetrain.waypointNav.clearWaypoints();
+    // Robot.drivetrain.model.setPosition(2.9, 6.7, 0.0);
+		// Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(2.9, 6.7, 0.0, 0.7, 0.9, 0.9, true));
+		// Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.6, 1.0, 0.0, 1.0, 1.3, 0.4, true));
+		// Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.6, 0.4, 0.0, 0.2, 0.4, 0.3, true));
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.drivetrain.driveToWaypoint();
+    // Robot.drivetrain.driveToWaypoint();
   }
 
   // Make this return true when this Command no longer needs to run execute()
