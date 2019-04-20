@@ -62,10 +62,10 @@ public class Animation extends JPanel implements Runnable
 
 		// // start pos
 		model.setPosition(3.0, 3.0, 0.0);
-		nav.addWaypoint(new Waypoint(3.0, 5.0, 45.0, 0.7));
-		// nav.addWaypoint(new Waypoint(5.0, 5.0, 0.0, 0.7));
-		// nav.addWaypoint(new Waypoint(5.0, 7.0, 45.0, 0.7));
-		// nav.addWaypoint(new Waypoint(6.0, 8.0, 0.0, 0.7));
+		nav.addWaypoint(new Waypoint(3.0, 5.0, 90.0, 0.7));
+		nav.addWaypoint(new Waypoint(5.0, 5.0, 0.0, 0.7));
+		nav.addWaypoint(new Waypoint(5.0, 7.0, 45.0, 0.7));
+		nav.addWaypoint(new Waypoint(5.5, 7.5, 10.0, 0.7));
 	
 		sim = new Thread ( this );	// Create and start the thread
 		sim.start();
