@@ -60,12 +60,14 @@ public class Animation extends JPanel implements Runnable
 		model = new DrivetrainModel();
 		nav = new CubicSplineFollower();
 
-		// // start pos
-		model.setPosition(3.0, 3.0, 0.0);
+		// model.setPosition(3.0, 3.0, 90.0);
+		// nav.addWaypoint(new Waypoint(5.0, 4.0, 90.0, 0.7));
+
+		model.setPosition(2.0, 5.0, 90.0);
 		nav.addWaypoint(new Waypoint(3.0, 5.0, 90.0, 0.7));
 		nav.addWaypoint(new Waypoint(5.0, 5.0, 0.0, 0.7));
-		nav.addWaypoint(new Waypoint(5.0, 7.0, 45.0, 0.7));
-		nav.addWaypoint(new Waypoint(5.5, 7.5, 10.0, 0.7));
+		nav.addWaypoint(new Waypoint(7.0, 6.0, 0.0, 0.7));
+		// nav.addWaypoint(new Waypoint(5.5, 7.5, 10.0, 0.7));
 	
 		sim = new Thread ( this );	// Create and start the thread
 		sim.start();

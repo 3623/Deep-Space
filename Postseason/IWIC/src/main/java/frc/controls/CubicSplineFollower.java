@@ -18,7 +18,7 @@ import frc.util.Utils;
  * Add your docs here.
  */
 public class CubicSplineFollower {
-    private static final double ROTATION_RATE = 20.0;
+    private static final double ROTATION_RATE = 15.0;
     private static final double MAX_SPEED = 4.0;
     private static final double SAMPLE_RATE = 50.0;
 
