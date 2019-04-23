@@ -18,7 +18,7 @@ import frc.util.Utils;
  * Add your docs here.
  */
 public class CubicSplineFollower {
-    private static final double ROTATION_RATE = 18.0;
+    private static final double ROTATION_RATE = 60.0;
     private static final double MAX_SPEED = 4.0;
     private static final double SAMPLE_RATE = 50.0;
     private static final double kLookAhead = 0.3;
@@ -91,7 +91,7 @@ public class CubicSplineFollower {
         double rotationSpeed = relativeFeedForwardPose.heading%360.0/ROTATION_RATE;
         // rotationSpeed = DrivetrainControls.turnToAngle(Math.toDegrees(feedForwardAngle), position.heading);
         System.out.println(Math.round(relativeFeedForwardPose.heading%360.0));
-        return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, false);
+        return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, true);
     }
 
     public Tuple theory(){
