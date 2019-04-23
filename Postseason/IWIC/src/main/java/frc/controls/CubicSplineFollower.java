@@ -18,9 +18,10 @@ import frc.util.Utils;
  * Add your docs here.
  */
 public class CubicSplineFollower {
-    private static final double ROTATION_RATE = 22.0;
+    private static final double ROTATION_RATE = 18.0;
     private static final double MAX_SPEED = 4.0;
     private static final double SAMPLE_RATE = 50.0;
+    private static final double kLookAhead = 0.3;
 
     private ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
     private Waypoint curWaypoint;
@@ -31,7 +32,7 @@ public class CubicSplineFollower {
     private double kRadiusPath = 0.5;
     private double kRadiusFinal = 0.1;
     private double kEpsilonPath = 20.0;
-    private double kEpsilonFinal = 1.0;
+    private double kEpsilonFinal = 3.0;
 
 
     private Pose position;
@@ -48,6 +49,7 @@ public class CubicSplineFollower {
 
         calculateDistanceFromWaypoint();
 
+        feedForwardSpeed = curWaypoint.kSpeed;
         if (index == waypoints.size() - 1) {
             if (atWaypoint(kRadiusFinal)){
                 feedForwardSpeed = 0.0;
@@ -60,13 +62,11 @@ public class CubicSplineFollower {
                 }
             } else {
                 feedForwardSpeed = distanceFromWaypoint;
-                return pointToPoint();
             }
         } else if (atWaypoint(kRadiusPath) && atHeading(kEpsilonPath)) {
             index++;
             curWaypoint = waypoints.get(index);
         } 
-        feedForwardSpeed = curWaypoint.kSpeed;
         return pathFollowing();
     }
 
@@ -88,33 +88,33 @@ public class CubicSplineFollower {
         Pose relativeFeedForwardPose = new Pose(deltaX, y2, Math.toDegrees(relativeFeedForwardAngle));
 
         double feedForwardAngle = position.r + relativeFeedForwardPose.r;
-        double rotationSpeed = relativeFeedForwardPose.heading/ROTATION_RATE;
-        rotationSpeed = DrivetrainControls.turnToAngle(Math.toDegrees(feedForwardAngle), position.heading);
+        double rotationSpeed = relativeFeedForwardPose.heading%360.0/ROTATION_RATE;
+        // rotationSpeed = DrivetrainControls.turnToAngle(Math.toDegrees(feedForwardAngle), position.heading);
+        System.out.println(Math.round(relativeFeedForwardPose.heading%360.0));
         return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, false);
     }
 
-    public Tuple pointToPoint(){
-        double straightPathAngle = Math.atan2(position.x - curWaypoint.x, position.y - curWaypoint.y);
-        double relativeAngle = position.r - straightPathAngle;
-        double relativeOpposDist = distanceFromWaypoint * Math.sin(relativeAngle);
-        double relativeAdjacDist = distanceFromWaypoint * Math.cos(relativeAngle);
-        double relativeGoalAngle = position.r - curWaypoint.r;
-        double relativeGoalDeriv = Math.tan(relativeGoalAngle);
-
-        generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
-
-        double deltaX = MAX_SPEED * feedForwardSpeed / SAMPLE_RATE;
-        double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
-        double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
-        double relativeFeedForwardAngle = Math.atan(dx2);
-
-        Pose relativeFeedForwardPose = new Pose(deltaX, y2, Math.toDegrees(relativeFeedForwardAngle));
-
-        double feedForwardAngle = position.r + relativeFeedForwardPose.r;
-        double rotationSpeed = relativeFeedForwardPose.heading/ROTATION_RATE;
-        rotationSpeed = DrivetrainControls.turnToAngle(Math.toDegrees(feedForwardAngle), position.heading);
-        System.out.println(rotationSpeed);
-        return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, true);
+    public Tuple theory(){
+        double pathAngle = curWaypoint.r;
+        double stateAngle = Math.atan2(curWaypoint.x-position.x, curWaypoint.y-position.y);
+        double relativeAngle = stateAngle - pathAngle;
+        
+		double lineDist = distanceFromWaypoint*Math.cos(relativeAngle);
+		if (lineDist > kLookAhead) {
+			lineDist -= kLookAhead;
+		} else {
+			lineDist = 0;
+		}
+		
+		double xChase = curWaypoint.x - (lineDist * Math.sin(pathAngle));
+		double yChase = curWaypoint.y - (lineDist * Math.cos(pathAngle));
+		double chaseRelativeAngle = Math.atan2(xChase-position.x, yChase-position.y);
+        double chaseAngle = (pathAngle - position.r) + Math.pow((chaseRelativeAngle - pathAngle), 2.0);
+        double error = Math.toDegrees(chaseAngle);
+        double rotationOutput = error / 180.0;
+        System.out.println(Math.toDegrees(pathAngle) + " " + Math.toDegrees(chaseRelativeAngle) + " " + Math.toDegrees(position.r));
+        System.out.println(rotationOutput);
+        return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationOutput, true);
     }
 
     public void generateSpline(double x, double y, double dx) {
@@ -190,6 +190,6 @@ public class CubicSplineFollower {
     }
 
     public static void main(String[] args) {
-        System.out.println(-540%180);
+        System.out.println(Math.atan2(1, 0));
     }
 }
