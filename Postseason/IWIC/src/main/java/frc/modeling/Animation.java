@@ -66,10 +66,9 @@ public class Animation extends JPanel implements Runnable
 		// nav.addWaypoint(new Waypoint(4.5, 6.0, 0.0, 0.7));
 
 		model.setPosition(3.0, 3.0, 0.0);
-		nav.addWaypoint(new Waypoint(3.3, 4.0, 45.0, 0.7));
-		nav.addWaypoint(new Waypoint(5.0, 5.7, 20.0, 0.7));
-		nav.addWaypoint(new Waypoint(5.0, 6.0, 5.0, 0.7));
-		nav.addWaypoint(new Waypoint(5.5, 7.5, 10.0, 0.7));
+		nav.addWaypoint(new Waypoint(3.3, 4.0, 35.0, 0.7));
+		nav.addWaypoint(new Waypoint(5.0, 5.7, 40.0, 0.7));
+		nav.addWaypoint(new Waypoint(5.5, 7.5, 0.0, 0.7));
 	
 		sim = new Thread ( this );	// Create and start the thread
 		sim.start();
@@ -87,9 +86,7 @@ public class Animation extends JPanel implements Runnable
 		double leftVoltage = output.left*12.0;
 		double rightVoltage = output.right*12.0;
 
-		// System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
-		// leftVoltage = 12.0;
-		// rightVoltage = -12.0;
+		//System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
 
 		model.updateVoltage(leftVoltage, rightVoltage, simTime);
 		model.updatePosition(simTime);
@@ -110,16 +107,12 @@ public class Animation extends JPanel implements Runnable
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 
-		/// Draw Pursuit Point
-		// xCoord = x + (int) Math.round(startPoint.x * scale);
-		// yCoord = y - (int) Math.round(startPoint.y * scale);
-		// offScreen.setColor ( Color.yellow );
-		// offScreen.drawOval(xCoord, yCoord, 6, 6);
-
 		xCoord = x + (int) Math.round(nav.getCurrentWaypoint().x * scale);
 		yCoord = y - (int) Math.round(nav.getCurrentWaypoint().y * scale);
-		offScreen.setColor ( Color.yellow );
+		offScreen.setColor(Color.yellow);
 		offScreen.drawOval(xCoord, yCoord, 6, 6);
+		offScreen.setColor(Color.blue);
+		offScreen.drawOval(xCoord, yCoord, 1, 1);
 
 		for(Tuple point : trajectory){
 			offScreen.setColor ( Color.yellow );
@@ -138,7 +131,7 @@ public class Animation extends JPanel implements Runnable
 
 	@Override
 	public void run () {
-		while ( Thread.currentThread() == sim ) {
+		while ( Thread.currentThread() == sim  && nav.getIsFinished() == false) {
 			repaint ();
 			try {
 				Thread.sleep ( dt*SPEED );
