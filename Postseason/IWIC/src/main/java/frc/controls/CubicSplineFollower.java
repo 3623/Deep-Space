@@ -31,7 +31,7 @@ public class CubicSplineFollower {
     private static double kRadiusPath = 0.4;
     private static final double kRadiusCritical = 0.7;
     private static final double kRadiusFinal = 0.05;
-    private static final double kEpsilonPath = 10.0;
+    private static final double kEpsilonPath = 5.0;
     private static final double kEpsilonFinal = 1.0;
     private static final double kD = 0.5;
     private static final double kFF = 1.0/ROTATION_RATE*4.5;
@@ -73,7 +73,7 @@ public class CubicSplineFollower {
                 }
             } else if (atWaypoint(kRadiusCritical)){ 
                 // need to switch algorithms to one which gets to the point more urgently
-                return toPoint();
+                // return toPoint();
             }
         } else if (atWaypoint(kRadiusPath) && atHeading(kEpsilonPath)) { 
             // at non-critical waypoint

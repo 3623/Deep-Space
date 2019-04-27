@@ -59,8 +59,8 @@ public class Animation extends JPanel implements Runnable
 		nav = new CubicSplineFollower();
 
 		model.setPosition(0.0, 1.0, 0.0);
-		// nav.addWaypoint(new Waypoint(3.3, 4.0, 40.0, 0.7));
-		// nav.addWaypoint(new Waypoint(5.0, 5.7, 40.0, 0.7));
+		nav.addWaypoint(new Waypoint(0.3, 4.0, 40.0, 0.7));
+		nav.addWaypoint(new Waypoint(2.0, 5.7, 40.0, 0.7));
 		nav.addWaypoint(new Waypoint(2.5, 7.5, 90.0, 0.7));
 	
 		sim = new Thread ( this );	// Create and start the thread

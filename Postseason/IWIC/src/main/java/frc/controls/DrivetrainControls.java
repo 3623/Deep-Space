@@ -9,9 +9,9 @@ import frc.util.Utils;
 
 public class DrivetrainControls {
 	static double error = 0.0;
-	static double lastError = 0.0;
-	static final double ROTATION_kP = 12.0;
-	static final double ROTATION_kD = 20.0;
+	static double lastHeading = 0.0;
+	static final double ROTATION_kP = 4.0;
+	static final double ROTATION_kD = 1.0;
 
 	public static double turnToAngle(double goal, double heading) {
 		
@@ -30,12 +30,11 @@ public class DrivetrainControls {
 			error = difference;
 		}
 
-
-		double pVal = (error / -180 * ROTATION_kP);
-		double dVal = - ((heading - lastError) * ROTATION_kD / 180.0);
+		double pVal = (error / -180 * ROTATION_kP); //Just some PD
+		double dVal = - ((heading - lastHeading) * ROTATION_kD / 360.0); //we care about rotation speed, not change in error cuz the goal angle is likely changing
 		double output = pVal + dVal;
 		System.out.print("Turn to Angle- P: " + pVal + ", D: " + dVal);
-		lastError = heading;
+		lastHeading = heading;
 		return output;
 	}
 
@@ -138,6 +137,5 @@ public class DrivetrainControls {
 	}
 
 	public static void main(String[] args) throws IOException {
-		System.out.println(((-730.0%360.0)+360.0)%360.0);
 	}
 }
