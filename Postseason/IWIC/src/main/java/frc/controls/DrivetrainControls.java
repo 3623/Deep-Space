@@ -40,15 +40,15 @@ public class DrivetrainControls {
 		double pVal = (error / -180 * ROTATION_kP);
 		double dVal = - ((heading - lastError) * ROTATION_kD / 180.0);
 		output = pVal + dVal;
-		System.out.print(pVal + " ++++ " + dVal);
+		System.out.print("Turn to Angle- P: " + pVal + ", D: " + dVal);
 		lastError = heading;
 		return output;
 	}
 
 	public static Tuple arcadeDrive(double xSpeed, double zRotation) {
-		xSpeed = Math.max(-1.0, Math.min(1.0, xSpeed));
+		xSpeed = Utils.limit(xSpeed);
 
-		zRotation = Math.max(-1.0, Math.min(1.0, zRotation));
+		zRotation = Utils.limit(zRotation);
 
 		double leftMotorOutput;
 		double rightMotorOutput;
@@ -87,9 +87,9 @@ public class DrivetrainControls {
 	private static double m_rightSideInvertMultiplier = -1.0;
 
 	public static Tuple curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
-		xSpeed = Math.max(-1.0, Math.min(1.0, xSpeed));
+		xSpeed = Utils.limit(xSpeed);
 
-		zRotation = Math.max(-1.0, Math.min(1.0, zRotation));
+		zRotation = Utils.limit(zRotation);
 
 		double angularPower;
 		boolean overPower;

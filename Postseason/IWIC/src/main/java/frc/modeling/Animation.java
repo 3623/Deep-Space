@@ -29,11 +29,10 @@ public class Animation extends JPanel implements Runnable
 	protected Image image;        // off-screen image
 	protected Graphics offScreen; // off-screen graphics
 	protected Image field, robot;
-	protected final double speed = 4.0;
+	protected final int SPEED = 1;
 	protected final double scale = 65; // pixels per meter
 	protected static final int offsetX = 5;
 	protected static final int offsetY = 15;
-	private static final int SPEED = 1;
 	protected final int x;
 	protected final int y;
 	protected int robotWidth, robotHeight;
@@ -71,8 +70,8 @@ public class Animation extends JPanel implements Runnable
 		// nav.addWaypoint(new Waypoint(5.5, 7.5, 0.0, 0.7));
 
 		model.setPosition(3.0, 3.0, 0.0);
-		nav.addWaypoint(new Waypoint(3.3, 4.0, 90.0, 0.7));
-		nav.addWaypoint(new Waypoint(5.0, 5.7, 10.0, 0.7));
+		// nav.addWaypoint(new Waypoint(3.3, 4.0, 40.0, 0.7));
+		// nav.addWaypoint(new Waypoint(5.0, 5.7, 40.0, 0.7));
 		nav.addWaypoint(new Waypoint(5.5, 7.5, 0.0, 0.7));
 	
 		sim = new Thread ( this );	// Create and start the thread
@@ -84,7 +83,7 @@ public class Animation extends JPanel implements Runnable
 
 	// Update function
 	public void paintComponent (Graphics g) {  
-		double simTime = dt*1.0/1000.0/speed;
+		double simTime = dt/1000.0;
 		time += simTime;
 		
 		Tuple output = nav.updatePursuit(model.center);

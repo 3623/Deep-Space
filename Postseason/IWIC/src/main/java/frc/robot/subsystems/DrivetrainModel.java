@@ -125,6 +125,9 @@ public class DrivetrainModel {
 		double movementX = -movement*sine;
 		double movementY = -movement*cosine;
 		center.update(movementX, movementY,-theta);
+
+		center.velocity = (left.velocity + right.velocity)/2.0;
+		center.angularVelocity = -Math.toDegrees(theta)/time;
 		
 		// //// Debug statements
 		// System.out.println("X: " + center.x + ", Y: " + center.y + ", Heading: " + center.heading);

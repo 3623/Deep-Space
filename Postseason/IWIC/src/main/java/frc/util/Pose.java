@@ -11,6 +11,8 @@ public class Pose {
 	public double y;
 	public double r;
 	public double heading;
+	public double velocity;
+	public double angularVelocity;
 	
 	/**
 	 * Constructor for CartesianCoordinate class
