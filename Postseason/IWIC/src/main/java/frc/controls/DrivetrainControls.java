@@ -11,7 +11,7 @@ public class DrivetrainControls {
 	static double error = 0.0;
 	static double lastHeading = 0.0;
 	static final double ROTATION_kP = 10.0;
-	static final double ROTATION_kD = 5.0;
+	static final double ROTATION_kD = 100.0;
 
 	public static double turnToAngle(double goal, double heading) {
 		
@@ -31,7 +31,7 @@ public class DrivetrainControls {
 		}
 
 		double pVal = (error / -180 * ROTATION_kP); //Just some PD
-		double dVal = - ((heading - lastHeading) * ROTATION_kD / 360.0); //we care about rotation speed, not change in error cuz the goal angle is likely changing
+		double dVal = -((heading - lastHeading) * ROTATION_kD / 180.0); //we care about rotation speed, not change in error cuz the goal angle is likely changing
 		double output = pVal + dVal;
 		System.out.print("Turn to Angle- P: " + pVal + ", D: " + dVal);
 		lastHeading = heading;

@@ -59,12 +59,28 @@ public class Animation extends JPanel implements Runnable
 		nav = new CubicSplineFollower();
 
 		model.setPosition(0.0, 1.0, 0.0);
-		nav.addWaypoint(new Waypoint(0.3, 4.0, 40.0, 0.7));
-		nav.addWaypoint(new Waypoint(2.0, 5.7, 40.0, 0.7));
-		nav.addWaypoint(new Waypoint(2.5, 7.5, 90.0, 0.7));
+		nav.addWaypoint(new Waypoint(0.3, 4.0, 40.0, 1.0));
+		// nav.addWaypoint(new Waypoint(2.0, 5.7, 220.0, -0.7));
+		nav.addWaypoint(new Waypoint(2.5, 7.5, 0.0, 1.0));
 	
 		// model.setPosition(0.0, 1.0, 0.0);
-		// nav.addWaypoint(new Waypoint(0.3, 2.0, -10.0, 0.7));
+		// nav.addWaypoint(new Waypoint(0.3, 2.0, -10.0, 1.0));
+
+		// model.setPosition(1.2, 0.7, 0.0);
+		// nav.addWaypoint(new Waypoint(3.3, 5.0, 30.0, 1.0));
+		// nav.addWaypoint(new Waypoint(3.4, 0.5, 0.0, -1.0));
+
+		// model.setPosition(1.2, 0.7, 0.0);
+		// nav.addWaypoint(new Waypoint(1.2, 6.6, -10.0, 1.0));
+		// nav.addWaypoint(new Waypoint(3.5, 0.5, -10.0, -1.0));
+		// nav.addWaypoint(new Waypoint(1.2, 7.2, -20.0, 1.0));
+
+
+
+
+		// nav.addWaypoint(new Waypoint(3.3, 5.0, 0.0, 1.0));
+
+
 
 		sim = new Thread ( this );	// Create and start the thread
 		sim.start();
@@ -79,8 +95,9 @@ public class Animation extends JPanel implements Runnable
 		time += simTime;
 		
 		Tuple output = nav.updatePursuit(model.center);
-		double leftVoltage = output.left*12.0;
-		double rightVoltage = output.right*12.0;
+		Tuple limitedOut = model.limitAcceleration(output);
+		double leftVoltage = limitedOut.left*12.0;
+		double rightVoltage = limitedOut.right*12.0;
 
 		//System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
 
@@ -107,7 +124,7 @@ public class Animation extends JPanel implements Runnable
 		xCoord = x + (int) Math.round(nav.getCurrentWaypoint().x * scale);
 		yCoord = y - (int) Math.round(nav.getCurrentWaypoint().y * scale);
 		offScreen.setColor(Color.yellow);
-		offScreen.drawOval(xCoord, yCoord, 6, 6);
+		offScreen.drawOval(xCoord-3, yCoord-3, 6, 6);
 
 		// Draw trajectory
 		for(Tuple point : trajectory){

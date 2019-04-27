@@ -29,12 +29,12 @@ public class CubicSplineFollower {
     private Boolean isFinished = false;
 
     private static double kRadiusPath = 0.4;
-    private static final double kRadiusCritical = 0.7;
+    private static final double kRadiusCritical = 0.15;
     private static final double kRadiusFinal = 0.05;
     private static final double kEpsilonPath = 5.0;
     private static final double kEpsilonFinal = 1.0;
-    private static final double kD = 0.5;
-    private static final double kFF = 1.0/ROTATION_RATE*4.5;
+    private static final double kD = 1.0;
+    private static final double kFF = 1.0/ROTATION_RATE*12.0;
 
     private Pose pose;
 
@@ -53,9 +53,9 @@ public class CubicSplineFollower {
         feedForwardSpeed = curWaypoint.kSpeed;
         if (index == waypoints.size() - 1) { 
             // Last waypoint, important to be at exactly
-            if(distanceFromWaypoint < feedForwardSpeed) 
+            if(distanceFromWaypoint < Math.abs(feedForwardSpeed)) 
                 // speed reduces as distance gets smaller
-                 feedForwardSpeed = distanceFromWaypoint;
+                 feedForwardSpeed = distanceFromWaypoint*feedForwardSpeed;
             if (atWaypoint(kRadiusFinal) || isFinished){
                 feedForwardSpeed = 0.0;
                 if(atHeading(kEpsilonFinal)){ 
@@ -96,7 +96,7 @@ public class CubicSplineFollower {
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
-        double deltaX = ((MAX_SPEED * feedForwardSpeed)*1.0 + pose.velocity*1.0) / SAMPLE_RATE;
+        double deltaX = ((MAX_SPEED * feedForwardSpeed)*0.0 + pose.velocity*2.0) / SAMPLE_RATE;
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
@@ -104,6 +104,9 @@ public class CubicSplineFollower {
         double rotationSpeedFF = -Math.toDegrees(relativeFeedForwardAngle)%360.0*kFF;
         double rotationSpeedD = -pose.angularVelocity/360.0*kD;
         double rotationSpeed = rotationSpeedFF + rotationSpeedD;
+
+        System.out.println(relativeAdjacDist);
+
         return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, true);
     }
 
