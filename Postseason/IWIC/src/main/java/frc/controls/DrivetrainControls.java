@@ -22,8 +22,7 @@ public class DrivetrainControls {
 
 		double difference = heading - goal;
 		if (difference > 180) {
-			// When the values cross to and from 0 & 360, the gross difference is greater
-			// than 180
+			// When the values cross to and from 0 & 360, the gross difference is greater than 180
 			error = difference - 360;
 		} else if (difference < -180) {
 			error = difference + 360;
@@ -31,15 +30,10 @@ public class DrivetrainControls {
 			error = difference;
 		}
 
-		// Sets output rotation to inverted dif as a factor of the given magnitude
-		// Uses cbrt to give greater output at mid to low differences
-		double output = 0.4 * Math.cbrt(-1 * error / 180 * ROTATION_kP);
-		// Deadband-ish
-		if (Utils.withinThreshold(error, 0.0, 4.0))
-			output = error / -180 * ROTATION_kP;
+
 		double pVal = (error / -180 * ROTATION_kP);
 		double dVal = - ((heading - lastError) * ROTATION_kD / 180.0);
-		output = pVal + dVal;
+		double output = pVal + dVal;
 		System.out.print("Turn to Angle- P: " + pVal + ", D: " + dVal);
 		lastError = heading;
 		return output;

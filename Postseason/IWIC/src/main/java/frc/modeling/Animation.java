@@ -29,16 +29,14 @@ public class Animation extends JPanel implements Runnable
 	protected Image image;        // off-screen image
 	protected Graphics offScreen; // off-screen graphics
 	protected Image field, robot;
-	protected final int SPEED = 1;
+	protected final int SPEED = 1; // replay speed
 	protected final double scale = 65; // pixels per meter
-	protected static final int offsetX = 5;
-	protected static final int offsetY = 15;
 	protected final int x;
 	protected final int y;
 	protected int robotWidth, robotHeight;
-	protected ArrayList<Tuple> trajectory;
+	protected ArrayList<Tuple> trajectory;// array for storing points passed through by robot
 
-	protected int dt = 20;          // interval between frames in millisec
+	protected int dt = 10;          // interval between frames in millisec
 	private DrivetrainModel model;
 	private CubicSplineFollower nav;
 
@@ -54,25 +52,16 @@ public class Animation extends JPanel implements Runnable
 		robotWidth = robot.getWidth(this);
 		robotHeight = robot.getHeight(this);
 		setSize(width, height);	
-		x = 0 + offsetX;	
-		y = height-offsetY;
+		x = 0 + width/2; //the x offset for drawing objects	
+		y = height-15; //y offset for drawing objects
 		
 		model = new DrivetrainModel();
 		nav = new CubicSplineFollower();
 
-		// model.setPosition(5.0, 5.0, 0.0);
-		// nav.addWaypoint(new Waypoint(6.5, 6.0, 0.0, 0.7));
-		// nav.addWaypoint(new Waypoint(4.5, 6.0, 0.0, 0.7));
-
-		// model.setPosition(3.0, 3.0, 0.0);
-		// nav.addWaypoint(new Waypoint(3.3, 4.0, 35.0, 0.7));
-		// nav.addWaypoint(new Waypoint(5.0, 5.7, 10.0, 0.7));
-		// nav.addWaypoint(new Waypoint(5.5, 7.5, 0.0, 0.7));
-
-		model.setPosition(3.0, 3.0, 0.0);
+		model.setPosition(0.0, 1.0, 0.0);
 		// nav.addWaypoint(new Waypoint(3.3, 4.0, 40.0, 0.7));
 		// nav.addWaypoint(new Waypoint(5.0, 5.7, 40.0, 0.7));
-		nav.addWaypoint(new Waypoint(5.5, 7.5, 0.0, 0.7));
+		nav.addWaypoint(new Waypoint(2.5, 7.5, 90.0, 0.7));
 	
 		sim = new Thread ( this );	// Create and start the thread
 		sim.start();
@@ -111,13 +100,13 @@ public class Animation extends JPanel implements Runnable
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 
+		// Draw waypoints
 		xCoord = x + (int) Math.round(nav.getCurrentWaypoint().x * scale);
 		yCoord = y - (int) Math.round(nav.getCurrentWaypoint().y * scale);
 		offScreen.setColor(Color.yellow);
 		offScreen.drawOval(xCoord, yCoord, 6, 6);
-		offScreen.setColor(Color.blue);
-		offScreen.drawOval(xCoord, yCoord, 1, 1);
 
+		// Draw trajectory
 		for(Tuple point : trajectory){
 			offScreen.setColor ( Color.yellow );
 			offScreen.drawOval((int) point.left, (int) point.right, 1, 1);
