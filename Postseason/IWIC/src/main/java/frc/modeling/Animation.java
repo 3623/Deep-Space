@@ -73,7 +73,7 @@ public class Animation extends JPanel implements Runnable
 		model.setPosition(1.2, 0.7, 0.0);
 		nav.addWaypoint(new Waypoint(1.2, 6.6, -10.0, 1.0));
 		nav.addWaypoint(new Waypoint(3.5, 0.5, -10.0, -1.0));
-		// nav.addWaypoint(new Waypoint(1.2, 7.2, -20.0, 1.0));
+		nav.addWaypoint(new Waypoint(1.2, 7.2, -20.0, 1.0));
 
 
 

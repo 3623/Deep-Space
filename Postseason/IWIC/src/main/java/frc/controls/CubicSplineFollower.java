@@ -85,6 +85,15 @@ public class CubicSplineFollower {
         return pathFollowing();
     }
 
+    /**
+     * Uses a cubic spline calculated OTF to figure out a projected change in angle required 
+     * to follow path and uses this as a feed forward value in conjuction with a d term used to 
+     * cancel out rotational inertia of the robot.
+     * This method cheats by setting the initial point of the cubic spline as x=0, y=0, dx=0 to 
+     * make calculations simpler. This means that the waypoint has to be converted to local 
+     * coordinates in reference to the robot. 
+     * @return
+     */
     public Tuple pathFollowing(){
         double straightPathAngle = Math.atan2(curWaypoint.x - pose.x, curWaypoint.y - pose.y);
         double relativeAngle = pose.r - straightPathAngle;
@@ -92,14 +101,30 @@ public class CubicSplineFollower {
         double relativeAdjacDist = distanceFromWaypoint * Math.cos(relativeAngle);
         double relativeGoalAngle = pose.r - curWaypoint.r;
         // relativeGoalAngle = Utils.limit(relativeGoalAngle, Math.PI/3.0, -Math.PI/3.0);
-        double relativeGoalDeriv = Math.atan(relativeGoalAngle);
+        double relativeGoalDeriv = Math.atan(relativeGoalAngle); 
+        /* Convert from heading in angle form to slope/derivative form.
+            It turns out that atan and tan are similar enough to work interchangeably.
+            In fact, atan is prefered because it limits the derivate of the waypoint
+            to an angle of 1 radian, so the cubic spline does not become absurd (at
+            angle of 90, slope is inifinity, the cubic spline therefore is a giant peak).
+            Limiting the derivative or angle of the waypoint isn't an issue because we
+            do this calculation OTF. (The limited tan option is left commented out just in case
+            someone wants to play around with that)*/
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
+        /* Not complicated, just two equations derived from solving the system of equations
+            where x1=0, y1=0, and dx1=0, and x2, y2, and dx2 are specified in relation to
+            p1, and y=ax^3+bx^2+cx+d (c and d are equal to 0 because of definition) */
 
-        double deltaX = ((MAX_SPEED * feedForwardSpeed)*0.0 + pose.velocity*2.0) / SAMPLE_RATE;
+        double deltaX = ((MAX_SPEED * feedForwardSpeed)*1.0 + pose.velocity*1.0) / SAMPLE_RATE;
+        /* stumbled upon this by accident, but works well. */
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
-        double relativeFeedForwardAngle = Math.atan(dx2);
+        double relativeFeedForwardAngle = Math.atan(dx2); 
+        /* It turns out that tan and atan are relatively interchangeable here, but in this
+            case, atan is the actually correct function (convert from ratio to angle) and
+            works more accurately, different from above usage, where atan is the incorrect
+            function but works more elegantly */
 
         double rotationSpeedFF = -Math.toDegrees(relativeFeedForwardAngle)%360.0*kFF;
         double rotationSpeedD = -pose.angularVelocity/360.0*kD;
@@ -110,6 +135,12 @@ public class CubicSplineFollower {
         return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, true);
     }
 
+    /**
+     * Method to get the robot to a specific point (specified x, y, and angle) more accurately
+     * than the cubic spline follower. Uses a quazi-pure pursuit method to converge on a line.
+     * However, it turns out this is not necessary, as the cubic spline follower is accurate when
+     * tuned properly
+     */
     public Tuple toPoint(){
         double pathAngle = curWaypoint.r;
         double stateAngle = Math.atan2(curWaypoint.x-pose.x, curWaypoint.y-pose.y);
