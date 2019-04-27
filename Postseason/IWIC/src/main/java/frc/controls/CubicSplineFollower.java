@@ -20,7 +20,7 @@ import frc.util.Utils;
 public class CubicSplineFollower {
     private static final double ROTATION_RATE = 60.0;
     private static final double MAX_SPEED = 3.0;
-    private static final double SAMPLE_RATE = 50.0;
+    private static final double SAMPLE_RATE = 100.0;
 
     private ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
     private Waypoint curWaypoint;
@@ -96,7 +96,7 @@ public class CubicSplineFollower {
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
-        double deltaX = ((MAX_SPEED * feedForwardSpeed) + pose.velocity)/2.0 / SAMPLE_RATE;
+        double deltaX = ((MAX_SPEED * feedForwardSpeed)*1.0 + pose.velocity*1.0) / SAMPLE_RATE;
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);

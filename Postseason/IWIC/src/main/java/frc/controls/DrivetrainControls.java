@@ -10,8 +10,8 @@ import frc.util.Utils;
 public class DrivetrainControls {
 	static double error = 0.0;
 	static double lastHeading = 0.0;
-	static final double ROTATION_kP = 4.0;
-	static final double ROTATION_kD = 1.0;
+	static final double ROTATION_kP = 10.0;
+	static final double ROTATION_kD = 5.0;
 
 	public static double turnToAngle(double goal, double heading) {
 		
