@@ -58,10 +58,10 @@ public class Animation extends JPanel implements Runnable
 		model = new DrivetrainModel();
 		nav = new CubicSplineFollower();
 
-		model.setPosition(0.0, 1.0, 0.0);
-		nav.addWaypoint(new Waypoint(0.3, 4.0, 40.0, 1.0));
-		// nav.addWaypoint(new Waypoint(2.0, 5.7, 220.0, -0.7));
-		nav.addWaypoint(new Waypoint(2.5, 7.5, 0.0, 1.0));
+		// model.setPosition(0.0, 1.0, 0.0);
+		// nav.addWaypoint(new Waypoint(0.3, 4.0, 40.0, 1.0));
+		// // nav.addWaypoint(new Waypoint(2.0, 5.7, 220.0, -0.7));
+		// nav.addWaypoint(new Waypoint(2.5, 7.5, 0.0, 1.0));
 	
 		// model.setPosition(0.0, 1.0, 0.0);
 		// nav.addWaypoint(new Waypoint(0.3, 2.0, -10.0, 1.0));
@@ -70,9 +70,9 @@ public class Animation extends JPanel implements Runnable
 		// nav.addWaypoint(new Waypoint(3.3, 5.0, 30.0, 1.0));
 		// nav.addWaypoint(new Waypoint(3.4, 0.5, 0.0, -1.0));
 
-		// model.setPosition(1.2, 0.7, 0.0);
-		// nav.addWaypoint(new Waypoint(1.2, 6.6, -10.0, 1.0));
-		// nav.addWaypoint(new Waypoint(3.5, 0.5, -10.0, -1.0));
+		model.setPosition(1.2, 0.7, 0.0);
+		nav.addWaypoint(new Waypoint(1.2, 6.6, -10.0, 1.0));
+		nav.addWaypoint(new Waypoint(3.5, 0.5, -10.0, -1.0));
 		// nav.addWaypoint(new Waypoint(1.2, 7.2, -20.0, 1.0));
 
 

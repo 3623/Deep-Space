@@ -29,7 +29,7 @@ public class DrivetrainModel {
 	private static final double CIMS_PER_SIDE = 2.0; // Minicim is 0.58
 	private static final double GEAR_RATIO = 10.75/1.0; // Reduction
 	private static final double DRIVETRAIN_FRICTION = 115;
-	private static final double MAX_FORCE = 200.0;
+	private static final double MAX_FORCE = 150.0;
 	private static final double MAX_TORQUE = MAX_FORCE * WHEEL_RADIUS;
 
 	
