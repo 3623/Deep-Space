@@ -73,7 +73,7 @@ public class CubicSplineFollower {
                 }
             } else if (atWaypoint(kRadiusCritical)){ 
                 // need to switch algorithms to one which gets to the point more urgently
-                // return toPoint();
+                // return toPoint(); // or maybe not
             }
         } else if (atWaypoint(kRadiusPath) && atHeading(kEpsilonPath)) { 
             // at non-critical waypoint
