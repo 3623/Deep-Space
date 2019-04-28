@@ -14,8 +14,7 @@ public class Geometry {
 	}
 	
 	public static double distance(Pose a, Pose b) {
-		double distance = distance(a.x, b.x, a.y, b.y);
-		return distance;
+		return distance(a.x, b.x, a.y, b.y);
 	}
 	
 	public static double distance(double x1, double x2, double y1, double y2) {
