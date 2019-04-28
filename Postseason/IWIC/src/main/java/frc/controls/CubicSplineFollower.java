@@ -33,7 +33,7 @@ public class CubicSplineFollower {
     private static final double kRadiusFinal = 0.05;
     private static final double kEpsilonPath = 5.0;
     private static final double kEpsilonFinal = 1.0;
-    private static final double kD = 1.0;
+    private static final double kD = 2.0;
     private static final double kFF = 1.0/ROTATION_RATE*12.0;
 
     private Pose pose;
