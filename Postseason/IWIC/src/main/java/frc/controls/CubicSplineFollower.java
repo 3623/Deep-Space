@@ -34,7 +34,7 @@ public class CubicSplineFollower {
     private static final double kEpsilonPath = 5.0;
     private static final double kEpsilonFinal = 1.0;
     private static final double kD = 2.0;
-    private static final double kFF = 1.0/ROTATION_RATE*12.0;
+    private static final double kFF = 1.0/ROTATION_RATE*20.0;
 
     private Pose pose;
 
@@ -51,7 +51,7 @@ public class CubicSplineFollower {
         calculateDistanceFromWaypoint();
 
         feedForwardSpeed = curWaypoint.kSpeed;
-        if (index == waypoints.size() - 1) { 
+        if (curWaypoint.isCritical) { 
             // Last waypoint, important to be at exactly
             if(distanceFromWaypoint < Math.abs(feedForwardSpeed)) 
                 // speed reduces as distance gets smaller
@@ -60,12 +60,16 @@ public class CubicSplineFollower {
                 feedForwardSpeed = 0.0;
                 if(atHeading(kEpsilonFinal)){ 
                     // at point and heading, we're done
-                    if (isFinished != true){ //print that we're there only once
-                        System.out.println("At Waypoint Final: (" + curWaypoint.toString() + ")");
-            index++;
+                    System.out.println("At Waypoint: " + index + " (" + curWaypoint.toString() + ")");
+                    if(index == waypoints.size() - 1 || isFinished){
+                        if (!isFinished) System.out.println("Finished Path Following");
+                        isFinished = true;
+                        return new Tuple (0.0, 0.0);
+                    } else{
+                        index++;
+                        curWaypoint = waypoints.get(index);
                     }
-                    isFinished = true;
-                    return new Tuple (0.0, 0.0);
+
                 } else { 
                     // at point but not heading, just turn to the point
                     double ptrOutput = DrivetrainControls.turnToAngle(curWaypoint.heading, pose.heading);
@@ -196,6 +200,7 @@ public class CubicSplineFollower {
         // public final Pose point;
         protected double kSpeed;
         public double x, y, r, heading;
+        protected Boolean isCritical;
 
         /**
          * Constructor for waypoint without driving params
@@ -210,6 +215,7 @@ public class CubicSplineFollower {
             this.r = Math.toRadians(heading);
             this.heading = heading;
             this.kSpeed = 0.0;
+            this.isCritical = false;
         }
 
         public Waypoint(Pose pose) {
@@ -218,6 +224,16 @@ public class CubicSplineFollower {
             this.r = pose.r;
             this.heading = pose.heading;
             this.kSpeed = 0.0;
+            this.isCritical = false;
+        }
+
+        public Waypoint(double x, double y, double heading, double speed, Boolean critical) {
+            this.x = x;
+            this.y = y;
+            this.r = Math.toRadians(heading);
+            this.heading = heading;
+            this.kSpeed = speed;
+            this.isCritical = critical;
         }
 
         public Waypoint(double x, double y, double heading, double speed) {
@@ -226,6 +242,7 @@ public class CubicSplineFollower {
             this.r = Math.toRadians(heading);
             this.heading = heading;
             this.kSpeed = speed;
+            this.isCritical = false;
         }
 
         public String toString(){
