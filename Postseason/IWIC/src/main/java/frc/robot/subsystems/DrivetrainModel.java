@@ -129,24 +129,10 @@ public class DrivetrainModel {
 		center.velocity = (left.velocity + right.velocity)/2.0;
 		center.angularVelocity = -Math.toDegrees(theta)/time;
 		
-		// //// Debug statements
+		// // Debug statements
 		// System.out.println("X: " + center.x + ", Y: " + center.y + ", Heading: " + center.heading);
 		// System.out.println("MA: " + movementAngle + ", Rad ICC: " + radius);
 		// System.out.println("Movement X: " + movementX + ", Movement Y: " + movementY);
-	}
-
-	/** 
-	 * Limits acceleration using the models velocity and information about motors
-	 * @param unchecked output voltage
-	 * @return checked voltage, limited to acceleration of MAX_TORQUE constant
-	 */
-	public Tuple limitAcceleration(double leftOut, double rightOut){
-		double leftVoltage = leftOut*12.0;
-		double rightVoltage = leftOut*12.0;
-		double leftVoltageChecked = left.limitAcceleration(leftVoltage);
-		double rightVoltageChecked = right.limitAcceleration(rightVoltage);
-		Tuple checkedOutput = new Tuple(leftVoltageChecked, rightVoltageChecked);
-		return checkedOutput;
 	}
 
 	/** 
@@ -162,7 +148,15 @@ public class DrivetrainModel {
 		Tuple checkedOutput = new Tuple(leftVoltageChecked, rightVoltageChecked);
 		return checkedOutput;
 	}
-	
+
+	/** 
+	 * Limits acceleration using the models velocity and information about motors
+	 * @param unchecked output voltage
+	 * @return checked voltage, limited to acceleration of MAX_TORQUE constant
+	 */
+	public Tuple limitAcceleration(double leftOut, double rightOut){
+		return limitAcceleration(new Tuple(leftOut, rightOut));
+	}
 
 	private static class DrivetrainSide{
 		double velocity;
@@ -204,16 +198,10 @@ public class DrivetrainModel {
 			double wheelForce = (totalTorque / WHEEL_RADIUS);
 			
 			double wheelnetForce = frictionModel(wheelForce, this.velocity);
-			
-			// Fake Traction Limiting
-			double maxForce = 250.0;
-			if (wheelnetForce < -maxForce) wheelnetForce = -maxForce;
-			else if (wheelnetForce > maxForce) wheelnetForce = maxForce;
-			
+					
 			double newAcceleration = wheelnetForce / psuedoMass;
 			this.velocity += (newAcceleration + this.acceleration) / 2 * time; // Trapezoidal integration
 			this.acceleration = newAcceleration;
-			
 		}
 
 		/** 
@@ -226,14 +214,9 @@ public class DrivetrainModel {
 			double maxVoltage = CIMMotor.torqueToVoltage(MAX_TORQUE/CIMS_PER_SIDE/GEAR_RATIO, motorSpeed);
 			double minVoltage = CIMMotor.torqueToVoltage(-MAX_TORQUE/CIMS_PER_SIDE/GEAR_RATIO, motorSpeed);
 
-
-			double limitedVoltage;
-			if (outputVoltage > maxVoltage) limitedVoltage = maxVoltage;
-			else if (outputVoltage < minVoltage) limitedVoltage = minVoltage;
-			else limitedVoltage = outputVoltage;
+			double limitedVoltage = Utils.limit(outputVoltage, maxVoltage, minVoltage);
 
 			// System.out.println("Max: " + maxVoltage + ", Min: " + minVoltage + ", Limited: " + limitedVoltage);
-
 			
 			return limitedVoltage;
 		}
