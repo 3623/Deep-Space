@@ -138,8 +138,6 @@ public class CubicSplineFollower {
         double rotationSpeedD = -pose.angularVelocity/360.0*kD;
         double rotationSpeed = rotationSpeedFF + rotationSpeedD;
 
-        System.out.println(relativeAdjacDist);
-
         return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, true);
     }
 

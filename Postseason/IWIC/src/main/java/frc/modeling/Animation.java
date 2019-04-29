@@ -78,9 +78,9 @@ public class Animation extends JPanel implements Runnable {
 
 		model.setPosition(-1.2, 0.7, 0.0);
 		nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
-		nav.addWaypoint(new Waypoint(-1.1, 6.6, 10.0, 1.0, true));
+		nav.addWaypoint(new Waypoint(-1.2, 6.6, 0.0, 1.0, true));
 		nav.addWaypoint(new Waypoint(-3.5, 0.5, 0.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(-1.1, 7.2, 10.0, 1.0, true));
+		nav.addWaypoint(new Waypoint(-1.2, 7.2, 0.0, 1.0, true));
 
 		// // Right rocket
 		// model.setPosition(1.2, 0.7, 0.0);
@@ -129,9 +129,6 @@ public class Animation extends JPanel implements Runnable {
 		// rightVoltage);
 
 		if(nav.getIsFinished()){
-			nav.clearWaypoints();
-
-
 		}
 
 		model.updateVoltage(leftVoltage, rightVoltage, simTime);
@@ -148,7 +145,7 @@ public class Animation extends JPanel implements Runnable {
 		/// Draw robot
 		int xCoord = x + (int) Math.round(model.center.x * scale) - (robotWidth / 2);
 		int yCoord = y - (int) Math.round(model.center.y * scale) - (robotHeight / 2);
-		trajectory.add(new Tuple(xCoord + (robotWidth / 2), yCoord + (robotHeight / 2)));
+		if(!nav.getIsFinished()) trajectory.add(new Tuple(xCoord + (robotWidth / 2), yCoord + (robotHeight / 2)));
 		AffineTransform tx = AffineTransform.getRotateInstance(model.center.r, robotWidth / 2, robotHeight / 2);
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
