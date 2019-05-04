@@ -76,21 +76,21 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
 		// nav.addWaypoint(new Waypoint(1.1, 7.2, -10.0, 1.0, true));
 
-		model.setPosition(-1.2, 0.7, 0.0);
-		nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
-		nav.addWaypoint(new Waypoint(-1.2, 6.6, 0.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(-3.5, 0.5, 0.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(-1.2, 7.2, 0.0, 1.0, true));
+		// model.setPosition(-1.2, 0.7, 0.0);
+		// nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
+		// nav.addWaypoint(new Waypoint(-1.2, 6.6, 0.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(-3.5, 0.5, 0.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(-1.2, 7.2, 0.0, 1.0, true));
 
-		// // Right rocket
-		// model.setPosition(1.2, 0.7, 0.0);
-		// nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5, false));
-		// nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
-		// nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
-		// nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, -1.0));
-		// nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
-		// nav.addWaypoint(new Waypoint(3.7, 3.5, 0.0, 1.0));
-		// nav.addWaypoint(new Waypoint(3.4, 5.0, -60.0, 1.0, true));
+		// Right rocket
+		model.setPosition(1.2, 0.7, 0.0);
+		nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
+		nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
+		nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
+		nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, -1.0));
+		nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
+		nav.addWaypoint(new Waypoint(3.7, 3.5, 0.0, 1.0));
+		nav.addWaypoint(new Waypoint(3.4, 5.0, -60.0, 1.0, true));
 
 		// model.setPosition(-1.2, 0.7, 0.0);
 		// nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
@@ -130,6 +130,9 @@ public class Animation extends JPanel implements Runnable {
 
 		if(nav.getIsFinished()){
 		}
+
+		// leftVoltage += (Math.random() - 0.5) * 4.0; // Some random error. Well, a lot
+		// rightVoltage += (Math.random() - 0.5) * 4.0;
 
 		model.updateVoltage(leftVoltage, rightVoltage, simTime);
 		model.updatePosition(simTime);

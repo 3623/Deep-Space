@@ -31,7 +31,7 @@ public class CubicSplineFollower {
     private static double kRadiusPath = 0.4;
     private static final double kRadiusCritical = 0.15;
     private static final double kRadiusFinal = 0.05;
-    private static final double kEpsilonPath = 5.0;
+    private static final double kEpsilonPath = 3.0;
     private static final double kEpsilonFinal = 1.0;
     private static final double kD = 2.0;
     private static final double kFF = 1.0/ROTATION_RATE*20.0;
@@ -273,20 +273,20 @@ public class CubicSplineFollower {
         }
 
         public Waypoint(double x, double y, double heading) {
-            new Waypoint(x, y, heading, 0.0, false);
+            this(x, y, heading, 0.0, false);
         }
 
         public Waypoint(Pose pose) {
-            new Waypoint(pose.x, pose.y, pose.heading, 0.0, false);
+            this(pose.x, pose.y, pose.heading, 0.0, false);
 
         }
 
         public Waypoint(double x, double y, double heading, double speed) {
-            new Waypoint(x, y, heading, speed, false);
+            this(x, y, heading, speed, false);
         }
 
         public String toString(){
-            return "x: " + x + ", y: " + y + ", heading: " + heading + ", speed" + kSpeed;
+            return "x: " + x + ", y: " + y + ", heading: " + heading + ", speed: " + kSpeed;
         }
     }
 
