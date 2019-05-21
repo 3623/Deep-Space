@@ -28,16 +28,23 @@ public class Animation extends JPanel implements Runnable {
 	protected Image image; // off-screen image
 	protected Graphics offScreen; // off-screen graphics
 	protected Image field, robot;
-	protected final int SPEED = 1; // replay speed
 	protected final double scale = 65; // pixels per meter
 	protected final int x;
 	protected final int y;
 	protected int robotWidth, robotHeight;
 	protected ArrayList<Tuple> trajectory;// array for storing points passed through by robot
 
-	protected int dt = 10; // interval between frames in millisec
+	protected final int SPEED = 1; // replay speed
+	protected final int FRAME_RATE = 60; // interval between frames in millisec
+
 	private DrivetrainModel model;
 	private CubicSplineFollower nav;
+
+	protected final int ODOMETRY_UPDATE_RATE = 200;
+	protected final int CONTROL_UPDATE_RATE = 200;
+	protected double leftVoltage = 0.0;
+	protected double rightVoltage = 0.0;
+
 
 	protected double time = 0.0;
 
@@ -111,32 +118,14 @@ public class Animation extends JPanel implements Runnable {
 
 		sim = new Thread(this); // Create and start the thread
 		sim.start();
+		odometryThread();
+		controlThread();
 
 		trajectory = new ArrayList<Tuple>();
 	}
 
 	// Update function
 	public void paintComponent(Graphics g) {
-		double simTime = dt / 1000.0;
-		time += simTime;
-
-		Tuple output = nav.updatePursuit(model.center);
-		output = model.limitAcceleration(output);
-		double leftVoltage = output.left * 12.0;
-		double rightVoltage = output.right * 12.0;
-
-		// System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " +
-		// rightVoltage);
-
-		if(nav.getIsFinished()){
-		}
-
-		// leftVoltage += (Math.random() - 0.5) * 4.0; // Some random error. Well, a lot
-		// rightVoltage += (Math.random() - 0.5) * 4.0;
-
-		model.updateVoltage(leftVoltage, rightVoltage, simTime);
-		model.updatePosition(simTime);
-
 		size = this.getSize(); // Get the size of the viewing area
 		if (image == null) { // Create the off-screen image buffer if it is the first time
 			image = createImage(size.width, size.height);
@@ -167,7 +156,6 @@ public class Animation extends JPanel implements Runnable {
 
 		/// Copy the off-screen image to the screen
 		g.drawImage(image, 0, 0, this);
-
 	}
 
 	@Override
@@ -180,11 +168,64 @@ public class Animation extends JPanel implements Runnable {
 		while (Thread.currentThread() == sim && nav.getIsFinished() == false) {
 			repaint();
 			try {
-				Thread.sleep(dt * SPEED);
+				Thread.sleep(1000/FRAME_RATE);
 			} catch (InterruptedException e) {
 				System.out.println("Exception: " + e.getMessage());
 			}
 		}
+	}
+
+	public void controlThread(){
+		Thread c = new Thread(() -> {
+            while (!Thread.interrupted()) {
+
+				Tuple output = nav.updatePursuit(model.center);
+				output = model.limitAcceleration(output);
+				leftVoltage = output.left * 12.0;
+				rightVoltage = output.right * 12.0;
+
+				System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " +
+				rightVoltage);
+
+				if(nav.getIsFinished()){
+				}
+
+
+				
+				try {
+					Thread.sleep(1000/CONTROL_UPDATE_RATE * SPEED);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+        });
+        c.start();
+	}
+
+	public void odometryThread(){
+		Thread o = new Thread(() -> {
+            while (!Thread.interrupted()) {
+				time += 1000/ODOMETRY_UPDATE_RATE;
+
+
+				// leftVoltage += (Math.random() - 0.5) * 4.0; // Some random error. Well, a lot
+				// rightVoltage += (Math.random() - 0.5) * 4.0;
+
+				model.updateVoltage(leftVoltage, rightVoltage, 1.0/ODOMETRY_UPDATE_RATE);
+				model.updatePosition(1.0/ODOMETRY_UPDATE_RATE);
+				System.out.println(model.center.x);
+
+				
+				try {
+					Thread.sleep(1000/ODOMETRY_UPDATE_RATE * SPEED);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+        });
+        o.start();
 	}
 
 	public static void main(String[] args) throws IOException {
