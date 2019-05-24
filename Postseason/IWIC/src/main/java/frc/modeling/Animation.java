@@ -40,8 +40,8 @@ public class Animation extends JPanel implements Runnable {
 	private DrivetrainModel model;
 	private CubicSplineFollower nav;
 
-	protected final int ODOMETRY_UPDATE_RATE = 200;
-	protected final int CONTROL_UPDATE_RATE = 200;
+	protected final int ODOMETRY_UPDATE_RATE = 50;
+	protected final int CONTROL_UPDATE_RATE = 50;
 	protected double leftVoltage = 0.0;
 	protected double rightVoltage = 0.0;
 
@@ -190,8 +190,6 @@ public class Animation extends JPanel implements Runnable {
 				if(nav.getIsFinished()){
 				}
 
-
-				
 				try {
 					Thread.sleep(1000/CONTROL_UPDATE_RATE * SPEED);
 				} catch (InterruptedException e) {
@@ -208,7 +206,6 @@ public class Animation extends JPanel implements Runnable {
             while (!Thread.interrupted()) {
 				time += 1000/ODOMETRY_UPDATE_RATE;
 
-
 				// leftVoltage += (Math.random() - 0.5) * 4.0; // Some random error. Well, a lot
 				// rightVoltage += (Math.random() - 0.5) * 4.0;
 
@@ -216,7 +213,6 @@ public class Animation extends JPanel implements Runnable {
 				model.updatePosition(1.0/ODOMETRY_UPDATE_RATE);
 				System.out.println(model.center.x);
 
-				
 				try {
 					Thread.sleep(1000/ODOMETRY_UPDATE_RATE * SPEED);
 				} catch (InterruptedException e) {
