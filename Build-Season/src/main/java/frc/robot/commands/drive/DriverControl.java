@@ -29,11 +29,11 @@ public class DriverControl extends Command {
     // quickTurn = true;
 
     if (quickTurn){
-      Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)/2.0, 
+      Robot.drivetrain.openLoopControl(Robot.driverController.getRawAxis(1)/2.0, 
       Robot.driverController.getRawAxis(4),
       quickTurn);
     } else{
-      Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)*Math.abs(Robot.driverController.getRawAxis(1)), 
+      Robot.drivetrain.openLoopControl(Robot.driverController.getRawAxis(1)*Math.abs(Robot.driverController.getRawAxis(1)), 
       Robot.driverController.getRawAxis(4)/2.0, 
       quickTurn);
     }

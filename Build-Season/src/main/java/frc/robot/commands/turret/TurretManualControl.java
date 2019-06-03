@@ -34,7 +34,8 @@ public class TurretManualControl extends Command {
       // Manual control with pot
       Robot.turret.setSpeed(Robot.operatorController.getRawAxis(0));
     } else {
-      Robot.turret.setVisionControlled();
+     // Robot.turret.setVisionControlled();
+      Robot.turret.setSpeed(0.0);
     }
   }
 
