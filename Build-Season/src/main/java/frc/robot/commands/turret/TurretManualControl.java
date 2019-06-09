@@ -24,12 +24,6 @@ public class TurretManualControl extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(Robot.operatorController.getRawButton(8)){
-      Robot.turret.disable();
-      Robot.turret.manualControl(Robot.operatorController.getRawAxis(0)/2.0);
-    } else if (Robot.operatorController.getRawButton(7)){
-      Robot.turret.enable();
-    }
     if (Utils.outsideDeadband(Robot.operatorController.getRawAxis(4), 0.0, 0.3) ||
     Utils.outsideDeadband(Robot.operatorController.getRawAxis(5), 0.0, 0.3)) {
         // Setpoint control
@@ -38,10 +32,8 @@ public class TurretManualControl extends Command {
       Robot.turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
     } else if (Utils.outsideDeadband(Robot.operatorController.getRawAxis(0), 0.0, 0.2)) {
       // Manual control with pot
-      Robot.turret.setSpeed(Robot.operatorController.getRawAxis(0)/2.0);
-    } else if (Robot.operatorController.getRawButton(6)){
-      Robot.turret.setSpeed(0.0);
-    } else{
+      Robot.turret.setSpeed(Robot.operatorController.getRawAxis(0));
+    } else {
       Robot.turret.setVisionControlled();
     }
   }

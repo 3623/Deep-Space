@@ -19,7 +19,7 @@ public class Elevator extends PIDSubsystem {
     private static final double DISTANCE_PER_PULSE = Math.PI*1.125*2.0/2024.0;
     private final double OFFSET = 20.0;
     private DigitalInput bottomLimit = new DigitalInput(6);
-    private final double BOTTOM_SOFT_LIMIT = 25.5;
+    private final double BOTTOM_SOFT_LIMIT = 24.5;
     private DigitalInput topLimit = new DigitalInput(7);
     private final double TOP_SOFT_LIMIT = 77.0;
 

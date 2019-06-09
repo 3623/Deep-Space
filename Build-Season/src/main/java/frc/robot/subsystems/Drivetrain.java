@@ -22,7 +22,7 @@ public class Drivetrain extends Subsystem{
 
 	Encoder encLeft, encRight;
 
-	public AHRS navx; 
+	AHRS navx; 
 
 	public DrivetrainModel model;
 	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS*Math.PI*2/2048.0;

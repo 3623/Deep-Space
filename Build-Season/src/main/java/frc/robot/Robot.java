@@ -67,8 +67,7 @@ public class Robot extends TimedRobot {
   final String DriverControl = "Driver Control";
 
   SendableChooser<Boolean> driveReverse;
-  final Boolean driveReversed = true;
-  final Boolean driveForward = false;
+
   Boolean driverControl;
 
   Command autoCommand;
@@ -99,11 +98,6 @@ public class Robot extends TimedRobot {
     autoChooser.addOption(CrossLine, CrossLine);
     SmartDashboard.putData("Auto choices", autoChooser);
 
-    driveReverse = new SendableChooser<Boolean>();
-    driveReverse.addDefault("Not Reverse", driveForward);
-    driveReverse.addDefault("Reversed", driveReversed);
-    SmartDashboard.putData("Drive Reverse", driveReverse);
-
     driverControl = false;
 
     climber = new Climber();
@@ -120,6 +114,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     elevator.update(); 
+    turret.update();
   }
 
   /**
@@ -137,9 +132,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     drivetrain.zeroSensors();
-    if(driveReverse.getSelected()){
-      drivetrain.navx.setAngleAdjustment(180.0);
-    }
     Scheduler.getInstance().removeAll();
 
     turret.enable();
