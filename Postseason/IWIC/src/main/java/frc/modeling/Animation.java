@@ -21,6 +21,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Animation extends JPanel implements Runnable {
+
+	public static void main(String[] args) throws IOException {
+		JFrame frame = new JFrame("Drivetrain Simulation");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(1000, 1000);
+		Container pane = frame.getContentPane();
+		pane.setLayout(new BorderLayout());
+		// pane.setLayout(new GridBagLayout());
+		// GridBagConstraints c = new GridBagConstraints();
+		// c.fill = GridBagConstraints.BOTH;
+		Animation panel = new Animation();
+		pane.add(panel, BorderLayout.CENTER);
+
+		// pane.add(panel, c);
+		// frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		// frame.addWindowListener(new WindowAdapter() {
+		// public void windowClosing(WindowEvent evt) {
+		// System.exit(0);
+		// }
+		// });
+	}
+
 	protected Thread sim; // animation thread
 	protected int width; // width of viewing area in pixels
 	protected int height; // height of viewing area in pixels
@@ -45,25 +69,35 @@ public class Animation extends JPanel implements Runnable {
 	protected double leftVoltage = 0.0;
 	protected double rightVoltage = 0.0;
 
-
 	protected double time = 0.0;
 
 	public Animation() throws IOException {
-		field = ImageIO.read(new File("field-blue.png"));
-		robot = ImageIO.read(new File("robot-blue.png"));
+		field = ImageIO.read(new File("IWIC/field-blue.png"));
+		robot = ImageIO.read(new File("IWIC/robot-blue.png"));
 
 		// Set the width and heigth and size
 		width = field.getWidth(this);
 		height = field.getHeight(this);
 		robotWidth = robot.getWidth(this);
 		robotHeight = robot.getHeight(this);
-		setSize(width, height);
+		// setSize(width, height);
 		x = 0 + width / 2; // the x offset for drawing objects
 		y = height - 15; // y offset for drawing objects
 
 		model = new DrivetrainModel();
 		nav = new CubicSplineFollower();
 
+		this.setWaypoints();
+
+		sim = new Thread(this); // Create and start the thread
+		sim.start();
+		odometryThread();
+		controlThread();
+
+		trajectory = new ArrayList<Tuple>();
+	}
+
+	private void setWaypoints() {
 		// model.setPosition(0.0, 1.0, 0.0);
 		// nav.addWaypoint(new Waypoint(0.3, 4.0, 40.0, 1.0));
 		// // nav.addWaypoint(new Waypoint(2.0, 5.7, 220.0, -0.7));
@@ -108,24 +142,18 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(-3.7, 3.5, -0.0, 1.0));
 		// nav.addWaypoint(new Waypoint(-3.4, 5.0, 60.0, 1.0, true));
 
-
 		// model.setPosition(0.0, 1.0, 0.0);
 		// // nav.addWaypoint(new Waypoint(0.4, 3.0, 90.0, 1.0));
 		// // nav.addWaypoint(new Waypoint(2.0, 3.4, 0.0, 1.0));
 		// nav.addWaypoint(new Waypoint(1.0, 3.0, 90.0, 1.0, true));
 
 		// nav.addWaypoint(new Waypoint(3.3, 5.0, 0.0, 1.0));
-
-		sim = new Thread(this); // Create and start the thread
-		sim.start();
-		odometryThread();
-		controlThread();
-
-		trajectory = new ArrayList<Tuple>();
 	}
 
 	// Update function
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+
 		size = this.getSize(); // Get the size of the viewing area
 		if (image == null) { // Create the off-screen image buffer if it is the first time
 			image = createImage(size.width, size.height);
@@ -137,7 +165,8 @@ public class Animation extends JPanel implements Runnable {
 		/// Draw robot
 		int xCoord = x + (int) Math.round(model.center.x * scale) - (robotWidth / 2);
 		int yCoord = y - (int) Math.round(model.center.y * scale) - (robotHeight / 2);
-		if(!nav.getIsFinished()) trajectory.add(new Tuple(xCoord + (robotWidth / 2), yCoord + (robotHeight / 2)));
+		if (!nav.getIsFinished())
+			trajectory.add(new Tuple(xCoord + (robotWidth / 2), yCoord + (robotHeight / 2)));
 		AffineTransform tx = AffineTransform.getRotateInstance(model.center.r, robotWidth / 2, robotHeight / 2);
 		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
@@ -155,85 +184,89 @@ public class Animation extends JPanel implements Runnable {
 		}
 
 		/// Copy the off-screen image to the screen
-		g.drawImage(image, 0, 0, this);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.scale(size.width / (double) this.width, size.height / (double) this.height);
+		g2.drawImage(image, 0, 0, this);
+		System.out.println(size.width);
 	}
 
-	@Override
-	public void update(Graphics g) {
-		paintComponent(g);
-	}
+	// @Override
+	// public Dimension getPreferredSize() {
+	// return new Dimension(width, height);
+	// }
+
+	// @Override
+	// public Dimension getMinimumSize() {
+	// return new Dimension(width / 2, height / 2);
+	// }
+
+	// @Override
+	// public Dimension getMaximumSize() {
+	// return new Dimension(width * 2, height * 2);
+	// }
+
+	// @Override
+	// public void update(Graphics g) {
+	// paintComponent(g);
+	// }
 
 	@Override
 	public void run() {
 		while (Thread.currentThread() == sim && nav.getIsFinished() == false) {
 			repaint();
 			try {
-				Thread.sleep(1000/FRAME_RATE);
+				Thread.sleep(1000 / FRAME_RATE);
 			} catch (InterruptedException e) {
 				System.out.println("Exception: " + e.getMessage());
 			}
 		}
 	}
 
-	public void controlThread(){
+	public void controlThread() {
 		Thread c = new Thread(() -> {
-            while (!Thread.interrupted()) {
+			while (!Thread.interrupted()) {
 
 				Tuple output = nav.updatePursuit(model.center);
 				output = model.limitAcceleration(output);
 				leftVoltage = output.left * 12.0;
 				rightVoltage = output.right * 12.0;
 
-				System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " +
-				rightVoltage);
+				System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
 
-				if(nav.getIsFinished()){
+				if (nav.getIsFinished()) {
 				}
 
 				try {
-					Thread.sleep(1000/CONTROL_UPDATE_RATE * SPEED);
+					Thread.sleep(1000 / CONTROL_UPDATE_RATE * SPEED);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-        });
-        c.start();
+		});
+		c.start();
 	}
 
-	public void odometryThread(){
+	public void odometryThread() {
 		Thread o = new Thread(() -> {
-            while (!Thread.interrupted()) {
-				time += 1000/ODOMETRY_UPDATE_RATE;
+			while (!Thread.interrupted()) {
+				time += 1000 / ODOMETRY_UPDATE_RATE;
 
 				// leftVoltage += (Math.random() - 0.5) * 4.0; // Some random error. Well, a lot
 				// rightVoltage += (Math.random() - 0.5) * 4.0;
 
-				model.updateVoltage(leftVoltage, rightVoltage, 1.0/ODOMETRY_UPDATE_RATE);
-				model.updatePosition(1.0/ODOMETRY_UPDATE_RATE);
+				model.updateVoltage(leftVoltage, rightVoltage, 1.0 / ODOMETRY_UPDATE_RATE);
+				model.updatePosition(1.0 / ODOMETRY_UPDATE_RATE);
 				System.out.println(model.center.x);
 
 				try {
-					Thread.sleep(1000/ODOMETRY_UPDATE_RATE * SPEED);
+					Thread.sleep(1000 / ODOMETRY_UPDATE_RATE * SPEED);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-        });
-        o.start();
-	}
-
-	public static void main(String[] args) throws IOException {
-		JFrame frame = new JFrame("Drivetrain Simulation");
-		Animation panel = new Animation();
-		frame.getContentPane().add(panel);
-		frame.setSize(panel.width, panel.height + 35);
-		frame.setVisible(true);
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent evt) {
-				System.exit(0);
-			}
 		});
+		o.start();
 	}
 }
