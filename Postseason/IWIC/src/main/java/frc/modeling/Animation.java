@@ -25,24 +25,14 @@ public class Animation extends JPanel implements Runnable {
 	public static void main(String[] args) throws IOException {
 		JFrame frame = new JFrame("Drivetrain Simulation");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1000, 1000);
+
 		Container pane = frame.getContentPane();
-		pane.setLayout(new BorderLayout());
-		// pane.setLayout(new GridBagLayout());
-		// GridBagConstraints c = new GridBagConstraints();
-		// c.fill = GridBagConstraints.BOTH;
 		Animation panel = new Animation();
 		pane.add(panel, BorderLayout.CENTER);
 
-		// pane.add(panel, c);
-		// frame.pack();
+		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		// frame.addWindowListener(new WindowAdapter() {
-		// public void windowClosing(WindowEvent evt) {
-		// System.exit(0);
-		// }
-		// });
 	}
 
 	protected Thread sim; // animation thread
@@ -80,7 +70,7 @@ public class Animation extends JPanel implements Runnable {
 		height = field.getHeight(this);
 		robotWidth = robot.getWidth(this);
 		robotHeight = robot.getHeight(this);
-		// setSize(width, height);
+
 		x = 0 + width / 2; // the x offset for drawing objects
 		y = height - 15; // y offset for drawing objects
 
@@ -190,25 +180,20 @@ public class Animation extends JPanel implements Runnable {
 		System.out.println(size.width);
 	}
 
-	// @Override
-	// public Dimension getPreferredSize() {
-	// return new Dimension(width, height);
-	// }
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(width, height);
+	}
 
-	// @Override
-	// public Dimension getMinimumSize() {
-	// return new Dimension(width / 2, height / 2);
-	// }
+	@Override
+	public Dimension getMinimumSize() {
+		return new Dimension(width / 2, height / 2);
+	}
 
-	// @Override
-	// public Dimension getMaximumSize() {
-	// return new Dimension(width * 2, height * 2);
-	// }
-
-	// @Override
-	// public void update(Graphics g) {
-	// paintComponent(g);
-	// }
+	@Override
+	public Dimension getMaximumSize() {
+		return new Dimension(width * 3, height * 3);
+	}
 
 	@Override
 	public void run() {
