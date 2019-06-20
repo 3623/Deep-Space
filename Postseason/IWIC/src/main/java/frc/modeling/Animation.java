@@ -100,12 +100,12 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(3.3, 5.0, 30.0, 1.0));
 		// nav.addWaypoint(new Waypoint(3.4, 0.5, 0.0, -1.0));
 
-		// Side of cargo ship x2
-		model.setPosition(1.2, 0.7, 0.0);
-		nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5, false));
-		nav.addWaypoint(new Waypoint(1.1, 6.6, -10.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(1.1, 7.2, -10.0, 1.0, true));
+		// // Side of cargo ship x2
+		// model.setPosition(1.2, 0.7, 0.0);
+		// nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5, false));
+		// nav.addWaypoint(new Waypoint(1.1, 6.6, -10.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(1.1, 7.2, -10.0, 1.0, true));
 
 		// model.setPosition(-1.2, 0.7, 0.0);
 		// nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
@@ -113,15 +113,15 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(-3.5, 0.5, 0.0, -1.0, true));
 		// nav.addWaypoint(new Waypoint(-1.2, 7.2, 0.0, 1.0, true));
 
-		// // Right rocket
-		// model.setPosition(1.2, 0.7, 0.0);
-		// nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
-		// nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
-		// nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
-		// nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, -1.0));
-		// nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
-		// nav.addWaypoint(new Waypoint(3.7, 3.5, 0.0, 1.0));
-		// nav.addWaypoint(new Waypoint(3.4, 5.0, -60.0, 1.0, true));
+		// Right rocket
+		model.setPosition(1.2, 0.7, 0.0);
+		nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
+		nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
+		nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
+		nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, -1.0));
+		nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
+		nav.addWaypoint(new Waypoint(3.7, 3.5, 0.0, 1.0));
+		nav.addWaypoint(new Waypoint(3.4, 5.0, -60.0, 1.0, true));
 
 		// model.setPosition(-1.2, 0.7, 0.0);
 		// nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
@@ -162,10 +162,9 @@ public class Animation extends JPanel implements Runnable {
 		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
 
 		// Draw waypoints
-		xCoord = x + (int) Math.round(nav.getCurrentWaypoint().x * scale);
-		yCoord = y - (int) Math.round(nav.getCurrentWaypoint().y * scale);
+		int waypointX = x + (int) Math.round(nav.getCurrentWaypoint().x * scale);
 		offScreen.setColor(Color.yellow);
-		offScreen.drawOval(xCoord - 3, yCoord - 3, 6, 6);
+		offScreen.drawOval(waypointX - 3, waypointY - 3, 6, 6);
 
 		// Draw trajectory
 		for (Tuple point : trajectory) {
