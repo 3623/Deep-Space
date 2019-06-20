@@ -41,7 +41,8 @@ public class Animation extends JPanel implements Runnable {
 	protected Dimension size; // size of viewing area
 	protected Image image; // off-screen image
 	protected Graphics offScreen; // off-screen graphics
-	protected Image field, robot;
+	protected Image field;
+	protected BufferedImage robot;
 	protected final double scale = 65; // pixels per meter
 	protected final int x;
 	protected final int y;
@@ -120,7 +121,7 @@ public class Animation extends JPanel implements Runnable {
 		nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
 		nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, -1.0));
 		nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(3.7, 3.5, 0.0, 1.0));
+		nav.addWaypoint(new Waypoint(3.7, 4.3, -10.0, 1.0));
 		nav.addWaypoint(new Waypoint(3.4, 5.0, -60.0, 1.0, true));
 
 		// model.setPosition(-1.2, 0.7, 0.0);
@@ -153,16 +154,24 @@ public class Animation extends JPanel implements Runnable {
 		offScreen.drawImage(field, 0, 0, this); // Draw background field
 
 		/// Draw robot
-		int xCoord = x + (int) Math.round(model.center.x * scale) - (robotWidth / 2);
-		int yCoord = y - (int) Math.round(model.center.y * scale) - (robotHeight / 2);
+		BufferedImage robotRotated = rotateRobot();
+		int xCoord = x + (int) Math.round(model.center.x * scale);
+		int xCoordOffset = xCoord - (robotRotated.getWidth() / 2);
+		int yCoord = y - (int) Math.round(model.center.y * scale);
+		int yCoordOffset = yCoord - (robotRotated.getHeight() / 2);
 		if (!nav.getIsFinished())
-			trajectory.add(new Tuple(xCoord + (robotWidth / 2), yCoord + (robotHeight / 2)));
-		AffineTransform tx = AffineTransform.getRotateInstance(model.center.r, robotWidth / 2, robotHeight / 2);
-		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-		offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord, this);
+			trajectory.add(new Tuple(xCoord, yCoord));
+		offScreen.drawImage(robotRotated, xCoordOffset, yCoordOffset, this);
+		// AffineTransform tx = AffineTransform.getRotateInstance(model.center.r,
+		// robotWidth / 2, robotHeight / 2);
+		// AffineTransformOp op = new AffineTransformOp(tx,
+		// AffineTransformOp.TYPE_BILINEAR);
+		// offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord,
+		// this);
 
 		// Draw waypoints
 		int waypointX = x + (int) Math.round(nav.getCurrentWaypoint().x * scale);
+		int waypointY = y - (int) Math.round(nav.getCurrentWaypoint().y * scale);
 		offScreen.setColor(Color.yellow);
 		offScreen.drawOval(waypointX - 3, waypointY - 3, 6, 6);
 
@@ -179,9 +188,32 @@ public class Animation extends JPanel implements Runnable {
 		System.out.println(size.width);
 	}
 
+	public BufferedImage rotateRobot() {
+		double sin = Math.abs(Math.sin(model.center.r));
+		double cos = Math.abs(Math.cos(model.center.r));
+
+		int newWidth = (int) Math.floor(robotWidth * cos + robotHeight * sin);
+		int newHeight = (int) Math.floor(robotHeight * cos + robotWidth * sin);
+
+		BufferedImage rotated = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = rotated.createGraphics();
+		AffineTransform at = new AffineTransform();
+		at.translate((newWidth - robotWidth) / 2, (newHeight - robotHeight) / 2);
+
+		int x = robotWidth / 2;
+		int y = robotHeight / 2;
+
+		at.rotate(model.center.r, x, y);
+		g2d.setTransform(at);
+		g2d.drawImage(robot, 0, 0, this);
+		g2d.dispose();
+
+		return rotated;
+	}
+
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(width, height);
+		return new Dimension(width * 2, height * 2);
 	}
 
 	@Override
