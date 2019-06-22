@@ -43,7 +43,7 @@ public class Animation extends JPanel implements Runnable {
 	protected Graphics offScreen; // off-screen graphics
 	protected Image field;
 	protected BufferedImage robot;
-	protected final double scale = 65; // pixels per meter
+	protected final double scale = 172.4; // pixels per meter
 	protected final int x;
 	protected final int y;
 	protected int robotWidth, robotHeight;
@@ -63,8 +63,8 @@ public class Animation extends JPanel implements Runnable {
 	protected double time = 0.0;
 
 	public Animation() throws IOException {
-		field = ImageIO.read(new File("IWIC/field-blue.png"));
-		robot = ImageIO.read(new File("IWIC/robot-blue.png"));
+		field = ImageIO.read(new File("IWIC/2018-field-blue.png"));
+		robot = ImageIO.read(new File("IWIC/robot-blue2.png"));
 
 		// Set the width and heigth and size
 		width = field.getWidth(this);
@@ -89,6 +89,27 @@ public class Animation extends JPanel implements Runnable {
 	}
 
 	private void setWaypoints() {
+
+		// Poofs 2018
+		// model.setPosition(2.8, 0.5, 0.0);
+		// nav.addWaypoint(new Waypoint(2.3, 7.3, -10.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(2.0, 5.5, 30.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(1.5, 5.7, 40.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(1.1, 5.7, 55.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+
+		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+		// model.setPosition(2.2, 7.3, 0.0);
+		// nav.addWaypoint(new Waypoint(1.1, 5.7, 55.0, -1.0, true));
+		model.setPosition(1.1, 5.7, 75.0);
+		nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+
+		// model.setPosition(2.8, 0.5, 0.0);
+		// nav.addWaypoint(new Waypoint(2.5, 5.5, -60.0, 1.0, false));
+		// nav.addWaypoint(new Waypoint(-1.5, 6.0, -90.0, 1.0, true));
+
 		// model.setPosition(0.0, 1.0, 0.0);
 		// nav.addWaypoint(new Waypoint(0.3, 4.0, 40.0, 1.0));
 		// // nav.addWaypoint(new Waypoint(2.0, 5.7, 220.0, -0.7));
@@ -114,15 +135,15 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(-3.5, 0.5, 0.0, -1.0, true));
 		// nav.addWaypoint(new Waypoint(-1.2, 7.2, 0.0, 1.0, true));
 
-		// Right rocket
-		model.setPosition(1.2, 0.7, 0.0);
-		nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
-		nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
-		nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, -1.0));
-		nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(3.7, 4.3, -10.0, 1.0));
-		nav.addWaypoint(new Waypoint(3.4, 5.0, -60.0, 1.0, true));
+		// // Right rocket
+		// model.setPosition(1.2, 0.7, 0.0);
+		// nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
+		// nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
+		// nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, -1.0));
+		// nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(3.7, 4.3, -10.0, 1.0));
+		// nav.addWaypoint(new Waypoint(3.4, 5.0, -60.0, 1.0, true));
 
 		// model.setPosition(-1.2, 0.7, 0.0);
 		// nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
@@ -162,12 +183,6 @@ public class Animation extends JPanel implements Runnable {
 		if (!nav.getIsFinished())
 			trajectory.add(new Tuple(xCoord, yCoord));
 		offScreen.drawImage(robotRotated, xCoordOffset, yCoordOffset, this);
-		// AffineTransform tx = AffineTransform.getRotateInstance(model.center.r,
-		// robotWidth / 2, robotHeight / 2);
-		// AffineTransformOp op = new AffineTransformOp(tx,
-		// AffineTransformOp.TYPE_BILINEAR);
-		// offScreen.drawImage(op.filter((BufferedImage) robot, null), xCoord, yCoord,
-		// this);
 
 		// Draw waypoints
 		int waypointX = x + (int) Math.round(nav.getCurrentWaypoint().x * scale);
@@ -181,7 +196,7 @@ public class Animation extends JPanel implements Runnable {
 			offScreen.drawOval((int) point.left, (int) point.right, 1, 1);
 		}
 
-		/// Copy the off-screen image to the screen
+		// Copy the off-screen image to the screen and scale to fit jframe
 		Graphics2D g2 = (Graphics2D) g;
 		g2.scale(size.width / (double) this.width, size.height / (double) this.height);
 		g2.drawImage(image, 0, 0, this);
@@ -213,7 +228,7 @@ public class Animation extends JPanel implements Runnable {
 
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(width * 2, height * 2);
+		return new Dimension(width, height);
 	}
 
 	@Override
@@ -255,7 +270,6 @@ public class Animation extends JPanel implements Runnable {
 				try {
 					Thread.sleep(1000 / CONTROL_UPDATE_RATE * SPEED);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -278,7 +292,6 @@ public class Animation extends JPanel implements Runnable {
 				try {
 					Thread.sleep(1000 / ODOMETRY_UPDATE_RATE * SPEED);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
