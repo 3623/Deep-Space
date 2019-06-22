@@ -124,7 +124,7 @@ public class CubicSplineFollower {
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
-        double deltaX = ((MAX_SPEED * feedForwardSpeed)*1.0 + pose.velocity*1.0) / SAMPLE_RATE;
+        double deltaX = ((MAX_SPEED * feedForwardSpeed) * 1.0 + pose.velocity * 1.0) / SAMPLE_RATE / 2;
         /* stumbled upon this by accident, but works well. */
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
