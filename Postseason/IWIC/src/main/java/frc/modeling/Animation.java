@@ -60,7 +60,7 @@ public class Animation extends JPanel implements Runnable {
 	protected double time = 0.0;
 
 	public Animation() throws IOException {
-		field = ImageIO.read(new File("IWIC/2019-field-blue.png"));
+		field = ImageIO.read(new File("IWIC/2018-field-blue.png"));
 		robot = ImageIO.read(new File("IWIC/robot-blue2.png"));
 
 		// Set the width and heigth and size
@@ -87,7 +87,7 @@ public class Animation extends JPanel implements Runnable {
 
 	private void setWaypoints() {
 
-		// // Poofs 2018
+		// // Poofs 2018 Near Side
 		// model.setPosition(2.8, 0.5, 0.0);
 		// nav.addWaypoint(new Waypoint(2.2, 7.3, -10.0, 1.0, true));
 		// nav.addWaypoint(new Waypoint(1.9, 5.5, 30.0, -1.0, true));
@@ -97,27 +97,17 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(1.0, 5.6, 60.0, -1.0, true));
 		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
 
-		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
-		// model.setPosition(2.2, 7.3, 0.0);
-		// nav.addWaypoint(new Waypoint(1.1, 5.7, 55.0, -1.0, true));
-		// model.setPosition(1.1, 5.7, 75.0);
-		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
-
+		// // Poofs 2018 Oppos Side
 		// model.setPosition(2.8, 0.5, 0.0);
-		// nav.addWaypoint(new Waypoint(2.2, 5.7, -70.0, 1.0, false));
-		// nav.addWaypoint(new Waypoint(-1.5, 6.0, -90.0, 1.0, true));
-
-		// model.setPosition(0.0, 1.0, 0.0);
-		// nav.addWaypoint(new Waypoint(0.3, 4.0, 40.0, 1.0));
-		// // nav.addWaypoint(new Waypoint(2.0, 5.7, 220.0, -0.7));
-		// nav.addWaypoint(new Waypoint(2.5, 7.5, 0.0, 1.0));
-
-		// model.setPosition(0.0, 1.0, 0.0);
-		// nav.addWaypoint(new Waypoint(0.3, 2.0, -10.0, 1.0));
-
-		// model.setPosition(1.2, 0.7, 0.0);
-		// nav.addWaypoint(new Waypoint(3.3, 5.0, 30.0, 1.0));
-		// nav.addWaypoint(new Waypoint(3.4, 0.5, 0.0, -1.0));
+		// nav.addWaypoint(new Waypoint(2.2, 5.7, -50.0, 1.0, false));
+		// nav.addWaypoint(new Waypoint(-2.2, 6.3, -40.0, 1.0, false));
+		// nav.addWaypoint(new Waypoint(-2.2, 7.3, 10.0, 0.9, true));
+		// nav.addWaypoint(new Waypoint(-1.9, 5.5, -30.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(-2.2, 7.3, 10.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(-1.5, 5.7, -40.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(-2.2, 7.3, -0.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(-1.0, 5.6, -60.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(-2.2, 7.3, -0.0, 1.0, true));
 
 		// // Side of cargo ship x2
 		// model.setPosition(1.2, 0.7, 0.0);
@@ -127,37 +117,39 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(1.1, 7.2, -10.0, 1.0, true));
 
 		// model.setPosition(-1.2, 0.7, 0.0);
-		// nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
-		// nav.addWaypoint(new Waypoint(-1.2, 6.6, 0.0, 1.0, true));
-		// nav.addWaypoint(new Waypoint(-3.5, 0.5, 0.0, -1.0, true));
-		// nav.addWaypoint(new Waypoint(-1.2, 7.2, 0.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(-1.2, 3.0, -0.0, 0.5, false));
+		// nav.addWaypoint(new Waypoint(-1.1, 6.6, 10.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(-3.5, 0.5, -0.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(-1.1, 7.2, 10.0, 1.0, true));
 
-		// Right rocket
-		model.setPosition(1.2, 0.7, 0.0);
-		nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
-		nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
-		nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(2.5, 5.8, 60.0, -1.0));
-		nav.addWaypoint(new Waypoint(3.0, 4.0, -20.0, -1.0));
-		nav.addWaypoint(new Waypoint(3.4, 0.5, 0.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(3.5, 3.9, 0.0, 1.0));
-		nav.addWaypoint(new Waypoint(3.2, 4.7, -60.0, 1.0, true));
+		// // Right rocket
+		// model.setPosition(1.2, 0.7, 0.0);
+		// nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
+		// nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
+		// nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(2.5, 6.1, 60.0, -1.0));
+		// nav.addWaypoint(new Waypoint(3.0, 4.0, -20.0, -1.0));
+		// nav.addWaypoint(new Waypoint(3.4, 0.5, 0.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(3.5, 3.9, 0.0, 1.0));
+		// nav.addWaypoint(new Waypoint(3.2, 4.7, -60.0, 1.0, true));
 
-		// model.setPosition(-1.2, 0.7, 0.0);
-		// nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
+		// model.setPosition(11.2, 0.7, -0.0);
+		// nav.addWaypoint(new Waypoint(-1.2, 3.0, -0.0, 0.5));
 		// nav.addWaypoint(new Waypoint(-2.9, 6.3, -60.0, 1.0));
 		// nav.addWaypoint(new Waypoint(-3.5, 6.6, -60.0, 1.0, true));
-		// nav.addWaypoint(new Waypoint(-2.9, 6.3, -60.0, -1.0));
-		// nav.addWaypoint(new Waypoint(-3.5, 0.5, -0.0, -1.0, true));
-		// nav.addWaypoint(new Waypoint(-3.7, 3.5, -0.0, 1.0));
-		// nav.addWaypoint(new Waypoint(-3.4, 5.0, 60.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(-2.5, 6.1, -60.0, -1.0));
+		// nav.addWaypoint(new Waypoint(-3.0, 4.0, 20.0, -1.0));
+		// nav.addWaypoint(new Waypoint(-3.4, 0.5, -0.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(-3.5, 3.9, -0.0, 1.0));
+		// nav.addWaypoint(new Waypoint(-3.2, 4.7, 60.0, 1.0, true));
 
+		// // Beautiful 90
 		// model.setPosition(0.0, 1.0, 0.0);
-		// // nav.addWaypoint(new Waypoint(0.4, 3.0, 90.0, 1.0));
-		// // nav.addWaypoint(new Waypoint(2.0, 3.4, 0.0, 1.0));
 		// nav.addWaypoint(new Waypoint(1.0, 3.0, 90.0, 1.0, true));
 
-		// nav.addWaypoint(new Waypoint(3.3, 5.0, 0.0, 1.0));
+		// // Tine S Curve
+		// model.setPosition(0.0, 1.0, 0.0);
+		// nav.addWaypoint(new Waypoint(0.3, 2.0, -10.0, 1.0, true));
 	}
 
 	// Update function
