@@ -6,15 +6,12 @@ import javax.swing.*;
 import frc.controls.CubicSplineFollower;
 import frc.controls.DrivetrainControls;
 import frc.controls.CubicSplineFollower.Waypoint;
-import frc.controls.DrivetrainControls;
 import frc.robot.subsystems.DrivetrainModel;
 import frc.util.Pose;
 import frc.util.Tuple;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +60,7 @@ public class Animation extends JPanel implements Runnable {
 	protected double time = 0.0;
 
 	public Animation() throws IOException {
-		field = ImageIO.read(new File("IWIC/2018-field-blue.png"));
+		field = ImageIO.read(new File("IWIC/2019-field-blue.png"));
 		robot = ImageIO.read(new File("IWIC/robot-blue2.png"));
 
 		// Set the width and heigth and size
@@ -90,15 +87,15 @@ public class Animation extends JPanel implements Runnable {
 
 	private void setWaypoints() {
 
-		// Poofs 2018
-		model.setPosition(2.8, 0.5, 0.0);
-		nav.addWaypoint(new Waypoint(2.3, 7.3, -10.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(2.0, 5.5, 30.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(1.5, 5.7, 40.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(1.1, 5.7, 55.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+		// // Poofs 2018
+		// model.setPosition(2.8, 0.5, 0.0);
+		// nav.addWaypoint(new Waypoint(2.2, 7.3, -10.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(1.9, 5.5, 30.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(2.2, 7.3, -10.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(1.5, 5.7, 40.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(1.0, 5.6, 60.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
 
 		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
 		// model.setPosition(2.2, 7.3, 0.0);
@@ -107,7 +104,7 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
 
 		// model.setPosition(2.8, 0.5, 0.0);
-		// nav.addWaypoint(new Waypoint(2.5, 5.5, -60.0, 1.0, false));
+		// nav.addWaypoint(new Waypoint(2.2, 5.7, -70.0, 1.0, false));
 		// nav.addWaypoint(new Waypoint(-1.5, 6.0, -90.0, 1.0, true));
 
 		// model.setPosition(0.0, 1.0, 0.0);
@@ -135,15 +132,16 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(-3.5, 0.5, 0.0, -1.0, true));
 		// nav.addWaypoint(new Waypoint(-1.2, 7.2, 0.0, 1.0, true));
 
-		// // Right rocket
-		// model.setPosition(1.2, 0.7, 0.0);
-		// nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
-		// nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
-		// nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
-		// nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, -1.0));
-		// nav.addWaypoint(new Waypoint(3.5, 0.5, 0.0, -1.0, true));
-		// nav.addWaypoint(new Waypoint(3.7, 4.3, -10.0, 1.0));
-		// nav.addWaypoint(new Waypoint(3.4, 5.0, -60.0, 1.0, true));
+		// Right rocket
+		model.setPosition(1.2, 0.7, 0.0);
+		nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
+		nav.addWaypoint(new Waypoint(2.9, 6.3, 60.0, 1.0));
+		nav.addWaypoint(new Waypoint(3.5, 6.6, 60.0, 1.0, true));
+		nav.addWaypoint(new Waypoint(2.5, 5.8, 60.0, -1.0));
+		nav.addWaypoint(new Waypoint(3.0, 4.0, -20.0, -1.0));
+		nav.addWaypoint(new Waypoint(3.4, 0.5, 0.0, -1.0, true));
+		nav.addWaypoint(new Waypoint(3.5, 3.9, 0.0, 1.0));
+		nav.addWaypoint(new Waypoint(3.2, 4.7, -60.0, 1.0, true));
 
 		// model.setPosition(-1.2, 0.7, 0.0);
 		// nav.addWaypoint(new Waypoint(-1.2, 3.0, 0.0, 0.5, false));
@@ -200,7 +198,6 @@ public class Animation extends JPanel implements Runnable {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.scale(size.width / (double) this.width, size.height / (double) this.height);
 		g2.drawImage(image, 0, 0, this);
-		System.out.println(size.width);
 	}
 
 	public BufferedImage rotateRobot() {
@@ -262,7 +259,8 @@ public class Animation extends JPanel implements Runnable {
 				leftVoltage = output.left * 12.0;
 				rightVoltage = output.right * 12.0;
 
-				System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " + rightVoltage);
+				// System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " +
+				// rightVoltage);
 
 				if (nav.getIsFinished()) {
 				}
@@ -287,7 +285,7 @@ public class Animation extends JPanel implements Runnable {
 
 				model.updateVoltage(leftVoltage, rightVoltage, 1.0 / ODOMETRY_UPDATE_RATE);
 				model.updatePosition(1.0 / ODOMETRY_UPDATE_RATE);
-				System.out.println(model.center.x);
+				// System.out.println(model.center.x);
 
 				try {
 					Thread.sleep(1000 / ODOMETRY_UPDATE_RATE * SPEED);

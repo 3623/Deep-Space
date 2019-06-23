@@ -29,12 +29,11 @@ public class CubicSplineFollower {
     private Boolean isFinished = false;
 
     private static double kRadiusPath = 0.4;
-    private static final double kRadiusCritical = 0.15;
-    // private static final double kRadiusFinal = 0.1;
+    private static final double kRadiusCritical = 0.10;
     private static final double kEpsilonPath = 30.0;
     private static final double kEpsilonCritical = 1.0;
-    private static final double kD = 0.5;
-    private static final double kFF = 0.5;
+    private static final double kD = 0.9;
+    private static final double kFF = 0.6;
 
     private Pose pose;
 
@@ -69,7 +68,8 @@ public class CubicSplineFollower {
                 feedForwardSpeed = 0.0;
                 if (atHeading(kEpsilonCritical)) {
                     // at point and heading, we're done
-                    System.out.println("At Waypoint: " + index + " (" + curWaypoint.toString() + ")");
+                    if (!isFinished)
+                        System.out.println("At Waypoint: " + index + " (" + curWaypoint.toString() + ")");
                     if (index == waypoints.size() - 1 || isFinished) {
                         if (!isFinished)
                             System.out.println("Finished Path Following");
@@ -129,7 +129,10 @@ public class CubicSplineFollower {
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
         double deltaX = ((MAX_SPEED * feedForwardSpeed) + pose.velocity) / SAMPLE_RATE / 2;
-        /* stumbled upon this by accident, but works well. */
+        System.out.println(Math.abs(Math.cos(relativeAngle)));
+        deltaX *= Math.cos(relativeAngle);
+        deltaX *= Math.cos(relativeAngle);
+        kRadiusPath = Math.abs(deltaX) + 0.9;
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
