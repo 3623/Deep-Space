@@ -20,7 +20,7 @@ import frc.util.Utils;
 public class CubicSplineFollower {
     private static final double ROTATION_RATE = 60.0;
     private static final double MAX_SPEED = 3.0;
-    private static final double SAMPLE_RATE = 200.0;
+    private static final double UPDATE_RATE = 200.0;
 
     private ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
     private Waypoint curWaypoint;
@@ -30,10 +30,10 @@ public class CubicSplineFollower {
 
     private static double kRadiusPath = 0.4;
     private static final double kRadiusCritical = 0.10;
-    private static final double kEpsilonPath = 30.0;
-    private static final double kEpsilonCritical = 1.0;
-    private static final double kD = 0.9;
-    private static final double kFF = 0.6;
+    private static final double kEpsilonPath = 10.0;
+    private static final double kEpsilonCritical = 3.0;
+    private static final double kD = 1.3;
+    private static final double kFF = 0.7;
 
     private Pose pose;
 
@@ -45,7 +45,7 @@ public class CubicSplineFollower {
 
     /**
      * Updates the path follower with a new robot pose. Should be called at rate
-     * equal to {@code SAMPLE_RATE}.
+     * equal to {@code UPDATE_RATE}.
      * 
      * @param robotPose the current robot pose, with position and velocities
      * @return a tuple with left and right wheel voltages
@@ -128,11 +128,11 @@ public class CubicSplineFollower {
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
-        double deltaX = ((MAX_SPEED * feedForwardSpeed) + pose.velocity) / SAMPLE_RATE / 2;
+        double deltaX = ((MAX_SPEED * feedForwardSpeed) + pose.velocity) / UPDATE_RATE / 2;
         System.out.println(Math.abs(Math.cos(relativeAngle)));
         deltaX *= Math.cos(relativeAngle);
         deltaX *= Math.cos(relativeAngle);
-        kRadiusPath = Math.abs(deltaX) + 0.9;
+        kRadiusPath = Math.abs(deltaX) * UPDATE_RATE / 2.0;
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
