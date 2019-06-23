@@ -18,7 +18,6 @@ import frc.util.Utils;
  * Add your docs here.
  */
 public class CubicSplineFollower {
-    private static final double ROTATION_RATE = 60.0;
     private static final double MAX_SPEED = 3.0;
     private static final double UPDATE_RATE = 200.0;
 
@@ -128,11 +127,18 @@ public class CubicSplineFollower {
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
-        double deltaX = ((MAX_SPEED * feedForwardSpeed) + pose.velocity) / UPDATE_RATE / 2;
-        System.out.println(Math.abs(Math.cos(relativeAngle)));
-        deltaX *= Math.cos(relativeAngle);
-        deltaX *= Math.cos(relativeAngle);
-        kRadiusPath = Math.abs(deltaX) * UPDATE_RATE / 2.0;
+        double cos = Math.cos(relativeAngle);
+        double deltaX = ((MAX_SPEED * feedForwardSpeed) + pose.velocity) / 2.0 * cos * cos / UPDATE_RATE;
+        /*
+         * Average of ffSpeed and actual speed scaled by cosine (to account for how far
+         * off straight the robot has to drive) and cos again (the further off straight
+         * the longer the curve) then divided by update rate (to get deltaX, the
+         * position along the spline the robot will be at for the next update, giving a
+         * feed forward point). If this just used actual speed, a stopped robot would
+         * not look ahead.
+         */
+
+        kRadiusPath = deltaX * UPDATE_RATE / 2.0;
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
