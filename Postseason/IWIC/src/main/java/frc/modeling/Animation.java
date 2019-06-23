@@ -91,20 +91,20 @@ public class Animation extends JPanel implements Runnable {
 	private void setWaypoints() {
 
 		// Poofs 2018
-		// model.setPosition(2.8, 0.5, 0.0);
-		// nav.addWaypoint(new Waypoint(2.3, 7.3, -10.0, 1.0, true));
-		// nav.addWaypoint(new Waypoint(2.0, 5.5, 30.0, -1.0, true));
-		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
-		// nav.addWaypoint(new Waypoint(1.5, 5.7, 40.0, -1.0, true));
-		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
-		// nav.addWaypoint(new Waypoint(1.1, 5.7, 55.0, -1.0, true));
-		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+		model.setPosition(2.8, 0.5, 0.0);
+		nav.addWaypoint(new Waypoint(2.3, 7.3, -10.0, 1.0, true));
+		nav.addWaypoint(new Waypoint(2.0, 5.5, 30.0, -1.0, true));
+		nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+		nav.addWaypoint(new Waypoint(1.5, 5.7, 40.0, -1.0, true));
+		nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+		nav.addWaypoint(new Waypoint(1.1, 5.7, 55.0, -1.0, true));
+		nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
 
 		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
 		// model.setPosition(2.2, 7.3, 0.0);
 		// nav.addWaypoint(new Waypoint(1.1, 5.7, 55.0, -1.0, true));
-		model.setPosition(1.1, 5.7, 75.0);
-		nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
+		// model.setPosition(1.1, 5.7, 75.0);
+		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
 
 		// model.setPosition(2.8, 0.5, 0.0);
 		// nav.addWaypoint(new Waypoint(2.5, 5.5, -60.0, 1.0, false));

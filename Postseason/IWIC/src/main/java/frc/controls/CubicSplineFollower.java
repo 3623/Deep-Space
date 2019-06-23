@@ -28,13 +28,13 @@ public class CubicSplineFollower {
 
     private Boolean isFinished = false;
 
-    private static double kRadiusPath = 0.9;
+    private static double kRadiusPath = 0.4;
     private static final double kRadiusCritical = 0.15;
-    private static final double kRadiusFinal = 0.05;
+    // private static final double kRadiusFinal = 0.1;
     private static final double kEpsilonPath = 30.0;
-    private static final double kEpsilonFinal = 1.0;
-    private static final double kD = 2.0;
-    private static final double kFF = 1.0 / ROTATION_RATE * 20.0;
+    private static final double kEpsilonCritical = 1.0;
+    private static final double kD = 0.5;
+    private static final double kFF = 0.5;
 
     private Pose pose;
 
@@ -62,10 +62,12 @@ public class CubicSplineFollower {
             // Last waypoint, important to be at exactly
             if (distanceFromWaypoint < Math.abs(feedForwardSpeed))
                 // speed reduces as distance gets smaller
-                feedForwardSpeed = Math.pow(distanceFromWaypoint, 0.76) * feedForwardSpeed;
-            if (atWaypoint(kRadiusFinal) || isFinished) {
+                // feedForwardSpeed = Math.pow(distanceFromWaypoint, 0.76) * feedForwardSpeed;
+                feedForwardSpeed = distanceFromWaypoint * feedForwardSpeed;
+
+            if (atWaypoint(kRadiusCritical) || isFinished) {
                 feedForwardSpeed = 0.0;
-                if (atHeading(kEpsilonFinal)) {
+                if (atHeading(kEpsilonCritical)) {
                     // at point and heading, we're done
                     System.out.println("At Waypoint: " + index + " (" + curWaypoint.toString() + ")");
                     if (index == waypoints.size() - 1 || isFinished) {
@@ -126,7 +128,7 @@ public class CubicSplineFollower {
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
-        double deltaX = ((MAX_SPEED * feedForwardSpeed) * 1.0 + pose.velocity * 1.0) / SAMPLE_RATE / 2;
+        double deltaX = ((MAX_SPEED * feedForwardSpeed) + pose.velocity) / SAMPLE_RATE / 2;
         /* stumbled upon this by accident, but works well. */
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
