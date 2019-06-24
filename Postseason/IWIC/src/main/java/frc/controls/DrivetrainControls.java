@@ -10,19 +10,20 @@ import frc.util.Utils;
 public class DrivetrainControls {
 	static double error = 0.0;
 	static double lastHeading = 0.0;
-	static final double ROTATION_kP = 10.0;
+	static final double ROTATION_kP = 20.0;
 	static final double ROTATION_kD = 100.0;
 
 	public static double turnToAngle(double goal, double heading) {
-		
-		heading = ((heading%360.0)+360.0)%360.0;
-		goal = ((goal%360.0)+360.0)%360.0;
+
+		heading = ((heading % 360.0) + 360.0) % 360.0;
+		goal = ((goal % 360.0) + 360.0) % 360.0;
 
 		System.out.println(Math.round(heading) + " " + Math.round(goal));
 
 		double difference = heading - goal;
 		if (difference > 180) {
-			// When the values cross to and from 0 & 360, the gross difference is greater than 180
+			// When the values cross to and from 0 & 360, the gross difference is greater
+			// than 180
 			error = difference - 360;
 		} else if (difference < -180) {
 			error = difference + 360;
@@ -30,8 +31,9 @@ public class DrivetrainControls {
 			error = difference;
 		}
 
-		double pVal = (error / -180 * ROTATION_kP); //Just some PD
-		double dVal = -((heading - lastHeading) * ROTATION_kD / 180.0); //we care about rotation speed, not change in error cuz the goal angle is likely changing
+		double pVal = (error / -180 * ROTATION_kP); // Just some PD
+		double dVal = -((heading - lastHeading) * ROTATION_kD / 180.0); // we care about rotation speed, not change in
+																		// error cuz the goal angle is likely changing
 		double output = pVal + dVal;
 		System.out.print("Turn to Angle- P: " + pVal + ", D: " + dVal);
 		lastHeading = heading;
@@ -89,7 +91,8 @@ public class DrivetrainControls {
 
 		if (isQuickTurn) {
 			if (Math.abs(xSpeed) < m_quickStopThreshold) {
-				m_quickStopAccumulator = (1 - m_quickStopAlpha) * m_quickStopAccumulator + m_quickStopAlpha * zRotation * 2;
+				m_quickStopAccumulator = (1 - m_quickStopAlpha) * m_quickStopAccumulator
+						+ m_quickStopAlpha * zRotation * 2;
 			}
 			overPower = true;
 			angularPower = zRotation;
@@ -133,7 +136,7 @@ public class DrivetrainControls {
 			rightMotorOutput /= maxMagnitude;
 		}
 
-		return new Tuple(leftMotorOutput, rightMotorOutput );
+		return new Tuple(leftMotorOutput, rightMotorOutput);
 	}
 
 	public static void main(String[] args) throws IOException {

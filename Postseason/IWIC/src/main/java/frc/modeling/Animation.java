@@ -87,6 +87,15 @@ public class Animation extends JPanel implements Runnable {
 
 	private void setWaypoints() {
 
+		// Spider Y 2 Banana
+		model.setPosition(0.5, 0.5, 0.0);
+		nav.addWaypoint(new Waypoint(1.3, 3.0, 0.0, 1.0, true));
+		nav.addWaypoint(new Waypoint(0.0, 1.0, 0.0, -1.0, true));
+		nav.addWaypoint(new Waypoint(0.0, 2.0, 0.0, 1.0, true));
+
+		// nav.addWaypoint(new Waypoint(0.5, 1.5, 20.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(0.4, 2.0, -20.0, 1.0, true));
+
 		// // Poofs 2018 Near Side
 		// model.setPosition(2.8, 0.5, 0.0);
 		// nav.addWaypoint(new Waypoint(2.2, 7.3, -10.0, 1.0, true));
@@ -97,17 +106,17 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(1.0, 5.6, 60.0, -1.0, true));
 		// nav.addWaypoint(new Waypoint(2.2, 7.3, 0.0, 1.0, true));
 
-		// Poofs 2018 Oppos Side
-		model.setPosition(2.8, 0.5, 0.0);
-		nav.addWaypoint(new Waypoint(2.2, 5.7, -50.0, 1.0, false));
-		nav.addWaypoint(new Waypoint(-2.2, 6.3, -40.0, 1.0, false));
-		nav.addWaypoint(new Waypoint(-2.2, 7.3, 10.0, 0.9, true));
-		nav.addWaypoint(new Waypoint(-1.9, 5.5, -30.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(-2.2, 7.3, 10.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(-1.5, 5.7, -40.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(-2.2, 7.3, -0.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(-1.0, 5.6, -60.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(-2.2, 7.3, -0.0, 1.0, true));
+		// // Poofs 2018 Oppos Side
+		// model.setPosition(2.8, 0.5, 0.0);
+		// nav.addWaypoint(new Waypoint(2.2, 5.7, -50.0, 1.0, false));
+		// nav.addWaypoint(new Waypoint(-2.2, 6.3, -40.0, 1.0, false));
+		// nav.addWaypoint(new Waypoint(-2.2, 7.3, 10.0, 0.9, true));
+		// nav.addWaypoint(new Waypoint(-1.9, 5.5, -30.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(-2.2, 7.3, 10.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(-1.5, 5.7, -40.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(-2.2, 7.3, -0.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(-1.0, 5.6, -60.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(-2.2, 7.3, -0.0, 1.0, true));
 
 		// // Side of cargo ship x2
 		// model.setPosition(1.2, 0.7, 0.0);
