@@ -32,7 +32,7 @@ public class CubicSplineFollower {
     private static final double kEpsilonPath = 10.0;
     private static final double kEpsilonCritical = 3.0;
     private static final double kD = 1.3;
-    private static final double kFF = 0.7;
+    private static final double kFF = 0.8;
 
     private Pose pose;
 
@@ -56,12 +56,11 @@ public class CubicSplineFollower {
         calculateDistanceFromWaypoint();
 
         feedForwardSpeed = curWaypoint.kSpeed;
-        if (curWaypoint.isCritical) {
-            // Last waypoint, important to be at exactly
+        if (curWaypoint.isCritical) { // important to be at exactly
+
             if (distanceFromWaypoint < Math.abs(feedForwardSpeed))
                 // speed reduces as distance gets smaller
-                // feedForwardSpeed = Math.pow(distanceFromWaypoint, 0.76) * feedForwardSpeed;
-                feedForwardSpeed = distanceFromWaypoint * feedForwardSpeed;
+                feedForwardSpeed = Math.copySign(distanceFromWaypoint, feedForwardSpeed);
 
             if (atWaypoint(kRadiusCritical) || isFinished) {
                 feedForwardSpeed = 0.0;
@@ -151,6 +150,7 @@ public class CubicSplineFollower {
 
         double rotationSpeedFF = -Math.toDegrees(relativeFeedForwardAngle) % 360.0 * kFF;
         double rotationSpeedD = -pose.angularVelocity / 360.0 * kD;
+        System.out.println(rotationSpeedFF + " " + rotationSpeedD + " " + deltaX);
         double rotationSpeed = rotationSpeedFF + rotationSpeedD;
 
         return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, true);
