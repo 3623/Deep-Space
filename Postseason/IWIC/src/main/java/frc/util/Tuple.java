@@ -12,6 +12,6 @@ public class Tuple {
 	public Tuple scale (double factor){
 		this.left *= factor;
 		this.right *= factor;
-		return this Tuple(this.left*factor, this.right*factor);
+		return this
 	}
 }
