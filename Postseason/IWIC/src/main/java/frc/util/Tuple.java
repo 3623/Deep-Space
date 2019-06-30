@@ -10,8 +10,8 @@ public class Tuple {
 	}
 
 	public Tuple scale (double factor){
-		return new Tuple(this.left*factor, this.right*factor);
-		this.left = left;
-		this.right = right;
+		this.left *= factor;
+		this.right *= factor;
+		return this Tuple(this.left*factor, this.right*factor);
 	}
 }
