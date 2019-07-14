@@ -18,7 +18,7 @@ public class DrivetrainControls {
 		heading = ((heading % 360.0) + 360.0) % 360.0;
 		goal = ((goal % 360.0) + 360.0) % 360.0;
 
-		System.out.println(Math.round(heading) + " " + Math.round(goal));
+		// System.out.println(Math.round(heading) + " " + Math.round(goal));
 
 		double difference = heading - goal;
 		if (difference > 180) {
@@ -35,7 +35,7 @@ public class DrivetrainControls {
 		double dVal = -((heading - lastHeading) * ROTATION_kD / 180.0); // we care about rotation speed, not change in
 																		// error cuz the goal angle is likely changing
 		double output = pVal + dVal;
-		System.out.print("Turn to Angle- P: " + pVal + ", D: " + dVal);
+		// System.out.println("Turn to Angle- P: " + pVal + ", D: " + dVal);
 		lastHeading = heading;
 		return output;
 	}

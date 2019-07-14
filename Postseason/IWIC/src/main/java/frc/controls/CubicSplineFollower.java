@@ -27,9 +27,9 @@ public class CubicSplineFollower {
 
     private Boolean isFinished = false;
 
-    private static double kRadiusPath = 0.4;
+    private static double kRadiusPath = 0.0;
     private static final double kRadiusCritical = 0.10;
-    private static final double kEpsilonPath = 15.0;
+    private static final double kEpsilonPath = 5.0;
     private static final double kEpsilonCritical = 3.0;
     private static final double kD = 1.35;
     private static final double kFF = 0.75;
@@ -127,7 +127,8 @@ public class CubicSplineFollower {
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
         double cos = Math.cos(relativeAngle);
-        double deltaX = ((MAX_SPEED * feedForwardSpeed) + pose.velocity) / 2.0 * cos * cos / UPDATE_RATE;
+        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) + pose.velocity) / 2.0;
+        double deltaX = nextSpeed * cos * cos / UPDATE_RATE;
         // if (Math.signum(deltaX) != Math.signum(feedForwardSpeed))
         // deltaX = 0.0;
         /*
@@ -139,6 +140,7 @@ public class CubicSplineFollower {
          * not look ahead.
          */
 
+        kRadiusPath = Math.abs(nextSpeed) * 0.2;
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
@@ -217,7 +219,7 @@ public class CubicSplineFollower {
      * @return true if the robot is within the desired radius of the point
      */
     private Boolean atWaypoint(double radius) {
-        System.out.println(distanceFromWaypoint);
+        // System.out.println(distanceFromWaypoint);
         return (distanceFromWaypoint < radius);
     }
 
@@ -231,7 +233,7 @@ public class CubicSplineFollower {
      *         of the waypoint
      */
     private Boolean atHeading(double epsilon) {
-        System.out.println(pose.heading + " " + curWaypoint.heading);
+        // System.out.println(pose.heading + " " + curWaypoint.heading);
         return Utils.withinThreshold(pose.heading, curWaypoint.heading, epsilon);
     }
 
