@@ -140,7 +140,7 @@ public class CubicSplineFollower {
          * not look ahead.
          */
 
-        kRadiusPath = Math.abs(nextSpeed) * 0.2;
+        kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.3;
         double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
