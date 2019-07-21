@@ -199,7 +199,7 @@ public class CubicSplineFollower {
      *           equal to 0 because of definition)
      */
     private void generateSpline(double x, double y, double dx) {
-        this.a = ((x * y) - (2 * y)) / (x * x * x);
+        this.a = ((x * dx) - (2 * y)) / (x * x * x);
         this.b = ((3 * y) - (dx * x)) / (x * x);
     }
 
