@@ -153,12 +153,20 @@ public class DrivetrainModel {
 		double leftVoltage = out.left * 12.0;
 		double rightVoltage = out.right * 12.0;
 		double voltageDif = (leftVoltage - rightVoltage) / 2.0;
-	public Tuple limitAcceleration(Tuple out){
-		double leftVoltage = out.left*12.0;
-		double rightVoltage = out.right*12.0;
-		double leftVoltageChecked = left.limitAcceleration(leftVoltage)/12.0;
-		double rightVoltageChecked = right.limitAcceleration(rightVoltage)/12.0;
-		Tuple checkedOutput = new Tuple(leftVoltageChecked, rightVoltageChecked);
+		double avg = (left.limitAcceleration(leftVoltage) + right.limitAcceleration(rightVoltage)) / 2.0;
+		double leftVoltageChecked = left.limitAcceleration(leftVoltage) + voltageDif;
+		double rightVoltageChecked = right.limitAcceleration(rightVoltage) - voltageDif;
+		leftVoltageChecked = avg + voltageDif;
+		// leftVoltageChecked = left.limitAcceleration(leftVoltageChecked);
+		rightVoltageChecked = avg - voltageDif;
+		// rightVoltageChecked = right.limitAcceleration(rightVoltageChecked);
+		// rightVoltageChecked = right.limitAcceleration(rightVoltageChecked);
+
+		// Boolean isLeftGreater = Math.abs(voltageDif) == voltageDif;
+		// Boolean isLeftNeg = Math.abs(leftVoltageChecked) > leftVoltageChecked;
+		// Boolean isRightNeg = Math.abs(rightVoltageChecked) > rightVoltageChecked;
+
+		Tuple checkedOutput = new Tuple(leftVoltageChecked / 12.0, rightVoltageChecked / 12.0);
 		return checkedOutput;
 	}
 
