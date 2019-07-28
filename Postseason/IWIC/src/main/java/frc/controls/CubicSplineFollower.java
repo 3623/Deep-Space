@@ -31,8 +31,8 @@ public class CubicSplineFollower {
     private static final double kRadiusCritical = 0.10;
     private static final double kEpsilonPath = 5.0;
     private static final double kEpsilonCritical = 3.0;
-    private static final double kD = 1.35;
-    private static final double kFF = 0.75;
+    private static final double kV = 1.0 / 13.0;
+    private static final double kTurn = 1.5 / 80.0;
 
     private Pose pose;
 
@@ -40,7 +40,9 @@ public class CubicSplineFollower {
     double b = 0;
 
     double feedForwardSpeed = 0.0;
-    double distanceFromWaypoint = 0.0;
+    double distanceFromWaypoint = 100.0;
+
+    Boolean debug = false;
 
     /**
      * Updates the path follower with a new robot pose. Should be called at rate
@@ -53,9 +55,8 @@ public class CubicSplineFollower {
         curWaypoint = waypoints.get(index);
         pose = robotPose;
 
-        calculateDistanceFromWaypoint();
-
         feedForwardSpeed = curWaypoint.kSpeed;
+        debug = false;
         if (curWaypoint.isCritical) { // important to be at exactly
 
             if (distanceFromWaypoint < Math.abs(feedForwardSpeed))
@@ -63,6 +64,7 @@ public class CubicSplineFollower {
                 feedForwardSpeed = Math.copySign(distanceFromWaypoint, feedForwardSpeed);
 
             if (atWaypoint(kRadiusCritical) || isFinished) {
+                debug = true;
                 feedForwardSpeed = 0.0;
                 if (atHeading(kEpsilonCritical)) {
                     // at point and heading, we're done
@@ -89,6 +91,7 @@ public class CubicSplineFollower {
             System.out.println("At Waypoint: " + index + " (" + curWaypoint.toString() + ")");
             index++;
             curWaypoint = waypoints.get(index);
+            debug = true;
         }
         // if not in a special case, just run path following
         return pathFollowing();
@@ -105,6 +108,8 @@ public class CubicSplineFollower {
      * @return a tuple of left and right output voltages
      */
     public Tuple pathFollowing() {
+        calculateDistanceFromWaypoint();
+
         double straightPathAngle = Math.atan2(curWaypoint.x - pose.x, curWaypoint.y - pose.y);
         double relativeAngle = pose.r - straightPathAngle;
         double relativeOpposDist = distanceFromWaypoint * Math.sin(relativeAngle);
@@ -126,11 +131,10 @@ public class CubicSplineFollower {
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
-        double cos = Math.cos(relativeAngle);
-        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) + pose.velocity) / 2.0;
-        double deltaX = nextSpeed * cos * cos / UPDATE_RATE;
-        // if (Math.signum(deltaX) != Math.signum(feedForwardSpeed))
-        // deltaX = 0.0;
+        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) * 0.0) + (pose.velocity * 1.0);
+        double deltaX = nextSpeed / UPDATE_RATE;
+        if (Math.signum(deltaX) != Math.signum(feedForwardSpeed))
+            deltaX = 0.0;
         /*
          * Average of ffSpeed and actual speed scaled by cosine (to account for how far
          * off straight the robot has to drive) and cos again (the further off straight
@@ -140,8 +144,14 @@ public class CubicSplineFollower {
          * not look ahead.
          */
 
-        kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.3;
-        double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
+        if (deltaX != 0.0) {
+            double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
+            double hypot = Geometry.hypotenuse(deltaX, y2);
+            double ratio = Math.abs(deltaX / hypot);
+            deltaX *= ratio * ratio;
+        }
+
+        kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.2;
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
         /*
@@ -151,37 +161,16 @@ public class CubicSplineFollower {
          * the incorrect function but works more elegantly
          */
 
-        double rotationSpeedFF = -Math.toDegrees(relativeFeedForwardAngle) % 360.0 * kFF;
-        double rotationSpeedD = -pose.angularVelocity / 360.0 * kD;
-        // System.out.println(rotationSpeedFF + " " + rotationSpeedD + " " + deltaX);
-        double rotationSpeed = rotationSpeedFF + rotationSpeedD;
+        if (false) {
+            System.out.println(relativeAdjacDist + " " + relativeOpposDist + " " + relativeGoalDeriv);
+            System.out.println(a + " " + b + " " + deltaX);
+        }
 
-        return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, true);
-    }
+        double turnOutput = -Math.toDegrees(relativeFeedForwardAngle) * kTurn;
+        double outputLeft = ((feedForwardSpeed * kV) + turnOutput) * 12.0;
+        double outputRight = ((feedForwardSpeed * kV) - turnOutput) * 12.0;
 
-    /**
-     * Method to get the robot to a specific point (specified x, y, and angle) more
-     * accurately than the cubic spline follower. Uses a quazi-pure pursuit method
-     * to converge on a line. However, it turns out this is not necessary, as the
-     * cubic spline follower is accurate when tuned properly
-     * 
-     * @deprecated
-     * @returns a tuple of left and right output voltages
-     */
-    public Tuple toPoint() {
-        double pathAngle = curWaypoint.r;
-        double stateAngle = Math.atan2(curWaypoint.x - pose.x, curWaypoint.y - pose.y);
-
-        double xChase = curWaypoint.x;
-        double yChase = curWaypoint.y;
-        double chaseRelativeAngle = Math.atan2(xChase - pose.x, yChase - pose.y);
-        double chaseAngle = (pathAngle - pose.r) + (chaseRelativeAngle - pathAngle);
-        double error = Math.toDegrees(chaseAngle);
-
-        double rotationSpeedFF = error % 360.0 * kFF;
-        double rotationSpeedD = -pose.angularVelocity / 360.0 * kD;
-        double rotationSpeed = rotationSpeedFF + rotationSpeedD;
-        return DrivetrainControls.curvatureDrive(feedForwardSpeed, rotationSpeed, true);
+        return new Tuple(outputLeft, outputRight);
     }
 
     /**
