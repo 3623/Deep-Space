@@ -105,8 +105,8 @@ public class Animation extends JPanel implements Runnable {
 
 		// Poofs 2018 Oppos Side
 		model.setPosition(2.8, 0.5, 0.0);
-		nav.addWaypoint(new Waypoint(2.2, 5.7, -50.0, 1.0, false));
-		nav.addWaypoint(new Waypoint(-2.2, 6.3, -60.0, 0.5, false));
+		nav.addWaypoint(new Waypoint(2.2, 5.7, -40.0, 1.0));
+		nav.addWaypoint(new Waypoint(-2.2, 6.5, -30.0, 0.5));
 		nav.addWaypoint(new Waypoint(-2.2, 7.3, 15.0, 0.5, true));
 		nav.addWaypoint(new Waypoint(-2.2, 5.8, -25.0, -1.0, true));
 		nav.addWaypoint(new Waypoint(-2.2, 7.3, 15.0, 1.0, true));

@@ -148,7 +148,7 @@ public class CubicSplineFollower {
             double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
             double hypot = Geometry.hypotenuse(deltaX, y2);
             double ratio = Math.abs(deltaX / hypot);
-            deltaX *= ratio * ratio;
+            deltaX *= ratio * ratio * ratio;
         }
 
         kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.2;
