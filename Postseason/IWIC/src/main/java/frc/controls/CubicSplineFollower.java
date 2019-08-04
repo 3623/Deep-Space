@@ -59,10 +59,13 @@ public class CubicSplineFollower {
         debug = false;
         if (curWaypoint.isCritical) { // important to be at exactly
 
-            if (distanceFromWaypoint < Math.abs(feedForwardSpeed))
+            if (distanceFromWaypoint < Math.abs(feedForwardSpeed) * 1.5) {
                 // speed reduces as distance gets smaller
-                feedForwardSpeed = Math.copySign(distanceFromWaypoint, feedForwardSpeed);
-
+                feedForwardSpeed = Math.copySign(distanceFromWaypoint / 1.5, feedForwardSpeed);
+                if (Math.abs(feedForwardSpeed) < 0.3) {
+                    feedForwardSpeed = Math.copySign(0.3, feedForwardSpeed);
+                }
+            }
             if (atWaypoint(kRadiusCritical) || isFinished) {
                 debug = true;
                 feedForwardSpeed = 0.0;
@@ -131,7 +134,7 @@ public class CubicSplineFollower {
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
-        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) * 0.0) + (pose.velocity * 1.0);
+        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) * 0.2) + (pose.velocity * 0.8);
         double deltaX = nextSpeed / UPDATE_RATE;
         if (Math.signum(deltaX) != Math.signum(feedForwardSpeed))
             deltaX = 0.0;
@@ -151,7 +154,7 @@ public class CubicSplineFollower {
             deltaX *= ratio * ratio * ratio;
         }
 
-        kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.2;
+        kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.1;
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
         /*
