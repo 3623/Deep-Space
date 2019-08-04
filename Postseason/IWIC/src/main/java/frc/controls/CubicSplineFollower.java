@@ -18,7 +18,7 @@ import frc.util.Utils;
  * Add your docs here.
  */
 public class CubicSplineFollower {
-    private static final double MAX_SPEED = 3.0;
+    private static final double MAX_SPEED = 3.3;
     private static final double UPDATE_RATE = 200.0;
 
     private ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
@@ -28,10 +28,10 @@ public class CubicSplineFollower {
     private Boolean isFinished = false;
 
     private static double kRadiusPath = 0.0;
-    private static final double kRadiusCritical = 0.10;
+    private static final double kRadiusCritical = 0.2;
     private static final double kEpsilonPath = 5.0;
     private static final double kEpsilonCritical = 3.0;
-    private static final double kV = 1.0 / 13.0;
+    private static final double kV = 1.0 / 14.0;
     private static final double kTurn = 1.5 / 80.0;
 
     private Pose pose;
@@ -59,9 +59,9 @@ public class CubicSplineFollower {
         debug = false;
         if (curWaypoint.isCritical) { // important to be at exactly
 
-            if (distanceFromWaypoint < Math.abs(feedForwardSpeed) * 1.5) {
+            if (distanceFromWaypoint < Math.abs(feedForwardSpeed) * 1.2) {
                 // speed reduces as distance gets smaller
-                feedForwardSpeed = Math.copySign(distanceFromWaypoint / 1.5, feedForwardSpeed);
+                feedForwardSpeed = Math.copySign(distanceFromWaypoint / 1.2, feedForwardSpeed);
                 if (Math.abs(feedForwardSpeed) < 0.3) {
                     feedForwardSpeed = Math.copySign(0.3, feedForwardSpeed);
                 }
@@ -134,7 +134,7 @@ public class CubicSplineFollower {
 
         generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
 
-        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) * 0.2) + (pose.velocity * 0.8);
+        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) * 0.1) + (pose.velocity * 0.9);
         double deltaX = nextSpeed / UPDATE_RATE;
         if (Math.signum(deltaX) != Math.signum(feedForwardSpeed))
             deltaX = 0.0;
