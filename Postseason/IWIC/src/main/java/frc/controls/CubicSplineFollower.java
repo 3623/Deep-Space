@@ -28,7 +28,7 @@ public class CubicSplineFollower {
     private Boolean isFinished = false;
 
     private static double kRadiusPath = 0.0;
-    private static final double kRadiusCritical = 0.2;
+    private static final double kRadiusCritical = 0.1;
     private static final double kEpsilonPath = 5.0;
     private static final double kEpsilonCritical = 3.0;
     private static final double kV = 1.0 / 14.0;
@@ -62,8 +62,8 @@ public class CubicSplineFollower {
             if (distanceFromWaypoint < Math.abs(feedForwardSpeed) * 1.2) {
                 // speed reduces as distance gets smaller
                 feedForwardSpeed = Math.copySign(distanceFromWaypoint / 1.2, feedForwardSpeed);
-                if (Math.abs(feedForwardSpeed) < 0.3) {
-                    feedForwardSpeed = Math.copySign(0.3, feedForwardSpeed);
+                if (Math.abs(feedForwardSpeed) < 0.25) {
+                    feedForwardSpeed = Math.copySign(0.25, feedForwardSpeed);
                 }
             }
             if (atWaypoint(kRadiusCritical) || isFinished) {
@@ -151,7 +151,7 @@ public class CubicSplineFollower {
             double y2 = (a * deltaX * deltaX * deltaX) + (b * deltaX * deltaX);
             double hypot = Geometry.hypotenuse(deltaX, y2);
             double ratio = Math.abs(deltaX / hypot);
-            deltaX *= ratio * ratio * ratio;
+            deltaX *= ratio;
         }
 
         kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.1;
