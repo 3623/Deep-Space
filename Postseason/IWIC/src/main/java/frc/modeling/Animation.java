@@ -60,8 +60,8 @@ public class Animation extends JPanel implements Runnable {
 	protected double time = 0.0;
 
 	public Animation() throws IOException {
-		field = ImageIO.read(new File("IWIC/2019-field-blue.png"));
-		robot = ImageIO.read(new File("IWIC/robot-blue2.png"));
+		field = ImageIO.read(new File("2019-field-blue.png"));
+		robot = ImageIO.read(new File("robot-blue2.png"));
 
 		// Set the width and heigth and size
 		width = field.getWidth(this);
@@ -258,7 +258,7 @@ public class Animation extends JPanel implements Runnable {
 			while (!Thread.interrupted()) {
 
 				Tuple output = nav.updatePursuit(model.center);
-				output = model.limitAcceleration(output);
+				//output = model.limitAcceleration(output);
 				leftVoltage = output.left * 12.0;
 				rightVoltage = output.right * 12.0;
 
