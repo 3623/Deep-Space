@@ -187,10 +187,10 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().removeAll();
 
     elevator.enable();
-    turret.enable();
+    //turret.enable();
 
     elevator.setSetpoint(elevator.getPosition());
-    turret.setSetpoint(180);
+    //turret.setSetpoint(180);
     Scheduler.getInstance().add(new Hold());
   }
 
@@ -205,21 +205,21 @@ public class Robot extends TimedRobot {
     // Drivetrain is now a default command
     
     // Grabber is now a default command
-    if (Robot.operatorController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
-    else if (Robot.operatorController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
+    if (Robot.driverController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
+    else if (Robot.driverController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
     
 
     // Elevator
-    if (operatorController.getPOV() == 180) elevator.setSetpoint(19.0);
-    else if (operatorController.getPOV() == 90) elevator.setSetpoint(49.0);
-    else if (operatorController.getPOV() == 0) elevator.setSetpoint(75.0);
+    if (driverController.getPOV() == 180) elevator.setSetpoint(19.0);
+    else if (driverController.getPOV() == 90) elevator.setSetpoint(49.0);
+    else if (driverController.getPOV() == 0) elevator.setSetpoint(75.0);
 
     // Turret is now a default command
       // Manual Control w/o Potentiometer
       // turret.manualControl(operatorController.getRawAxis(0)/2.0);
     
-    climber.setFront(operatorController.getYButton());
-    climber.setBack(operatorController.getXButton());
+    //climber.setFront(operatorController.getYButton());
+    //climber.setBack(operatorController.getXButton());
 
   }
 
