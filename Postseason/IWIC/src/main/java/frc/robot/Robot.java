@@ -29,6 +29,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.CargoMech;
 import frc.util.Utils;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -52,6 +53,7 @@ public class Robot extends TimedRobot {
   public static Elevator elevator;
   public static Turret turret;
   public static Climber climber;
+  public static CargoMech mech;
 
   AxisCameraStream axisCam;
 
@@ -85,6 +87,7 @@ public class Robot extends TimedRobot {
     grabber = new Grabber();
     elevator = new Elevator();
     turret = new Turret();
+    mech = new CargoMech();
 
     axisCam = new AxisCameraStream();
   
@@ -205,9 +208,14 @@ public class Robot extends TimedRobot {
     // Drivetrain is now a default command
     
     // Grabber is now a default command
-    if (Robot.driverController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
-    else if (Robot.driverController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
+    //if (Robot.driverController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
+    //else if (Robot.driverController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
     
+    // Cargo Mech Control Code
+    if (Math.abs(Robot.driverController.getTriggerAxis(Hand.kRight))>0.5) mech.intake(1.0);
+    else if (Robot.driverController.getAButtonPressed()) mech.intake(-1.0);
+
+    mech.tiltClaw(driverController.getY(Hand.kRight));
 
     // Elevator
     if (driverController.getPOV() == 180) elevator.setSetpoint(19.0);
