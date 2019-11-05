@@ -26,15 +26,11 @@ public void tiltClaw(double speed){
         tilt.set(speed);
     }
     else{
-        tilt.set(0.0);
+        tilt.set(0.05);
     }
 }
 
 public void intake(double speed){
-    wheels.set(speed);
-}
-
-public void release(double speed){
     wheels.set(speed);
 }
 

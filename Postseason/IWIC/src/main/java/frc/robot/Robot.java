@@ -137,12 +137,12 @@ public class Robot extends TimedRobot {
     drivetrain.zeroSensors();
     Scheduler.getInstance().removeAll();
 
-    turret.enable();
+    //turret.enable();
     elevator.enable();
 
     Scheduler.getInstance().add(new Hold());
     elevator.setSetpoint(elevator.getPosition());
-    turret.setSetpoint(180);
+    //turret.setSetpoint(180);
 
     autoSelected = autoChooser.getSelected();
 
@@ -208,14 +208,18 @@ public class Robot extends TimedRobot {
     // Drivetrain is now a default command
     
     // Grabber is now a default command
-    //if (Robot.driverController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
-    //else if (Robot.driverController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
+    if (Robot.driverController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
+    else if (Robot.driverController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
     
     // Cargo Mech Control Code
-    if (Math.abs(Robot.driverController.getTriggerAxis(Hand.kRight))>0.5) mech.intake(1.0);
-    else if (Robot.driverController.getAButtonPressed()) mech.intake(-1.0);
+    if (Math.abs(Robot.driverController.getTriggerAxis(Hand.kRight))>0.5) mech.intake(Robot.driverController.getTriggerAxis(Hand.kRight));
+    else if (Math.abs(Robot.driverController.getTriggerAxis(Hand.kLeft))>0.5) mech.intake(-Robot.driverController.getTriggerAxis(Hand.kRight));
 
-    mech.tiltClaw(driverController.getY(Hand.kRight));
+    if (driverController.getBumper(Hand.kRight)) mech.tiltClaw(1.0);
+    else if (driverController.getBumper(Hand.kLeft)) mech.tiltClaw(-1.0);
+    else {
+      mech.tiltClaw(0.0);
+    }
 
     // Elevator
     if (driverController.getPOV() == 180) elevator.setSetpoint(19.0);
