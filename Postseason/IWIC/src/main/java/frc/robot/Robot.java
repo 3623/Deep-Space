@@ -29,6 +29,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.CargoMech;
 import frc.util.Utils;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -103,6 +104,8 @@ public class Robot extends TimedRobot {
     driverControl = false;
 
     climber = new Climber();
+    CameraServer server = CameraServer.getInstance();
+    server.startAutomaticCapture(0);
   }
 
   /**
