@@ -96,7 +96,7 @@ public class Drivetrain extends Subsystem{
 	}
     
    	public void openLoopControl(double xSpeed, double rSpeed, Boolean quickTurn) {
-	   	drivetrain.curvatureDrive(xSpeed, rSpeed, quickTurn);
+	   	drivetrain.curvatureDrive(-xSpeed, rSpeed, quickTurn);
    	}
 
    	public void directMotorControl(double leftSpeed, double rightSpeed){

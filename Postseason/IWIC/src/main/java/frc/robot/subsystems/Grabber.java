@@ -11,11 +11,14 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.grabber.GrabberManualControl;
 import frc.robot.commands.grabber.Hold;
 
 public class Grabber extends Subsystem{
     private Solenoid clawSolenoid1, clawSolenoid2, extensionSolenoid;
+
+    public boolean OpenStatus;
     
     private DigitalInput hatchSwitch;
     
@@ -30,16 +33,19 @@ public class Grabber extends Subsystem{
     public void openClaw() {
         clawSolenoid1.set(false);
         clawSolenoid2.set(true);
+        OpenStatus = true;
     }
 
     public void closeClaw() {
         clawSolenoid1.set(true);
         clawSolenoid2.set(false);
+        OpenStatus = false;
     }
 
     public void halfClaw() {
         clawSolenoid1.set(false);
         clawSolenoid2.set(false);
+        OpenStatus = true;
     }
 
     public void extend(){
@@ -53,5 +59,17 @@ public class Grabber extends Subsystem{
     @Override
     protected void initDefaultCommand() {
         setDefaultCommand(new Hold());
+    }
+
+    public boolean getStatus(){
+        return OpenStatus;
+    }
+
+    public void update(){
+        this.monitor();
+    }
+
+    private void monitor(){
+        SmartDashboard.putBoolean("Grabber Status", this.getStatus());
     }
 }

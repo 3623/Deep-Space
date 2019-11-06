@@ -19,7 +19,6 @@ import frc.robot.commands.auto.LeftRocket;
 import frc.robot.commands.drive.DriveOffLevel1;
 import frc.robot.commands.drive.DriverControl;
 import frc.robot.commands.general.GeneralTimer;
-import frc.robot.commands.auto.LeftCargoShip;
 import frc.robot.commands.grabber.Hold;
 import frc.robot.commands.grabber.Intake;
 import frc.robot.commands.grabber.Place;
@@ -28,7 +27,6 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
-import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.CargoMech;
 import frc.util.Utils;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -51,7 +49,7 @@ public class Robot extends TimedRobot {
   public static Drivetrain drivetrain;	 
   public static Grabber grabber;
   public static Elevator elevator;
-  public static Turret turret;
+  //public static Turret turret;
   public static Climber climber;
   public static CargoMech mech;
 
@@ -71,6 +69,7 @@ public class Robot extends TimedRobot {
   SendableChooser<Boolean> driveReverse;
 
   Boolean driverControl;
+  Boolean ButtonDown = false;
 
   Command autoCommand;
 
@@ -86,7 +85,7 @@ public class Robot extends TimedRobot {
     drivetrain = new Drivetrain();	 
     grabber = new Grabber();
     elevator = new Elevator();
-    turret = new Turret();
+    //turret = new Turret();
     mech = new CargoMech();
 
     axisCam = new AxisCameraStream();
@@ -117,7 +116,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     elevator.update(); 
-    turret.update();
+    grabber.update();
+    //turret.update();
   }
 
   /**
@@ -151,9 +151,6 @@ public class Robot extends TimedRobot {
         autoCommand = new DriveOffLevel1();
       break;
 
-      case LeftCargoShip:
-        autoCommand = new LeftCargoShip();
-      break;
 
       case LeftRocket:
         autoCommand = new LeftRocket();
@@ -208,15 +205,25 @@ public class Robot extends TimedRobot {
     // Drivetrain is now a default command
     
     // Grabber is now a default command
-    if (Robot.driverController.getBButtonPressed()) Scheduler.getInstance().add(new Place());
-    else if (Robot.driverController.getAButtonPressed()) Scheduler.getInstance().add(new Intake());
+    if (Robot.driverController.getBButtonPressed()&&grabber.getStatus()) Scheduler.getInstance().add(new Place());
+    else if (Robot.driverController.getAButtonPressed()&&grabber.getStatus()) Scheduler.getInstance().add(new Intake());
     
     // Cargo Mech Control Code
-    if (Math.abs(Robot.driverController.getTriggerAxis(Hand.kRight))>0.5) mech.intake(Robot.driverController.getTriggerAxis(Hand.kRight));
-    else if (Math.abs(Robot.driverController.getTriggerAxis(Hand.kLeft))>0.5) mech.intake(-Robot.driverController.getTriggerAxis(Hand.kRight));
+    if (Math.abs(Robot.driverController.getTriggerAxis(Hand.kRight))>0.5) mech.intake(-Robot.driverController.getTriggerAxis(Hand.kRight));
+    else if (Math.abs(Robot.driverController.getTriggerAxis(Hand.kLeft))>0.5) mech.intake(Robot.driverController.getTriggerAxis(Hand.kLeft));
+    else {
+      mech.intake(0.0);
+    }
 
-    if (driverController.getBumper(Hand.kRight)) mech.tiltClaw(1.0);
-    else if (driverController.getBumper(Hand.kLeft)) mech.tiltClaw(-1.0);
+    if (driverController.getBumper(Hand.kRight)) {
+      mech.tiltClaw(0.8);
+      grabber.closeClaw();
+    }
+    else if (driverController.getBumper(Hand.kLeft)) 
+    {
+      mech.tiltClaw(-0.8);
+      grabber.closeClaw();
+    }
     else {
       mech.tiltClaw(0.0);
     }
@@ -225,6 +232,21 @@ public class Robot extends TimedRobot {
     if (driverController.getPOV() == 180) elevator.setSetpoint(19.0);
     else if (driverController.getPOV() == 90) elevator.setSetpoint(49.0);
     else if (driverController.getPOV() == 0) elevator.setSetpoint(75.0);
+
+    if (driverController.getYButton()&&ButtonDown == false&&grabber.getStatus()) {
+      grabber.closeClaw();
+      ButtonDown = true;
+    }
+    else if (driverController.getYButton()&&ButtonDown==false&&grabber.getStatus()==false){
+      grabber.openClaw();
+      ButtonDown = true;
+    }
+    else if (driverController.getYButton()==true){
+
+    }
+    else {
+      ButtonDown = false;
+    }
 
     // Turret is now a default command
       // Manual Control w/o Potentiometer
@@ -237,7 +259,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    turret.enable();
+   // turret.enable();
   }
 
   /**
@@ -251,7 +273,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     elevator.disable();
-    turret.disable();
+    //turret.disable();
     drivetrain.stop();
   }
 }

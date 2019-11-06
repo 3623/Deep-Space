@@ -26,7 +26,7 @@ public void tiltClaw(double speed){
         tilt.set(speed);
     }
     else{
-        tilt.set(0.05);
+        tilt.set(0.1);
     }
 }
 
