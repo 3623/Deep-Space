@@ -33,8 +33,9 @@ public class CubicSplineFollower {
     private static final double kEpsilonCritical = 3.0;
     private static final double kV = 1.0 / 14.0;
     private static final double kTurn = 1.5 / 80.0;
+    private static final double kMaxSplineAngle = Math.PI * 0.3;
 
-    private Pose pose;
+    private Pose robotPose;
 
     double a = 0;
     double b = 0;
@@ -53,7 +54,7 @@ public class CubicSplineFollower {
      */
     public Tuple updatePursuit(Pose robotPose) {
         curWaypoint = waypoints.get(index);
-        pose = robotPose;
+        this.robotPose = robotPose;
 
         feedForwardSpeed = curWaypoint.kSpeed;
         debug = false;
@@ -85,7 +86,7 @@ public class CubicSplineFollower {
 
                 } else {
                     // at point but not heading, just turn to the point
-                    double ptrOutput = DrivetrainControls.turnToAngle(curWaypoint.heading, pose.heading);
+                    double ptrOutput = DrivetrainControls.turnToAngle(curWaypoint.heading, robotPose.heading);
                     return DrivetrainControls.curvatureDrive(0.0, ptrOutput, true);
                 }
             }
@@ -97,7 +98,7 @@ public class CubicSplineFollower {
             debug = true;
         }
         // if not in a special case, just run path following
-        return pathFollowing();
+        return pathFollowing(robotPose);
     }
 
     /**
@@ -110,31 +111,9 @@ public class CubicSplineFollower {
      * 
      * @return a tuple of left and right output voltages
      */
-    public Tuple pathFollowing() {
-        calculateDistanceFromWaypoint();
-
-        double straightPathAngle = Math.atan2(curWaypoint.x - pose.x, curWaypoint.y - pose.y);
-        double relativeAngle = pose.r - straightPathAngle;
-        double relativeOpposDist = distanceFromWaypoint * Math.sin(relativeAngle);
-        double relativeAdjacDist = distanceFromWaypoint * Math.cos(relativeAngle);
-        double relativeGoalAngle = pose.r - curWaypoint.r;
-        // relativeGoalAngle = Utils.limit(relativeGoalAngle, Math.PI/3.0,
-        // -Math.PI/3.0);
-        double relativeGoalDeriv = Math.atan(relativeGoalAngle);
-        /*
-         * Convert from heading in angle form to slope/derivative form. It turns out
-         * that atan and tan are similar enough to work interchangeably. In fact, atan
-         * is prefered because it limits the derivate of the waypoint to an angle of 1
-         * radian, so the cubic spline does not become absurd (at angle of 90, slope is
-         * inifinity, the cubic spline therefore is a giant peak). Limiting the
-         * derivative or angle of the waypoint isn't an issue because we do this
-         * calculation OTF. (The limited tan option is left commented out just in case
-         * someone wants to play around with that)
-         */
-
-        generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
-
-        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) * 0.1) + (pose.velocity * 0.9);
+    public Tuple pathFollowing(Pose robotPose) {
+        getPathGeometry(robotPose, curWaypoint);
+        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) * 0.1) + (robotPose.velocity * 0.9);
         double deltaX = nextSpeed / UPDATE_RATE;
         if (Math.signum(deltaX) != Math.signum(feedForwardSpeed))
             deltaX = 0.0;
@@ -176,6 +155,20 @@ public class CubicSplineFollower {
         return new Tuple(outputLeft, outputRight);
     }
 
+    private Tuple getPathGeometry(Pose startPoint, Pose goalPoint) {
+        calculateDistanceFromWaypoint();
+
+        double straightPathAngle = Math.atan2(goalPoint.x - startPoint.x, goalPoint.y - startPoint.y);
+        double relativeAngle = startPoint.r - straightPathAngle;
+        double relativeOpposDist = distanceFromWaypoint * Math.sin(relativeAngle);
+        double relativeAdjacDist = distanceFromWaypoint * Math.cos(relativeAngle);
+        double relativeGoalAngle = startPoint.r - goalPoint.r;
+        relativeGoalAngle = Utils.limit(relativeGoalAngle, kMaxSplineAngle,
+        -kMaxSplineAngle);
+        double relativeGoalDeriv = Math.tan(relativeGoalAngle);
+
+        return generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
+    }
     /**
      * Calculates the value of two coefficients (a & b) of a cubic spline specified
      * by two points and derivatives.
@@ -190,11 +183,11 @@ public class CubicSplineFollower {
      *           specified in relation to p1, and y=ax^3+bx^2+cx+d (c and d are
      *           equal to 0 because of definition)
      */
-    private void generateSpline(double x, double y, double dx) {
-        this.a = ((x * dx) - (2 * y)) / (x * x * x);
-        this.b = ((3 * y) - (dx * x)) / (x * x);
+    private static Tuple generateSpline(double x, double y, double dx) {
+        a = ((x * dx) - (2 * y)) / (x * x * x);
+        b = ((3 * y) - (dx * x)) / (x * x);
+        return new Tuple(a, b);
     }
-
     /**
      * Calculates euclidean distance between robot pose and current waypoint.
      * Updates the {@code distanceFromWaypoint} value
@@ -270,10 +263,9 @@ public class CubicSplineFollower {
     /**
      * Contains information to define a point along a desired path
      */
-    public static class Waypoint {
+    public static class Waypoint extends Pose {
         // public final Pose point;
         protected double kSpeed;
-        public double x, y, r, heading;
         protected Boolean isCritical;
 
         /**
@@ -287,10 +279,7 @@ public class CubicSplineFollower {
          *                 critical waypoint
          */
         public Waypoint(double x, double y, double heading, double speed, Boolean critical) {
-            this.x = x;
-            this.y = y;
-            this.r = Math.toRadians(heading);
-            this.heading = heading;
+            super(x, y, heading);
             this.kSpeed = speed;
             this.isCritical = critical;
         }
@@ -307,7 +296,8 @@ public class CubicSplineFollower {
         public Waypoint(double x, double y, double heading, double speed) {
             this(x, y, heading, speed, false);
         }
-
+        
+        @Override
         public String toString() {
             return "x: " + x + ", y: " + y + ", heading: " + heading + ", speed: " + kSpeed;
         }
