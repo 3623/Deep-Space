@@ -144,8 +144,8 @@ public class CubicSplineFollower {
     }
 
     private Tuple getPathGeometry(Pose startPoint, Pose goalPoint) {
-        calculateDistanceFromWaypoint();
-
+        //calculateDistanceFromWaypoint();
+        distanceFromWaypoint = Geometry.distance(curWaypoint, robotPose);
         double straightPathAngle = Math.atan2(goalPoint.x - startPoint.x, goalPoint.y - startPoint.y);
         double relativeAngle = startPoint.r - straightPathAngle;
         double relativeOpposDist = distanceFromWaypoint * Math.sin(relativeAngle);
@@ -209,7 +209,7 @@ public class CubicSplineFollower {
      */
     private Boolean atHeading(double epsilon) {
         // System.out.println(pose.heading + " " + curWaypoint.heading);
-        return Utils.withinThreshold(pose.heading, curWaypoint.heading, epsilon);
+        return Utils.withinThreshold(robotPose.heading, curWaypoint.heading, epsilon);
     }
 
     /**
