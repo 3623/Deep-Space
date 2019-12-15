@@ -25,7 +25,7 @@ class SimulationApp(App):
         # Citation: from cleanpng.com, contributor: georgen
         url = "https://icon2.cleanpng.com/20180417/bxw/kisspng-steve-harvey-still-trippin-act-like-a-lady-thin-steve-jobs-5ad626cde40c49.3709911715239840779341.jpg"
         self._robotImage = self.scaleImage(self.loadImage(url), 0.6)
-        self._WAYPOINT_RADIUS = 30
+        self._WAYPOINT_RADIUS = self.width*0.1
         self.setAppDims()
         self.resetUserInputs()
 
