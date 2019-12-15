@@ -37,9 +37,6 @@ public class CubicSplineFollower {
 
     private Pose robotPose;
 
-    double a = 0;
-    double b = 0;
-
     double feedForwardSpeed = 0.0;
     double distanceFromWaypoint = 100.0;
 
@@ -177,8 +174,8 @@ public class CubicSplineFollower {
      */
     
     private static Tuple generateSpline(double x, double y, double dx) {
-        a = ((x * dx) - (2 * y)) / (x * x * x);
-        b = ((3 * y) - (dx * x)) / (x * x);
+        double a = ((x * dx) - (2 * y)) / (x * x * x);
+        double b = ((3 * y) - (dx * x)) / (x * x);
         return new Tuple(a, b);
     }
     /**
@@ -186,7 +183,7 @@ public class CubicSplineFollower {
      * Updates the {@code distanceFromWaypoint} value
      */
     private void calculateDistanceFromWaypoint() {
-        distanceFromWaypoint = Geometry.distance(curWaypoint.x, pose.x, curWaypoint.y, pose.y);
+        distanceFromWaypoint = Geometry.distance(curWaypoint.x, robotPose.x, curWaypoint.y, robotPose.y);
     }
 
     /**
