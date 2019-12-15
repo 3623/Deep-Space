@@ -136,17 +136,8 @@ public class CubicSplineFollower {
         kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.1;
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
-        /*
-         * It turns out that tan and atan are relatively interchangeable here, but in
-         * this case, atan is the actually correct function (convert from ratio to
-         * angle) and works more accurately, different from above usage, where atan is
-         * the incorrect function but works more elegantly
-         */
-
-        if (false) {
-            System.out.println(relativeAdjacDist + " " + relativeOpposDist + " " + relativeGoalDeriv);
-            System.out.println(a + " " + b + " " + deltaX);
-        }
+        //Convert from derivative to angle
+        
 
         double turnOutput = -Math.toDegrees(relativeFeedForwardAngle) * kTurn;
         double outputLeft = ((feedForwardSpeed * kV) + turnOutput) * 12.0;
@@ -166,8 +157,9 @@ public class CubicSplineFollower {
         relativeGoalAngle = Utils.limit(relativeGoalAngle, kMaxSplineAngle,
         -kMaxSplineAngle);
         double relativeGoalDeriv = Math.tan(relativeGoalAngle);
-
+        if (false) System.out.println(relativeAdjacDist + " " + relativeOpposDist + " " + relativeGoalDeriv);
         return generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
+    
     }
     /**
      * Calculates the value of two coefficients (a & b) of a cubic spline specified
@@ -183,6 +175,7 @@ public class CubicSplineFollower {
      *           specified in relation to p1, and y=ax^3+bx^2+cx+d (c and d are
      *           equal to 0 because of definition)
      */
+    
     private static Tuple generateSpline(double x, double y, double dx) {
         a = ((x * dx) - (2 * y)) / (x * x * x);
         b = ((3 * y) - (dx * x)) / (x * x);
