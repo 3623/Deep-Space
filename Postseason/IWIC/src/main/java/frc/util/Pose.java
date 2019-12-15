@@ -1,5 +1,7 @@
 package frc.util;
 
+import java.io.IOException;
+
 /**
  * Simple Cartesian coordinate class
  * 
@@ -25,6 +27,7 @@ public class Pose {
 		this.y = y;
 		this.r = Math.toRadians(heading);
 		this.heading = heading;
+		limitAngle();
 	}
 
 	// public Pose(double x, double y, double r){
@@ -35,15 +38,11 @@ public class Pose {
 	// }
 	
 	public Pose(double x, double y) {
-		this.x = x;
-		this.y = y;
+		this(x, y, 0.0);
 	}
 	
 	public Pose() {
-		this.x = 0.0;
-		this.y = 0.0;
-		this.heading = 0.0;
-		this.r = 0.0;
+		this(0.0, 0.0, 0.0);		
 	}
 
 	public void update(double deltaX, double deltaY, double deltaR) {
@@ -51,10 +50,29 @@ public class Pose {
 		this.y += deltaY;
 		this.r += deltaR;
 		this.heading = Math.toDegrees(r);
+		limitAngle();
 	}
 
 	public void setHeading(double heading) {
 		this.heading = heading;
-		this.r = Math.toRadians(heading);
+		this.r = Math.toRadians(this.heading);
+		limitAngle();
+	}
+	
+	private void limitAngle() {
+		if (Math.abs(this.heading) != 180.0) this.heading %= 180;
+		this.r = Math.toRadians(this.heading); 
+	}
+
+	public String toString() {
+		return "x: " + x + ", y: " + y + ", heading: " + heading + ", radians: " + r;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		Pose pose = new Pose(0, 0, 179);
+		Pose test = pose;
+		//pose.setHeading(-180);
+		pose.update(0, 0, 0.003);
+		System.out.println(pose.toString());
 	}
 }
