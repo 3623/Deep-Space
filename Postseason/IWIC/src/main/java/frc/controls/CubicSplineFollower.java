@@ -32,10 +32,10 @@ public class CubicSplineFollower {
     private static final double kAngularErrorPath = 5.0;
     private static final double kEpsilonCritical = 3.0;
     private static final double kV = 1.0 / 14.0;
-    private static final double kTurn = 1.5 / 80.0;
+    private static final double kTurn = 12.0 / 450.0;
     private static final double kMaxSplineAngle = Math.PI * 0.3;
 
-    double feedForwardSpeed = 0.0;
+    double ffSpeed = 0.0;
 
     Boolean debug = false;
 
@@ -49,20 +49,20 @@ public class CubicSplineFollower {
     public Tuple updatePursuit(Pose robotPose) {
         curWaypoint = waypoints.get(index);
         double distanceFromWaypoint = Geometry.distance(robotPose, curWaypoint);
-        feedForwardSpeed = curWaypoint.kSpeed;
+        ffSpeed = curWaypoint.kSpeed;
         debug = false;
         if (curWaypoint.isCritical) { // important to be at exactly
 
-            if (distanceFromWaypoint < Math.abs(feedForwardSpeed) * 1.2) {
+            if (distanceFromWaypoint < Math.abs(ffSpeed) * 1.2) {
                 // speed reduces as distance gets smaller
-                feedForwardSpeed = Math.copySign(distanceFromWaypoint / 1.2, feedForwardSpeed);
-                if (Math.abs(feedForwardSpeed) < 0.25) {
-                    feedForwardSpeed = Math.copySign(0.25, feedForwardSpeed);
+                ffSpeed = Math.copySign(distanceFromWaypoint / 1.2, ffSpeed);
+                if (Math.abs(ffSpeed) < 0.25) {
+                    ffSpeed = Math.copySign(0.25, ffSpeed);
                 }
             }
             if (distanceFromWaypoint < kRadiusCritical || isFinished) {
                 debug = true;
-                feedForwardSpeed = 0.0;
+                ffSpeed = 0.0;
                 if (Utils.withinThreshold(robotPose.heading, curWaypoint.heading, kAngularErrorPath)) {
                     // at point and heading, we're done
                     if (!isFinished)
@@ -109,9 +109,9 @@ public class CubicSplineFollower {
         Tuple pathCoefficients = getPathGeometry(robotPose, curWaypoint);
         double a = pathCoefficients.left;
         double b = pathCoefficients.right;
-        double nextSpeed = ((MAX_SPEED * feedForwardSpeed) * 0.1) + (robotPose.velocity * 0.9);
+        double nextSpeed = ((MAX_SPEED * ffSpeed) * 0.1) + (robotPose.velocity * 0.9);
         double deltaX = nextSpeed / UPDATE_RATE;
-        if (Math.signum(deltaX) != Math.signum(feedForwardSpeed))
+        if (Math.signum(deltaX) != Math.signum(ffSpeed))
             deltaX = 0.0;
         /*
          * Average of ffSpeed and actual speed scaled by cosine (to account for how far
@@ -131,12 +131,13 @@ public class CubicSplineFollower {
 
         kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.1;
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
-        double relativeFeedForwardAngle = Math.atan(dx2);
+        double relativeFFAngle = Math.atan(dx2);
         // Convert from derivative to angle
 
-        double turnOutput = -Math.toDegrees(relativeFeedForwardAngle) * kTurn;
-        double outputLeft = ((feedForwardSpeed * kV) + turnOutput) * 12.0;
-        double outputRight = ((feedForwardSpeed * kV) - turnOutput) * 12.0;
+        double turnOutput = -Math.toDegrees(relativeFFAngle) * kTurn * UPDATE_RATE;
+        double turnLimitedFFSpeed = Math.copySign(Math.abs(ffSpeed) - Math.abs(turnOutput / 12.0), ffSpeed);
+        double outputLeft = (turnLimitedFFSpeed * kV * 12.0) + turnOutput;
+        double outputRight = (turnLimitedFFSpeed * kV * 12.0) - turnOutput;
 
         return new Tuple(outputLeft, outputRight);
     }
