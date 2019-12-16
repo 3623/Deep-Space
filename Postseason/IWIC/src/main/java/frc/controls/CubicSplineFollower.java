@@ -29,30 +29,26 @@ public class CubicSplineFollower {
 
     private static double kRadiusPath = 0.0;
     private static final double kRadiusCritical = 0.1;
-    private static final double kEpsilonPath = 5.0;
+    private static final double kAngularErrorPath = 5.0;
     private static final double kEpsilonCritical = 3.0;
     private static final double kV = 1.0 / 14.0;
     private static final double kTurn = 1.5 / 80.0;
     private static final double kMaxSplineAngle = Math.PI * 0.3;
 
-    private Pose robotPose;
-
     double feedForwardSpeed = 0.0;
-    double distanceFromWaypoint = 100.0;
 
     Boolean debug = false;
 
     /**
      * Updates the path follower with a new robot pose. Should be called at rate
      * equal to {@code UPDATE_RATE}.
-     * 
+     *
      * @param robotPose the current robot pose, with position and velocities
      * @return a tuple with left and right wheel voltages
      */
     public Tuple updatePursuit(Pose robotPose) {
         curWaypoint = waypoints.get(index);
-        this.robotPose = robotPose;
-
+        double distanceFromWaypoint = Geometry.distance(robotPose, curWaypoint);
         feedForwardSpeed = curWaypoint.kSpeed;
         debug = false;
         if (curWaypoint.isCritical) { // important to be at exactly
@@ -64,10 +60,10 @@ public class CubicSplineFollower {
                     feedForwardSpeed = Math.copySign(0.25, feedForwardSpeed);
                 }
             }
-            if (atWaypoint(kRadiusCritical) || isFinished) {
+            if (distanceFromWaypoint < kRadiusCritical || isFinished) {
                 debug = true;
                 feedForwardSpeed = 0.0;
-                if (atHeading(kEpsilonCritical)) {
+                if (Utils.withinThreshold(robotPose.heading, curWaypoint.heading, kAngularErrorPath)) {
                     // at point and heading, we're done
                     if (!isFinished)
                         System.out.println("At Waypoint: " + index + " (" + curWaypoint.toString() + ")");
@@ -87,7 +83,8 @@ public class CubicSplineFollower {
                     return DrivetrainControls.curvatureDrive(0.0, ptrOutput, true);
                 }
             }
-        } else if (atWaypoint(kRadiusPath) && atHeading(kEpsilonPath)) {
+        } else if (distanceFromWaypoint < kRadiusPath
+                && Utils.withinThreshold(robotPose.heading, curWaypoint.heading, kAngularErrorPath)) {
             // at non-critical waypoint
             System.out.println("At Waypoint: " + index + " (" + curWaypoint.toString() + ")");
             index++;
@@ -105,11 +102,13 @@ public class CubicSplineFollower {
      * cheats by setting the initial point of the cubic spline as x=0, y=0, dx=0 to
      * make calculations simpler. This means that the waypoint has to be converted
      * to local coordinates in reference to the robot.
-     * 
+     *
      * @return a tuple of left and right output voltages
      */
     public Tuple pathFollowing(Pose robotPose) {
-        getPathGeometry(robotPose, curWaypoint);
+        Tuple pathCoefficients = getPathGeometry(robotPose, curWaypoint);
+        double a = pathCoefficients.left;
+        double b = pathCoefficients.right;
         double nextSpeed = ((MAX_SPEED * feedForwardSpeed) * 0.1) + (robotPose.velocity * 0.9);
         double deltaX = nextSpeed / UPDATE_RATE;
         if (Math.signum(deltaX) != Math.signum(feedForwardSpeed))
@@ -133,8 +132,7 @@ public class CubicSplineFollower {
         kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.1;
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFeedForwardAngle = Math.atan(dx2);
-        //Convert from derivative to angle
-        
+        // Convert from derivative to angle
 
         double turnOutput = -Math.toDegrees(relativeFeedForwardAngle) * kTurn;
         double outputLeft = ((feedForwardSpeed * kV) + turnOutput) * 12.0;
@@ -144,24 +142,24 @@ public class CubicSplineFollower {
     }
 
     private Tuple getPathGeometry(Pose startPoint, Pose goalPoint) {
-        //calculateDistanceFromWaypoint();
-        distanceFromWaypoint = Geometry.distance(curWaypoint, robotPose);
+        double distanceFromWaypoint = Geometry.distance(startPoint, goalPoint);
         double straightPathAngle = Math.atan2(goalPoint.x - startPoint.x, goalPoint.y - startPoint.y);
         double relativeAngle = startPoint.r - straightPathAngle;
         double relativeOpposDist = distanceFromWaypoint * Math.sin(relativeAngle);
         double relativeAdjacDist = distanceFromWaypoint * Math.cos(relativeAngle);
         double relativeGoalAngle = startPoint.r - goalPoint.r;
-        relativeGoalAngle = Utils.limit(relativeGoalAngle, kMaxSplineAngle,
-        -kMaxSplineAngle);
+        relativeGoalAngle = Utils.limit(relativeGoalAngle, kMaxSplineAngle, -kMaxSplineAngle);
         double relativeGoalDeriv = Math.tan(relativeGoalAngle);
-        if (false) System.out.println(relativeAdjacDist + " " + relativeOpposDist + " " + relativeGoalDeriv);
+        if (false)
+            System.out.println(relativeAdjacDist + " " + relativeOpposDist + " " + relativeGoalDeriv);
         return generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
-    
+
     }
+
     /**
      * Calculates the value of two coefficients (a & b) of a cubic spline specified
      * by two points and derivatives.
-     * 
+     *
      * @Note The first point is assumed to be (0, 0) with a derivative of 0. Second
      *       point must be in reference to this point
      * @param x  the x coordinate of the second point
@@ -172,50 +170,16 @@ public class CubicSplineFollower {
      *           specified in relation to p1, and y=ax^3+bx^2+cx+d (c and d are
      *           equal to 0 because of definition)
      */
-    
     private static Tuple generateSpline(double x, double y, double dx) {
         double a = ((x * dx) - (2 * y)) / (x * x * x);
         double b = ((3 * y) - (dx * x)) / (x * x);
         return new Tuple(a, b);
     }
-    /**
-     * Calculates euclidean distance between robot pose and current waypoint.
-     * Updates the {@code distanceFromWaypoint} value
-     */
-    private void calculateDistanceFromWaypoint() {
-        distanceFromWaypoint = Geometry.distance(curWaypoint.x, robotPose.x, curWaypoint.y, robotPose.y);
-    }
-
-    /**
-     * Helper function to check if the robot is within a radius of the desired
-     * waypoint
-     * 
-     * @param radius the desired radius of the robot to the point
-     * @return true if the robot is within the desired radius of the point
-     */
-    private Boolean atWaypoint(double radius) {
-        // System.out.println(distanceFromWaypoint);
-        return (distanceFromWaypoint < radius);
-    }
-
-    /**
-     * Helper function to check if the robot heading is within a deadband of the
-     * desired heading
-     * 
-     * @param epsilon the tolerance, in degrees, of the robots heading versus the
-     *                desired
-     * @return true if the robot is pointing at an angle within the desired epsilon
-     *         of the waypoint
-     */
-    private Boolean atHeading(double epsilon) {
-        // System.out.println(pose.heading + " " + curWaypoint.heading);
-        return Utils.withinThreshold(robotPose.heading, curWaypoint.heading, epsilon);
-    }
 
     /**
      * Checks whether or not the robot has finished following the path specified by
      * given waypoints
-     * 
+     *
      * @return true if the robot has finished the path specified
      */
     public Boolean getIsFinished() {
@@ -234,7 +198,7 @@ public class CubicSplineFollower {
 
     /**
      * Returns the current waypoint being followed by the path follower
-     * 
+     *
      * @return {@link Waypoint}
      */
     public Waypoint getCurrentWaypoint() {
@@ -243,7 +207,7 @@ public class CubicSplineFollower {
 
     /**
      * Adds a waypoint to the list of waypoints (FILO)
-     * 
+     *
      * @param newWaypoint see {@link Waypoint}
      */
     public void addWaypoint(Waypoint newWaypoint) {
@@ -260,7 +224,7 @@ public class CubicSplineFollower {
 
         /**
          * Constructor for waypoint
-         * 
+         *
          * @param x        in meters
          * @param y        in meters
          * @param heading  in degrees. Call .r for radians
@@ -286,7 +250,7 @@ public class CubicSplineFollower {
         public Waypoint(double x, double y, double heading, double speed) {
             this(x, y, heading, speed, false);
         }
-        
+
         @Override
         public String toString() {
             return "x: " + x + ", y: " + y + ", heading: " + heading + ", speed: " + kSpeed;
