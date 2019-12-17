@@ -259,8 +259,8 @@ public class Animation extends JPanel implements Runnable {
 
 				Tuple output = nav.updatePursuit(model.center);
 				output = model.limitAcceleration(output);
-				leftVoltage = output.left * 12.0;
-				rightVoltage = output.right * 12.0;
+				leftVoltage = output.left;
+				rightVoltage = output.right;
 
 				// System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " +
 				// rightVoltage);

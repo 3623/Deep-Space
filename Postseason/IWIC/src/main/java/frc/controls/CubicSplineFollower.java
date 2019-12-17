@@ -31,8 +31,7 @@ public class CubicSplineFollower {
     private static final double kRadiusCritical = 0.1;
     private static final double kAngularErrorPath = 5.0;
     private static final double kEpsilonCritical = 3.0;
-    private static final double kV = 1.0 / 14.0;
-    private static final double kTurn = 12.0 / 450.0;
+    private static final double kTurn = 12.0 / 450.0; // Volts/turn speed(deg/s)
     private static final double kMaxSplineAngle = Math.PI * 0.3;
 
     double ffSpeed = 0.0;
@@ -136,8 +135,8 @@ public class CubicSplineFollower {
 
         double turnOutput = -Math.toDegrees(relativeFFAngle) * kTurn * UPDATE_RATE;
         double turnLimitedFFSpeed = Math.copySign(Math.abs(ffSpeed) - Math.abs(turnOutput / 12.0), ffSpeed);
-        double outputLeft = (turnLimitedFFSpeed * kV * 12.0) + turnOutput;
-        double outputRight = (turnLimitedFFSpeed * kV * 12.0) - turnOutput;
+        double outputLeft = (turnLimitedFFSpeed * 12.0) + turnOutput;
+        double outputRight = (turnLimitedFFSpeed * 12.0) - turnOutput;
 
         return new Tuple(outputLeft, outputRight);
     }

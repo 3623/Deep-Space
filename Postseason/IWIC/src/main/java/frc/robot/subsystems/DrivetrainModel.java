@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Integrates acceleration over time for both sides of the drivetrain and uses
  * velocity to calculate the instantaneous curvature of the robot, which is then
  * integrated for position
- * 
+ *
  * @author eric
  *
  */
@@ -49,7 +49,7 @@ public class DrivetrainModel {
 
 	/**
 	 * Sets the drivetrain position to a known location
-	 * 
+	 *
 	 * @param x        location (side to side), in meters
 	 * @param y        location (forwards backwards, in meters
 	 * @param heading, in degrees
@@ -74,7 +74,7 @@ public class DrivetrainModel {
 	/**
 	 * Sets the speed of each drivetrain side to a known value and calculates
 	 * acceleration. For using encoders
-	 * 
+	 *
 	 * @param lSpeed left speed, in meters/sec
 	 * @param rSpeed right speed, in meters/sec
 	 * @param time   elapsed time since last update, in seconds
@@ -87,7 +87,7 @@ public class DrivetrainModel {
 	/**
 	 * Updates the models heading with a set heading. For using a gyro to more
 	 * accurately track heading
-	 * 
+	 *
 	 * @param angle in degrees
 	 */
 	public void updateHeading(double heading) {
@@ -97,7 +97,7 @@ public class DrivetrainModel {
 	/**
 	 * Updates velocity and acceleration of each side of the drivetrain using motor
 	 * curves
-	 * 
+	 *
 	 * @param left  voltage
 	 * @param right voltage
 	 * @param the   elapsedtime between updates, in seconds
@@ -109,7 +109,7 @@ public class DrivetrainModel {
 
 	/**
 	 * Updates the models position from each sides velocity
-	 * 
+	 *
 	 * @param the elapsed time between updates, in seconds
 	 */
 	public void updatePosition(double time) {
@@ -145,13 +145,13 @@ public class DrivetrainModel {
 
 	/**
 	 * Limits acceleration using the models velocity and information about motors
-	 * 
+	 *
 	 * @param unchecked output voltage
 	 * @return checked voltage, limited to acceleration of MAX_TORQUE constant
 	 */
 	public Tuple limitAcceleration(Tuple out) {
-		double leftVoltage = out.left * 12.0;
-		double rightVoltage = out.right * 12.0;
+		double leftVoltage = out.left;
+		double rightVoltage = out.right;
 		double voltageDif = (leftVoltage - rightVoltage) / 2.0;
 		double avg = (left.limitAcceleration(leftVoltage) + right.limitAcceleration(rightVoltage)) / 2.0;
 		double leftVoltageChecked = left.limitAcceleration(leftVoltage) + voltageDif;
@@ -166,13 +166,13 @@ public class DrivetrainModel {
 		// Boolean isLeftNeg = Math.abs(leftVoltageChecked) > leftVoltageChecked;
 		// Boolean isRightNeg = Math.abs(rightVoltageChecked) > rightVoltageChecked;
 
-		Tuple checkedOutput = new Tuple(leftVoltageChecked / 12.0, rightVoltageChecked / 12.0);
+		Tuple checkedOutput = new Tuple(leftVoltageChecked, rightVoltageChecked);
 		return checkedOutput;
 	}
 
 	/**
 	 * Limits acceleration using the models velocity and information about motors
-	 * 
+	 *
 	 * @param unchecked output voltage
 	 * @return checked voltage, limited to acceleration of MAX_TORQUE constant
 	 */
@@ -197,7 +197,7 @@ public class DrivetrainModel {
 		/**
 		 * Sets the speed of each drivetrain side to a known value and calculates
 		 * acceleration. For using encoders
-		 * 
+		 *
 		 * @param speed, in meters/sec
 		 */
 		protected void updateSpeed(double speed, double time) {
@@ -209,7 +209,7 @@ public class DrivetrainModel {
 		/**
 		 * Updates velocity and acceleration of each side of the drivetrain using motor
 		 * curves
-		 * 
+		 *
 		 * @param voltage
 		 * @param the     elapsedtime between updates, in seconds
 		 */
@@ -232,7 +232,7 @@ public class DrivetrainModel {
 
 		/**
 		 * Limits acceleration using the models velocity and information about motors
-		 * 
+		 *
 		 * @param unchecked output voltage
 		 * @return checked voltage, limited to acceleration of MAX_TORQUE constant
 		 */
@@ -251,7 +251,7 @@ public class DrivetrainModel {
 
 		/**
 		 * Converts linear wheel speed back to motor angular speed
-		 * 
+		 *
 		 * @param speed meters/sec
 		 * @return angular speed, revolutions per minute
 		 */
@@ -264,7 +264,7 @@ public class DrivetrainModel {
 
 		/**
 		 * Models friction as a constant
-		 * 
+		 *
 		 * @param Ideal output force of the drivetrain, in newtons
 		 * @param Speed of the drivetrain, to set direction of friction
 		 */
@@ -287,7 +287,7 @@ public class DrivetrainModel {
 	 * The radius of the robot about the Instantaneous Center of Curvature (ICC)
 	 * Used to infinitesimally calculate the displacement of the robot A positive
 	 * radius is to the right of the robot (relative to robot) and negative is left
-	 * 
+	 *
 	 * @see <a href="http://www.cs.columbia.edu/~allen/F17/NOTES/icckinematics.pdf">
 	 *      Columbia University: CS W4733 NOTES - Differential Drive Robots</a>
 	 * @param wheelBase width between left and right sides of the drivetrain, meters
@@ -304,7 +304,7 @@ public class DrivetrainModel {
 	 * (ICC) Used to infinitesimally calculate the displacement of the robot A
 	 * positive radius is to the left of the robot (relative to robot) and negative
 	 * is right
-	 * 
+	 *
 	 * @see <a href="http://www.cs.columbia.edu/~allen/F17/NOTES/icckinematics.pdf">
 	 *      Columbia University: CS W4733 NOTES - Differential Drive Robots</a>
 	 * @param wheelBase width between left and right sides of the drivetrain, meters
