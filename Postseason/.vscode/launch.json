@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - SwingPaintDemo3",
+            "request": "launch",
+            "mainClass": "frc.modeling.motors.SwingPaintDemo3",
+            "projectName": "IWIC"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Animation",
+            "request": "launch",
+            "mainClass": "frc.modeling.Animation",
+            "projectName": "IWIC"
+        }
+    ]
+}

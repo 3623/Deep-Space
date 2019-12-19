@@ -7,12 +7,26 @@
 
 package frc.robot.commands.drive;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 import frc.robot.Robot;
 
-public class DriverControl extends Command {
-  public DriverControl() {
+/**
+ * Add your docs here.
+ */
+public class DriveDeadReckoning extends TimedCommand {
+  /**
+   * Add your docs here.
+   */
+  double xSpeed;
+  double rSpeed;
+  Boolean quickTurn;
+
+  public DriveDeadReckoning(double timeout, double xSpeed, double rSpeed, Boolean quickTurn) {
+    super(timeout);
     requires(Robot.drivetrain);
+    this.xSpeed = xSpeed;
+    this.rSpeed = rSpeed;
+    this.quickTurn = quickTurn;
   }
 
   // Called just before this Command runs the first time
@@ -23,31 +37,13 @@ public class DriverControl extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Boolean quickTurn;
-    if (Math.abs(Robot.driverController.getRawAxis(1)) < 0.5) quickTurn = true;
-    else quickTurn = false;
-    // quickTurn = true;
-
-    if (quickTurn){
-      Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)/2.0, 
-      Robot.driverController.getRawAxis(4),
-      quickTurn);
-    } else{
-      Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)*Math.abs(Robot.driverController.getRawAxis(1)), 
-      Robot.driverController.getRawAxis(4)/2.0, 
-      quickTurn);
-    }
+    Robot.drivetrain.openLoopControl(xSpeed, rSpeed, quickTurn);
   }
 
-  // Make this return true when this Command no longer needs to run execute()
-  @Override
-  protected boolean isFinished() {
-    return false;
-  }
-
-  // Called once after isFinished returns true
+  // Called once after timeout
   @Override
   protected void end() {
+    Robot.drivetrain.openLoopControl(0.0, 0.0, false);
   }
 
   // Called when another command which requires one or more of the same

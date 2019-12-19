@@ -5,14 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drive;
+package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.util.Utils;
 
-public class DriverControl extends Command {
-  public DriverControl() {
-    requires(Robot.drivetrain);
+public class TurretManualControl extends Command {
+  public TurretManualControl() {
+    requires(Robot.turret);
   }
 
   // Called just before this Command runs the first time
@@ -23,19 +24,17 @@ public class DriverControl extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Boolean quickTurn;
-    if (Math.abs(Robot.driverController.getRawAxis(1)) < 0.5) quickTurn = true;
-    else quickTurn = false;
-    // quickTurn = true;
-
-    if (quickTurn){
-      Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)/2.0, 
-      Robot.driverController.getRawAxis(4),
-      quickTurn);
-    } else{
-      Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)*Math.abs(Robot.driverController.getRawAxis(1)), 
-      Robot.driverController.getRawAxis(4)/2.0, 
-      quickTurn);
+    if (Utils.outsideDeadband(Robot.operatorController.getRawAxis(4), 0.0, 0.3) ||
+    Utils.outsideDeadband(Robot.operatorController.getRawAxis(5), 0.0, 0.3)) {
+        // Setpoint control
+      double goalAngle = (Math.toDegrees(Math.atan2(Robot.operatorController.getRawAxis(4), -Robot.operatorController.getRawAxis(5)))+360.0)%360.0;
+      double robotAngle = Robot.drivetrain.model.center.heading;
+      Robot.turret.setSetpoint(((goalAngle - robotAngle)+360.0)%360.0);
+    } else if (Utils.outsideDeadband(Robot.operatorController.getRawAxis(0), 0.0, 0.2)) {
+      // Manual control with pot
+      Robot.turret.setSpeed(Robot.operatorController.getRawAxis(0));
+    } else {
+      Robot.turret.setVisionControlled();
     }
   }
 

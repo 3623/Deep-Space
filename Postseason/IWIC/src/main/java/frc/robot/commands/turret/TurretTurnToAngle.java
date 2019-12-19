@@ -5,44 +5,33 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.drive;
+package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class DriverControl extends Command {
-  public DriverControl() {
-    requires(Robot.drivetrain);
+public class TurretTurnToAngle extends Command {
+  double angle = 180.0;
+  public TurretTurnToAngle(double angle) {
+    requires(Robot.turret);
+    this.angle = angle;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.turret.setSetpoint(angle);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Boolean quickTurn;
-    if (Math.abs(Robot.driverController.getRawAxis(1)) < 0.5) quickTurn = true;
-    else quickTurn = false;
-    // quickTurn = true;
-
-    if (quickTurn){
-      Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)/2.0, 
-      Robot.driverController.getRawAxis(4),
-      quickTurn);
-    } else{
-      Robot.drivetrain.openLoopControl(-Robot.driverController.getRawAxis(1)*Math.abs(Robot.driverController.getRawAxis(1)), 
-      Robot.driverController.getRawAxis(4)/2.0, 
-      quickTurn);
-    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return Robot.turret.onTarget();
   }
 
   // Called once after isFinished returns true
