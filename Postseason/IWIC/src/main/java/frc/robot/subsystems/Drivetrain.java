@@ -86,7 +86,9 @@ public class Drivetrain extends Subsystem {
 		Tuple limitedOut = model.limitAcceleration(output);
 		double leftSpeed = limitedOut.left;
 		double rightSpeed = limitedOut.right;
-		directMotorControl(leftSpeed, rightSpeed);
+		SmartDashboard.putNumber("Left Out", leftSpeed);
+		SmartDashboard.putNumber("Right Out", rightSpeed);
+		// directMotorControl(leftSpeed, rightSpeed);
 	}
 
 	public void zeroSensors() {
