@@ -16,22 +16,22 @@ import frc.controls.DrivetrainControls;
 import frc.controls.CubicSplineFollower;
 import frc.robot.commands.drive.DriverControl;
 
-public class Drivetrain extends Subsystem{
+public class Drivetrain extends Subsystem {
 	Spark rightMotors, leftMotors;
 	DifferentialDrive drivetrain;
 
 	Encoder encLeft, encRight;
 
-	// AHRS navx; 
+	// AHRS navx;
 
 	public DrivetrainModel model;
-	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS*Math.PI*2/2048.0;
+	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS * Math.PI * 2 / 2048.0;
 
 	public CubicSplineFollower waypointNav;
 
 	double time;
 
-	public Drivetrain(){
+	public Drivetrain() {
 		rightMotors = new Spark(0);
 		leftMotors = new Spark(1);
 		drivetrain = new DifferentialDrive(leftMotors, rightMotors);
@@ -51,18 +51,18 @@ public class Drivetrain extends Subsystem{
 		this.updateThreadStart();
 	}
 
-	public void initDefaultCommand(){
+	public void initDefaultCommand() {
 		setDefaultCommand(new DriverControl());
 	}
 
-    public void stop() {
-    	leftMotors.disable();
+	public void stop() {
+		leftMotors.disable();
 		rightMotors.disable();
 	}
 
-	public void updateThreadStart(){
+	public void updateThreadStart() {
 		Thread t = new Thread(() -> {
-            while (!Thread.interrupted()) {
+			while (!Thread.interrupted()) {
 				this.update();
 				try {
 					Thread.sleep(20);
@@ -71,8 +71,8 @@ public class Drivetrain extends Subsystem{
 					e.printStackTrace();
 				}
 			}
-        });
-        t.start();
+		});
+		t.start();
 	}
 
 	public void updatePosition(double time) {
@@ -81,51 +81,53 @@ public class Drivetrain extends Subsystem{
 		model.updatePosition(time);
 	}
 
-	public void driveWaypointNavigator(){
+	public void driveWaypointNavigator() {
 		Tuple output = waypointNav.updatePursuit(model.center);
 		Tuple limitedOut = model.limitAcceleration(output);
 		double leftSpeed = limitedOut.left;
 		double rightSpeed = limitedOut.right;
 		directMotorControl(leftSpeed, rightSpeed);
-   }
-
-   	public void zeroSensors() {
-   		encLeft.reset();
-		encRight.reset();
-		// navx.reset();   	
 	}
-    
-   	public void openLoopControl(double xSpeed, double rSpeed, Boolean quickTurn) {
-	   	drivetrain.curvatureDrive(xSpeed, rSpeed, quickTurn);
-   	}
 
-   	public void directMotorControl(double leftSpeed, double rightSpeed){
-	  	drivetrain.tankDrive(leftSpeed, rightSpeed, false);
-	   }
-	   
+	public void zeroSensors() {
+		encLeft.reset();
+		encRight.reset();
+		navx.reset();
+	}
+
+	public void openLoopControl(double xSpeed, double rSpeed, Boolean quickTurn) {
+		drivetrain.curvatureDrive(xSpeed, rSpeed, quickTurn);
+	}
+
+	public void directMotorControl(double leftSpeed, double rightSpeed) {
+		drivetrain.tankDrive(leftSpeed, rightSpeed, false);
+	}
+
 	private double turnToAngle(double goal, double heading) {
 		double error;
 		double ROTATION_kP = 2.5;
-		
-		double difference = heading-goal;
-		if(difference > 180){
-			// When the values cross to and from 0 & 360, the gross difference is greater than 180
-			error = difference-360;
-		} else if(difference < -180){
-			error = difference+360;
-		} else{
+
+		double difference = heading - goal;
+		if (difference > 180) {
+			// When the values cross to and from 0 & 360, the gross difference is greater
+			// than 180
+			error = difference - 360;
+		} else if (difference < -180) {
+			error = difference + 360;
+		} else {
 			error = difference;
 		}
 
 		// Sets output rotation to inverted dif as a factor of the given magnitude
 		// Uses cbrt to give greater output at mid to low differences
-		double output = 0.4*Math.cbrt(-1*error/180*ROTATION_kP);
+		double output = 0.4 * Math.cbrt(-1 * error / 180 * ROTATION_kP);
 		// Deadband-ish
-		if(Utils.withinThreshold(error, 0.0, 4.0)) output = error/-180*ROTATION_kP;
+		if (Utils.withinThreshold(error, 0.0, 4.0))
+			output = error / -180 * ROTATION_kP;
 		return output;
 	}
 
-	public void update(){
+	public void update() {
 		double time = Timer.getFPGATimestamp();
 		double deltaTime = time - this.time;
 		this.time = time;
@@ -133,8 +135,8 @@ public class Drivetrain extends Subsystem{
 		this.monitor();
 		SmartDashboard.putNumber("DT", deltaTime);
 	}
- 
-	public void monitor(){
+
+	public void monitor() {
 		// SmartDashboard.putNumber("Left Encoder", encLeft.getDistance());
 		// SmartDashboard.putNumber("Rights Encoder", encRight.getDistance());
 		SmartDashboard.putNumber("Drivetrain Model X", model.center.x);
@@ -142,8 +144,8 @@ public class Drivetrain extends Subsystem{
 		SmartDashboard.putNumber("Heading", model.center.heading);
 		// SmartDashboard.putNumber("Drivetrain Heading", navx.getAngle());
 	}
-    
-    public static void main(String[] args) throws IOException{}
-    
+
+	public static void main(String[] args) throws IOException {
+	}
 
 }
