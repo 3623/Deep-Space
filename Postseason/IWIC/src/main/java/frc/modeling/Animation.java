@@ -121,12 +121,12 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(-1.0, 5.6, -65.0, -1.0, true));
 		// nav.addWaypoint(new Waypoint(-2.2, 7.3, 15.0, 1.0, true));
 
-		// Right Side of cargo ship x2
-		model.setPosition(1.2, 0.7, 0.0);
-		nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5, false));
-		nav.addWaypoint(new Waypoint(1.1, 6.6, -10.0, 1.0, true));
-		nav.addWaypoint(new Waypoint(3.3, 0.5, -10.0, -1.0, true));
-		nav.addWaypoint(new Waypoint(1.1, 7.2, -10.0, 1.0, true));
+		// // Right Side of cargo ship x2
+		// model.setPosition(1.2, 0.7, 0.0);
+		// nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5, false));
+		// nav.addWaypoint(new Waypoint(1.1, 6.6, -10.0, 1.0, true));
+		// nav.addWaypoint(new Waypoint(3.3, 0.5, -10.0, -1.0, true));
+		// nav.addWaypoint(new Waypoint(1.1, 7.2, -10.0, 1.0, true));
 
 		// // Left Side of cargo ship x2
 		// model.setPosition(-1.2, 0.7, -0.0);
@@ -135,15 +135,15 @@ public class Animation extends JPanel implements Runnable {
 		// nav.addWaypoint(new Waypoint(-3.3, 0.5, 10.0, -1.0, true));
 		// nav.addWaypoint(new Waypoint(-1.1, 7.2, 10.0, 1.0, true));
 
-		// // Right rocket
-		// model.setPosition(1.2, 0.7, 0.0);
-		// nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
-		// nav.addWaypoint(new Waypoint(3.5, 6.7, 60.0, 1.0, true));
+		// Right rocket
+		model.setPosition(1.2, 0.7, 0.0);
+		nav.addWaypoint(new Waypoint(1.2, 3.0, 0.0, 0.5));
+		nav.addWaypoint(new Waypoint(3.5, 6.7, 60.0, 1.0, true));
 		// nav.addWaypoint(new Waypoint(2.8, 6.0, 30.0, -0.6));
-		// nav.addWaypoint(new Waypoint(3.4, 0.5, 0.0, -1.0, true));
-		// nav.addWaypoint(new Waypoint(3.4, 3.0, 0.0, 1.0));
-		// nav.addWaypoint(new Waypoint(3.2, 4.7, -60.0, 0.6, true));
-		// nav.addWaypoint(new Waypoint(2.0, 7.2, 0.0, 0.6, true));
+		nav.addWaypoint(new Waypoint(3.4, 0.5, 0.0, -1.0, true));
+		nav.addWaypoint(new Waypoint(3.4, 4.2, 15.0, 0.6));
+		nav.addWaypoint(new Waypoint(3.1, 4.7, -60.0, 0.6, true));
+		nav.addWaypoint(new Waypoint(2.0, 7.2, 0.0, 0.6, true));
 
 		// // Left rocket
 		// model.setPosition(-1.2, 0.7, -0.0);
@@ -258,7 +258,7 @@ public class Animation extends JPanel implements Runnable {
 			while (!Thread.interrupted()) {
 
 				Tuple output = nav.updatePursuit(model.center);
-				output = model.limitAcceleration(output);
+				// output = model.limitAcceleration(output);
 				leftVoltage = output.left;
 				rightVoltage = output.right;
 

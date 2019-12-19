@@ -53,9 +53,9 @@ class SimulationApp(App):
         self.logger = Logger()
         self.logger.registerLoggerDict(self.robot.logDict, "robot")
         self.logger.registerLoggerDict(self.controls.logDict, "controls")
-        yAxes = [self.logger.dict["robot.heading"],
-                 self.logger.dict["robot.vel"],
-                 self.logger.dict["controls.ffSpeed"]]
+        yAxes = [self.logger.dict["controls.ffSpeed"],
+                 self.logger.dict["controls.a"],
+                 self.logger.dict["controls.b"]]
         self.graph = StackedTimeGraph(self.logger.time, yAxes,
                            (self.fieldImageWidth, self.width), (self.height, 0))
 
@@ -185,7 +185,9 @@ class SimulationApp(App):
         elif key == "s":
             self.incrementWaypointSpeed(-0.05)
         elif key == "p":
-            print(self.logger.dict["robot.vel"])
+            self.waypoints.append(Waypoint(1.2, 3.0, 0.0, 0.5))
+            self.waypoints.append(Waypoint(3.5, 6.7, 60.0, 1.0, True))
+            self.waypoints.append(Waypoint(3.4, 0.5, 0.0, -1.0, True))
         else:
             None
 

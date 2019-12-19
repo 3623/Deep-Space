@@ -16,7 +16,7 @@ class Controls():
         self.UPDATE_RATE = 100
 
         self.kRadiusCritical = 0.1
-        self.kEpsilonCritical = 3.0
+        self.kEpsilonCritical = 5.0
         self.kRadiusPath = 0.0
         self.kEpsilonPath = 5.0
 
@@ -28,7 +28,9 @@ class Controls():
         self.logDict = {"index": None,
                         "waypointX": None,
                         "waypointY": None,
-                        "ffSpeed": None}
+                        "ffSpeed": None,
+                        "a": None,
+                        "b": None}
 
     def reset(self):
         self.index = 0
@@ -70,7 +72,7 @@ class Controls():
                     else:
                         self.index += 1
                         curWaypoint = self.waypoints[self.index]
-
+                        print(self.getPathGeometry(self.robot.center, curWaypoint))
                 else:
                     # at point but not heading, just turn to the point
                     # ptrOutput = DrivetrainControls.turnToAngle(
@@ -94,6 +96,8 @@ class Controls():
         curWaypoint = self.waypoints[self.index]
         robotPose = self.robot.center
         a, b = self.getPathGeometry(robotPose, curWaypoint)
+        self.logDict["a"] = a
+        self.logDict["b"] = b
 
         nextSpeed = ((self.MAX_SPEED * ffSpeed) * 0.1) + \
             (robotPose.velocity * 0.9)
@@ -176,3 +180,7 @@ class Controls():
                 waypoint, self.waypoints[i+1], True))
 
         return path
+
+
+if __name__ == "__main__":
+    None

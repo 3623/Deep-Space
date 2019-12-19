@@ -14,4 +14,8 @@ public class Tuple {
 		this.right *= factor;
 		return this;
 	}
+
+	public String toString() {
+		return this.left + ", " + this.right;
+	}
 }

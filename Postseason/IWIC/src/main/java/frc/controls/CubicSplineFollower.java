@@ -30,7 +30,7 @@ public class CubicSplineFollower {
     private static double kRadiusPath = 0.0;
     private static final double kRadiusCritical = 0.1;
     private static final double kAngularErrorPath = 5.0;
-    private static final double kEpsilonCritical = 3.0;
+    private static final double kAngularErrorCritical = 8.0;
     private static final double kTurn = 12.0 / 450.0; // Volts/turn speed(deg/s)
     private static final double kMaxSplineAngle = Math.PI * 0.3;
 
@@ -62,7 +62,7 @@ public class CubicSplineFollower {
             if (distanceFromWaypoint < kRadiusCritical || isFinished) {
                 debug = true;
                 ffSpeed = 0.0;
-                if (Utils.withinThreshold(robotPose.heading, curWaypoint.heading, kAngularErrorPath)) {
+                if (Utils.withinThreshold(robotPose.heading, curWaypoint.heading, kAngularErrorCritical)) {
                     // at point and heading, we're done
                     if (!isFinished)
                         System.out.println("At Waypoint: " + index + " (" + curWaypoint.toString() + ")");
@@ -79,7 +79,7 @@ public class CubicSplineFollower {
                 } else {
                     // at point but not heading, just turn to the point
                     double ptrOutput = DrivetrainControls.turnToAngle(curWaypoint.heading, robotPose.heading);
-                    return DrivetrainControls.curvatureDrive(0.0, ptrOutput, true);
+                    return DrivetrainControls.curvatureDrive(0.0, ptrOutput, true).scale(12.0);
                 }
             }
         } else if (distanceFromWaypoint < kRadiusPath
@@ -137,6 +137,10 @@ public class CubicSplineFollower {
         double turnLimitedFFSpeed = Math.copySign(Math.abs(ffSpeed) - Math.abs(turnOutput / 12.0), ffSpeed);
         double outputLeft = (turnLimitedFFSpeed * 12.0) + turnOutput;
         double outputRight = (turnLimitedFFSpeed * 12.0) - turnOutput;
+
+        if (debug) {
+            System.out.println(pathCoefficients.toString());
+        }
 
         return new Tuple(outputLeft, outputRight);
     }
