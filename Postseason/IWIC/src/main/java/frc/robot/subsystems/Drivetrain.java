@@ -139,6 +139,7 @@ public class Drivetrain extends Subsystem{
 		// SmartDashboard.putNumber("Rights Encoder", encRight.getDistance());
 		SmartDashboard.putNumber("Drivetrain Model X", model.center.x);
 		SmartDashboard.putNumber("Drivetrain Model Y", model.center.y);
+		SmartDashboard.putNumber("Heading", model.center.heading);
 		// SmartDashboard.putNumber("Drivetrain Heading", navx.getAngle());
 	}
     
