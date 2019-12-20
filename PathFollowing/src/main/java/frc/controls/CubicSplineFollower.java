@@ -136,6 +136,7 @@ public class CubicSplineFollower {
         kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.1;
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFFAngle = Math.atan(dx2);
+
         // Convert from derivative to angle
 
         double turnOutput = -Math.toDegrees(relativeFFAngle) * kTurn * UPDATE_RATE;
@@ -145,13 +146,14 @@ public class CubicSplineFollower {
         double limitedOutLeft = Utils.limit(outputLeft, kMaxOutput);
         double limitedOutRight = Utils.limit(outputRight, kMaxOutput);
 
-        if (false) {
-            System.out.println(pathCoefficients.toString());
+        if (true) {
+            // System.out.println(pathCoefficients.toString());
+            System.out.println(turnOutput);
         }
         if (limitedOutLeft != outputLeft)
             System.out.println("Limited left: " + outputLeft);
         if (limitedOutRight != outputRight)
-            System.out.println("Limited left: " + outputRight);
+            System.out.println("Limited right: " + outputRight);
 
         return new Tuple(limitedOutLeft, limitedOutRight);
     }

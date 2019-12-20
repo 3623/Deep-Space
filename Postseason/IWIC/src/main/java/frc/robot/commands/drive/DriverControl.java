@@ -9,6 +9,7 @@ package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.controls.CubicSplineFollower.Waypoint;
 
 public class DriverControl extends Command {
   public DriverControl() {
@@ -18,6 +19,7 @@ public class DriverControl extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.drivetrain.waypointNav.addWaypoint(new Waypoint(0.0, 2.0, 0.0, 1.0, true));
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -42,6 +44,7 @@ public class DriverControl extends Command {
     if (Robot.driverController.getXButton()) {
       Robot.drivetrain.zeroSensors();
     }
+    Robot.drivetrain.driveWaypointNavigator();
   }
 
   // Make this return true when this Command no longer needs to run execute()

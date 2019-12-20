@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Encoder;
-// import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import frc.controls.CubicSplineFollower;
 import frc.controls.DrivetrainControls;
@@ -22,7 +22,7 @@ public class Drivetrain extends Subsystem {
 
 	Encoder encLeft, encRight;
 
-	// AHRS navx;
+	AHRS navx;
 
 	public DrivetrainModel model;
 	private final double DISTANCE_PER_PULSE = model.WHEEL_RADIUS * Math.PI * 2 / 2048.0;
@@ -41,7 +41,7 @@ public class Drivetrain extends Subsystem {
 		encLeft.setDistancePerPulse(DISTANCE_PER_PULSE);
 		encRight.setDistancePerPulse(DISTANCE_PER_PULSE);
 
-		// navx = new AHRS(SPI.Port.kMXP);
+		navx = new AHRS(SPI.Port.kMXP);
 
 		model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);

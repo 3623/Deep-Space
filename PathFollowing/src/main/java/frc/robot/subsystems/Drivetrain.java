@@ -98,11 +98,14 @@ public class Drivetrain extends Subsystem {
 	private void driveWaypointNavigator() {
 		Tuple output = waypointNav.updatePursuit(model.center);
 		Tuple limitedOut = model.limitAcceleration(output);
-		double leftSpeed = limitedOut.left;
-		double rightSpeed = limitedOut.right;
-		SmartDashboard.putNumber("Left Out", leftSpeed);
-		SmartDashboard.putNumber("Right Out", rightSpeed);
-		// setVoltages(leftSpeed, rightSpeed);
+		// double leftSpeed = limitedOut.left;
+		// double rightSpeed = limitedOut.right;
+		double leftSpeed = output.left;
+		double rightSpeed = output.right;
+
+		SmartDashboard.putNumber("Left Out 1", leftSpeed);
+		SmartDashboard.putNumber("Right Out 1", rightSpeed);
+		setVoltages(leftSpeed, leftSpeed);
 	}
 
 	public void zeroSensors() {
@@ -112,7 +115,7 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public void driverControl(double xSpeed, double rSpeed, Boolean quickTurn) {
-		setOpenLoop(new Tuple(0.0, 0.0));
+		setOpenLoop(0.0, 0.0);
 		// setOpenLoop(xSpeed, rSpeed);
 	}
 
@@ -123,6 +126,7 @@ public class Drivetrain extends Subsystem {
 		this.updatePosition(deltaTime);
 		this.monitor();
 		SmartDashboard.putNumber("DT", deltaTime);
+
 
 		switch (controlState) {
 		case OPEN_LOOP:
@@ -135,17 +139,17 @@ public class Drivetrain extends Subsystem {
 		}
 	}
 
-	public void setOpenLoop(Tuple out) {
+	public void setOpenLoop(double left, double right) {
 		if (controlState != DriveControlState.OPEN_LOOP) {
 			System.out.println("Switching to open loop control, time: " + time);
 			controlState = DriveControlState.OPEN_LOOP;
 		}
-		setMotorControllers(out);
+		setMotorControllers(left, right);
 	}
 
 	private void setMotorControllers(double left, double right) {
 		leftMotors.set(left);
-		rightMotors.set(right);
+		rightMotors.set(-right);
 	}
 
 	private void setMotorControllers(Tuple out) {
@@ -166,6 +170,7 @@ public class Drivetrain extends Subsystem {
 		SmartDashboard.putNumber("Drivetrain Model X", model.center.x);
 		SmartDashboard.putNumber("Drivetrain Model Y", model.center.y);
 		SmartDashboard.putNumber("Heading", model.center.heading);
+		SmartDashboard.putNumber("Radians", model.center.r);
 		// SmartDashboard.putNumber("Drivetrain Heading", navx.getAngle());
 	}
 

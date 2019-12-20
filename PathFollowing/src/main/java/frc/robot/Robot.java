@@ -35,6 +35,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     oi = new OI();
+    driveCommand = new TestDriveCommand();
+
   }
 
   /**
@@ -80,6 +82,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    driveCommand.start();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
@@ -113,8 +116,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    driveCommand = new TestDriveCommand();
-    driveCommand.start();
+    System.out.println("started");
+
   }
 
   /**
@@ -122,6 +125,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    Scheduler.getInstance().run();
+    drivetrain.setOpenLoop(13.0/12.0, -0.4);
   }
 }

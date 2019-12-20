@@ -22,14 +22,13 @@ public class TestDriveCommand extends Command {
     Robot.drivetrain.waypointNav.clearWaypoints();
     Robot.drivetrain.zeroSensors();
     Robot.drivetrain.model.setPosition(0.0, 0.0, 0.0);
-    Robot.drivetrain.waypointNav.addWaypoint(2.0, 0.0, 0.0, 0.4, true);
+    Robot.drivetrain.waypointNav.addWaypoint(0.0, 2.0, 0.0, 0.4, true);
     Robot.drivetrain.startPathFollowing();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.drivetrain.driveWaypointNavigator();
   }
 
   // Make this return true when this Command no longer needs to run execute()
