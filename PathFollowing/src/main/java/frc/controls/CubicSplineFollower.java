@@ -27,11 +27,11 @@ public class CubicSplineFollower {
 
     public Boolean isFinished = false;
 
-    private static double kRadiusPath = 0.0;
-    private static final double kRadiusCritical = 0.1;
-    private static final double kAngularErrorPath = 5.0;
-    private static final double kAngularErrorCritical = 8.0;
-    private static final double kTurn = 12.0 / 450.0; // Volts/turn speed(deg/s)
+    private static double kRadiusPath = 0.0; // m
+    private static final double kRadiusCritical = 0.05;
+    private static final double kAngularErrorPath = 5.0; // deg
+    private static final double kAngularErrorCritical = 5.0;
+    private static final double kTurn = 12.0 / 500.0; // Volts/turn speed(deg/s)
     private static final double kMaxSplineAngle = Math.PI * 0.3;
     private static final double kMaxOutput = 13.0;
 
@@ -80,9 +80,11 @@ public class CubicSplineFollower {
                     }
 
                 } else {
-                    // at point but not heading, just turn to the point
-                    double ptrOutput = DrivetrainControls.turnToAngle(curWaypoint.heading, robotPose.heading);
-                    return DrivetrainControls.curvatureDrive(0.0, ptrOutput, true).scale(12.0);
+                    // // at point but not heading, just turn to the point
+                    // double ptrOutput = DrivetrainControls.turnToAngle(curWaypoint.heading,
+                    // robotPose.heading);
+                    // return DrivetrainControls.curvatureDrive(0.0, ptrOutput, true).scale(12.0);
+                    return new Tuple(0.0, 0.0);
                 }
             }
         } else if (distanceFromWaypoint < kRadiusPath
