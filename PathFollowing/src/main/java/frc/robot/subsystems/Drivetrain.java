@@ -3,12 +3,13 @@ package frc.robot.subsystems;
 import java.io.IOException;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controls.CubicSplineFollower;
 import frc.robot.commands.drive.DriverControl;
@@ -16,12 +17,11 @@ import frc.util.Tuple;
 import frc.util.Utils;
 
 public class Drivetrain extends Subsystem {
-	Spark rightMotors, leftMotors;
-	DifferentialDrive drivetrain;
+	private Spark rightMotors, leftMotors;
 
-	Encoder encLeft, encRight;
+	private Encoder encLeft, encRight;
 
-	AHRS navx;
+	private AHRS navx;
 
 	private final int UPDATE_RATE = 200;
 	public DrivetrainModel model;
@@ -31,10 +31,17 @@ public class Drivetrain extends Subsystem {
 
 	double time;
 
+	private DriveControlState controlState = DriveControlState.DISABLED;
+
+	private enum DriveControlState {
+		OPEN_LOOP, // open loop voltage control
+		PATH_FOLLOWING, // velocity PID control
+		DISABLED,
+	}
+
 	public Drivetrain() {
 		rightMotors = new Spark(0);
 		leftMotors = new Spark(1);
-		drivetrain = new DifferentialDrive(leftMotors, rightMotors);
 
 		encLeft = new Encoder(0, 1, true, Encoder.EncodingType.k2X);
 		encRight = new Encoder(2, 3, true, Encoder.EncodingType.k2X);
@@ -51,17 +58,19 @@ public class Drivetrain extends Subsystem {
 		this.updateThreadStart();
 	}
 
-	// @Override
-	// public void initDefaultCommand() {
-	// setDefaultCommand(new DriverControl());
-	// }
-
-	public void disable() {
-		leftMotors.disable();
-		rightMotors.disable();
+	@Override
+	public void initDefaultCommand() {
+		// setDefaultCommand(new DriverControl());
 	}
 
-	public void updateThreadStart() {
+	public void disable() {
+		if (controlState != DriveControlState.DISABLED) {
+			controlState = DriveControlState.DISABLED;
+		}
+		setMotorControllers(new Tuple(0.0, 0.0));
+	}
+
+	private void updateThreadStart() {
 		Thread t = new Thread(() -> {
 			while (!Thread.interrupted()) {
 				this.update();
@@ -76,20 +85,24 @@ public class Drivetrain extends Subsystem {
 		t.start();
 	}
 
-	public void updatePosition(double time) {
+	private void updatePosition(double time) {
 		model.updateSpeed(encLeft.getRate(), encRight.getRate(), time);
 		model.updateHeading(navx.getAngle());
 		model.updatePosition(time);
 	}
 
-	public void driveWaypointNavigator() {
+	public void startPathFollowing() {
+		controlState = DriveControlState.PATH_FOLLOWING;
+	}
+
+	private void driveWaypointNavigator() {
 		Tuple output = waypointNav.updatePursuit(model.center);
 		Tuple limitedOut = model.limitAcceleration(output);
 		double leftSpeed = limitedOut.left;
 		double rightSpeed = limitedOut.right;
 		SmartDashboard.putNumber("Left Out", leftSpeed);
 		SmartDashboard.putNumber("Right Out", rightSpeed);
-		// directMotorControl(leftSpeed, rightSpeed);
+		// setVoltages(leftSpeed, rightSpeed);
 	}
 
 	public void zeroSensors() {
@@ -98,24 +111,56 @@ public class Drivetrain extends Subsystem {
 		navx.reset();
 	}
 
-	public void openLoopControl(double xSpeed, double rSpeed, Boolean quickTurn) {
-		drivetrain.curvatureDrive(xSpeed, rSpeed, quickTurn);
+	public void driverControl(double xSpeed, double rSpeed, Boolean quickTurn) {
+		setOpenLoop(new Tuple(0.0, 0.0));
+		// setOpenLoop(xSpeed, rSpeed);
 	}
 
-	public void directMotorControl(double leftSpeed, double rightSpeed) {
-		drivetrain.tankDrive(leftSpeed, rightSpeed, false);
-	}
-
-	public void update() {
+	private void update() {
 		double time = Timer.getFPGATimestamp();
 		double deltaTime = time - this.time;
 		this.time = time;
 		this.updatePosition(deltaTime);
 		this.monitor();
 		SmartDashboard.putNumber("DT", deltaTime);
+
+		switch (controlState) {
+		case OPEN_LOOP:
+			break;
+		case PATH_FOLLOWING:
+			driveWaypointNavigator();
+			break;
+		case DISABLED:
+			break;
+		}
 	}
 
-	public void monitor() {
+	public void setOpenLoop(Tuple out) {
+		if (controlState != DriveControlState.OPEN_LOOP) {
+			System.out.println("Switching to open loop control, time: " + time);
+			controlState = DriveControlState.OPEN_LOOP;
+		}
+		setMotorControllers(out);
+	}
+
+	private void setMotorControllers(double left, double right) {
+		leftMotors.set(left);
+		rightMotors.set(right);
+	}
+
+	private void setMotorControllers(Tuple out) {
+		setMotorControllers(out.left, out.right);
+	}
+
+	private void setVoltages(double left, double right) {
+		setMotorControllers(left / 12.0, right / 12.0);
+	}
+
+	private void setVoltages(Tuple voltages) {
+		setVoltages(voltages.left, voltages.right);
+	}
+
+	private void monitor() {
 		// SmartDashboard.putNumber("Left Encoder", encLeft.getDistance());
 		// SmartDashboard.putNumber("Rights Encoder", encRight.getDistance());
 		SmartDashboard.putNumber("Drivetrain Model X", model.center.x);
