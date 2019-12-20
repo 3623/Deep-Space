@@ -181,7 +181,7 @@ public class Animation extends JPanel implements Runnable {
 		int xCoordOffset = xCoord - (robotRotated.getWidth() / 2);
 		int yCoord = y - (int) Math.round(model.center.y * scale);
 		int yCoordOffset = yCoord - (robotRotated.getHeight() / 2);
-		if (!nav.getIsFinished())
+		if (!nav.isFinished)
 			trajectory.add(new Tuple(xCoord, yCoord));
 		offScreen.drawImage(robotRotated, xCoordOffset, yCoordOffset, this);
 
@@ -243,7 +243,7 @@ public class Animation extends JPanel implements Runnable {
 
 	@Override
 	public void run() {
-		while (Thread.currentThread() == sim && nav.getIsFinished() == false) {
+		while (Thread.currentThread() == sim && nav.isFinished == false) {
 			repaint();
 			try {
 				Thread.sleep(1000 / FRAME_RATE);
@@ -265,7 +265,7 @@ public class Animation extends JPanel implements Runnable {
 				// System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " +
 				// rightVoltage);
 
-				if (nav.getIsFinished()) {
+				if (nav.isFinished) {
 				}
 
 				try {

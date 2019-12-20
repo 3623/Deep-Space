@@ -25,7 +25,7 @@ public class CubicSplineFollower {
     private Waypoint curWaypoint;
     private int index = 0;
 
-    private Boolean isFinished = false;
+    public Boolean isFinished = false;
 
     private static double kRadiusPath = 0.0;
     private static final double kRadiusCritical = 0.1;
@@ -47,6 +47,8 @@ public class CubicSplineFollower {
      * @return a tuple with left and right wheel voltages
      */
     public Tuple updatePursuit(Pose robotPose) {
+        if (waypoints.size() < 1)
+            return new Tuple(0.0, 0.0);
         curWaypoint = waypoints.get(index);
         double distanceFromWaypoint = Geometry.distance(robotPose, curWaypoint);
         ffSpeed = curWaypoint.kSpeed;
@@ -141,9 +143,13 @@ public class CubicSplineFollower {
         double limitedOutLeft = Utils.limit(outputLeft, kMaxOutput);
         double limitedOutRight = Utils.limit(outputRight, kMaxOutput);
 
-        if (debug) {
+        if (false) {
             System.out.println(pathCoefficients.toString());
         }
+        if (limitedOutLeft != outputLeft)
+            System.out.println("Limited left: " + outputLeft);
+        if (limitedOutRight != outputRight)
+            System.out.println("Limited left: " + outputRight);
 
         return new Tuple(limitedOutLeft, limitedOutRight);
     }
@@ -180,16 +186,6 @@ public class CubicSplineFollower {
         double a = ((x * dx) - (2 * y)) / (x * x * x);
         double b = ((3 * y) - (dx * x)) / (x * x);
         return new Tuple(a, b);
-    }
-
-    /**
-     * Checks whether or not the robot has finished following the path specified by
-     * given waypoints
-     *
-     * @return true if the robot has finished the path specified
-     */
-    public Boolean getIsFinished() {
-        return isFinished;
     }
 
     /**
