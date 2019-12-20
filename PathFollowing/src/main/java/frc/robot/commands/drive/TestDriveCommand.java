@@ -23,6 +23,7 @@ public class TestDriveCommand extends Command {
     Robot.drivetrain.zeroSensors();
     Robot.drivetrain.model.setPosition(0.0, 0.0, 0.0);
     Robot.drivetrain.waypointNav.addWaypoint(2.0, 0.0, 0.0, 0.4, true);
+    Robot.drivetrain.startPathFollowing();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -34,12 +35,13 @@ public class TestDriveCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.drivetrain.waypointNav.getIsFinished();
+    return Robot.drivetrain.waypointNav.isFinished;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.drivetrain.disable();
   }
 
   // Called when another command which requires one or more of the same
