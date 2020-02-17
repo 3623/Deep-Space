@@ -13,31 +13,53 @@ import frc.util.Geometry;
 import frc.util.Pose;
 import frc.util.Tuple;
 import frc.util.Utils;
+import frc.robot.subsystems.DrivetrainModel;
 
 /**
  * Add your docs here.
  */
 public class CubicSplineFollower {
-    private static final double MAX_SPEED = 3.3;
-    private static final double UPDATE_RATE = 200.0;
+    private final double MAX_SPEED;
+    private final double WHEEL_BASE;
+    private final double UPDATE_RATE;
 
-    private ArrayList<Waypoint> waypoints = new ArrayList<Waypoint>();
+    private ArrayList<Waypoint> waypoints;
     private Waypoint curWaypoint;
     private int index = 0;
 
     public Boolean isFinished = false;
 
-    private static double kRadiusPath = 0.0; // m
-    private static final double kRadiusCritical = 0.05;
-    private static final double kAngularErrorPath = 5.0; // deg
-    private static final double kAngularErrorCritical = 5.0;
-    private static final double kTurn = 12.0 / 500.0; // Volts/turn speed(deg/s)
-    private static final double kMaxSplineAngle = Math.PI * 0.3;
-    private static final double kMaxOutput = 13.0;
+    private double kRadiusCritical = 0.05; // m
+    private double kScaleRadiusPath = 0.1; // constant
+    private double kRadiusPath = 0.0;
+    private double kAngularErrorCritical = 5.0; // deg
+    private double kAngularErrorPath = 5.0; // deg
+    private double kMaxSplineAngle = Math.PI * 0.3;
 
     double ffSpeed = 0.0;
 
-    Boolean debug = false;
+    private Boolean debug;
+
+    public CubicSplineFollower(double robotMaxSpeed, double robotWheelBase, double updateRate, Boolean debug,
+            double goalRadius, double goalAngularError, double pathRadiusScale, double pathAngularError) {
+        MAX_SPEED = robotMaxSpeed;
+        WHEEL_BASE = robotWheelBase;
+
+        UPDATE_RATE = updateRate;
+
+        this.debug = debug;
+
+        kRadiusCritical = goalRadius;
+        kAngularErrorCritical = goalAngularError;
+        kScaleRadiusPath = pathRadiusScale;
+        kAngularErrorPath = pathAngularError;
+
+        waypoints = new ArrayList<Waypoint>();
+    }
+
+    public CubicSplineFollower(double robotMaxSpeed, double robotWheelBase) {
+        this(robotMaxSpeed, robotWheelBase, 200.0, false, 0.05, 5.0, 0.1, 5.0);
+    }
 
     /**
      * Updates the path follower with a new robot pose. Should be called at rate
@@ -52,7 +74,6 @@ public class CubicSplineFollower {
         curWaypoint = waypoints.get(index);
         double distanceFromWaypoint = Geometry.distance(robotPose, curWaypoint);
         ffSpeed = curWaypoint.kSpeed;
-        debug = false;
         if (curWaypoint.isCritical) { // important to be at exactly
 
             if (distanceFromWaypoint < Math.abs(ffSpeed) * 1.2) {
@@ -107,7 +128,7 @@ public class CubicSplineFollower {
      * make calculations simpler. This means that the waypoint has to be converted
      * to local coordinates in reference to the robot.
      *
-     * @return a tuple of left and right output voltages
+     * @return a tuple of left and right output linear speed
      */
     public Tuple pathFollowing(Pose robotPose) {
         Tuple pathCoefficients = getPathGeometry(robotPose, curWaypoint);
@@ -133,31 +154,35 @@ public class CubicSplineFollower {
             deltaX *= ratio;
         }
 
-        kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * 0.1;
+        kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * kScaleRadiusPath;
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFFAngle = Math.atan(dx2);
+        double omega = relativeFFAngle / UPDATE_RATE;
 
         // Convert from derivative to angle
 
-        double turnOutput = -Math.toDegrees(relativeFFAngle) * kTurn * UPDATE_RATE;
-        double turnLimitedFFSpeed = Math.copySign(Math.abs(ffSpeed) - Math.abs(turnOutput / 12.0), ffSpeed);
-        double outputLeft = (turnLimitedFFSpeed * 12.0) + turnOutput;
-        double outputRight = (turnLimitedFFSpeed * 12.0) - turnOutput;
-        double limitedOutLeft = Utils.limit(outputLeft, kMaxOutput);
-        double limitedOutRight = Utils.limit(outputRight, kMaxOutput);
+        double maxAccel = 0.5;
+        double desiredSpeed = ffSpeed * MAX_SPEED;
+        if (desiredSpeed - robotPose.velocity > maxAccel)
+            desiredSpeed = robotPose.velocity + maxAccel;
+        else if (robotPose.velocity - desiredSpeed < maxAccel)
+            desiredSpeed = robotPose.velocity - maxAccel;
+        double lrSpeedDifference = omega * WHEEL_BASE;
+        double leftSpeed = desiredSpeed + (lrSpeedDifference / 2);
+        double rightSpeed = desiredSpeed - (lrSpeedDifference / 2);
 
-        if (true) {
-            // System.out.println(pathCoefficients.toString());
-            System.out.println(turnOutput);
-        }
-        if (limitedOutLeft != outputLeft)
-            System.out.println("Limited left: " + outputLeft);
-        if (limitedOutRight != outputRight)
-            System.out.println("Limited right: " + outputRight);
-
-        return new Tuple(limitedOutLeft, limitedOutRight);
+        return new Tuple(leftSpeed, rightSpeed);
     }
 
+    /**
+     * Calculates the relative angles and distances from the current robot position
+     * to the desired goal point.
+     *
+     * @param startPoint the start position of the robot, if using dynamic path
+     *                   generation, this should be the robot position
+     * @param goalPoint  the goal position of the path to be calculated
+     * @return a tuple of path coefficients a and b respectively for a cubic spline
+     */
     private Tuple getPathGeometry(Pose startPoint, Pose goalPoint) {
         double distanceFromWaypoint = Geometry.distance(startPoint, goalPoint);
         double straightPathAngle = Math.atan2(goalPoint.x - startPoint.x, goalPoint.y - startPoint.y);
@@ -185,6 +210,7 @@ public class CubicSplineFollower {
      *           of equations where x1=0, y1=0, and dx1=0, and x2, y2, and dx2 are
      *           specified in relation to p1, and y=ax^3+bx^2+cx+d (c and d are
      *           equal to 0 because of definition)
+     * @return a tuple for coefficients a and b respectively
      */
     private static Tuple generateSpline(double x, double y, double dx) {
         double a = ((x * dx) - (2 * y)) / (x * x * x);
