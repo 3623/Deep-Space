@@ -17,6 +17,11 @@ import java.util.ArrayList;
 
 public class Animation extends JPanel implements Runnable {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public static void main(String[] args) throws IOException {
 		JFrame frame = new JFrame("Drivetrain Simulation");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,7 +76,7 @@ public class Animation extends JPanel implements Runnable {
 		y = height - 15; // y offset for drawing objects
 
 		model = new DrivetrainModel();
-		nav = new CubicSplineFollower(model.MAX_SPEED, model.WHEEL_BASE);
+		nav = new CubicSplineFollower(DrivetrainModel.MAX_SPEED, DrivetrainModel.WHEEL_BASE);
 
 		this.setWaypoints();
 

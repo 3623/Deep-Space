@@ -5,7 +5,7 @@ import frc.util.Geometry;
 import frc.util.Pose;
 import frc.util.Tuple;
 import frc.util.Utils;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Model for a differential drivetrain, simulates mass and motor performance
@@ -185,7 +185,7 @@ public class DrivetrainModel {
 		double acceleration;
 		private double psuedoMass;
 		private Boolean coast;
-		private CIMMotor cim = new CIMMotor();
+		// private CIMMotor cim = new CIMMotor();
 
 		public DrivetrainSide() {
 			velocity = 0.0;

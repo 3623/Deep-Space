@@ -13,7 +13,6 @@ import frc.util.Geometry;
 import frc.util.Pose;
 import frc.util.Tuple;
 import frc.util.Utils;
-// import frc.robot.subsystems.DrivetrainModel;
 
 /**
  * Add your docs here.
@@ -160,11 +159,11 @@ public class CubicSplineFollower {
 
         // Convert from derivative to angle
 
-        double maxAccel = 0.5;
+        double maxAccel = 0.1;
         double desiredSpeed = ffSpeed * MAX_SPEED;
         if (desiredSpeed - robotPose.velocity > maxAccel)
             desiredSpeed = robotPose.velocity + maxAccel;
-        else if (robotPose.velocity - desiredSpeed < maxAccel)
+        else if (desiredSpeed - robotPose.velocity < -maxAccel)
             desiredSpeed = robotPose.velocity - maxAccel;
         double lrSpeedDifference = omega * WHEEL_BASE;
         double leftSpeed = desiredSpeed - (lrSpeedDifference / 2);
