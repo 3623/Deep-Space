@@ -53,7 +53,7 @@ public class Drivetrain extends Subsystem {
 		model = new DrivetrainModel();
 		model.setPosition(0.0, 0.0, 0.0);
 
-		waypointNav = new CubicSplineFollower();
+		waypointNav = new CubicSplineFollower(DrivetrainModel.MAX_SPEED, DrivetrainModel.WHEEL_BASE);
 
 		this.updateThreadStart();
 	}
@@ -97,9 +97,6 @@ public class Drivetrain extends Subsystem {
 
 	private void driveWaypointNavigator() {
 		Tuple output = waypointNav.updatePursuit(model.center);
-		Tuple limitedOut = model.limitAcceleration(output);
-		// double leftSpeed = limitedOut.left;
-		// double rightSpeed = limitedOut.right;
 		double leftSpeed = output.left;
 		double rightSpeed = output.right;
 
@@ -126,7 +123,6 @@ public class Drivetrain extends Subsystem {
 		this.updatePosition(deltaTime);
 		this.monitor();
 		SmartDashboard.putNumber("DT", deltaTime);
-
 
 		switch (controlState) {
 		case OPEN_LOOP:

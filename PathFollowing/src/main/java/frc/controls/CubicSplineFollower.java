@@ -13,7 +13,7 @@ import frc.util.Geometry;
 import frc.util.Pose;
 import frc.util.Tuple;
 import frc.util.Utils;
-import frc.robot.subsystems.DrivetrainModel;
+// import frc.robot.subsystems.DrivetrainModel;
 
 /**
  * Add your docs here.
@@ -78,13 +78,13 @@ public class CubicSplineFollower {
 
             if (distanceFromWaypoint < Math.abs(ffSpeed) * 1.2) {
                 // speed reduces as distance gets smaller
+                // TODO This is probably unnecesarry since FPID should be used now
                 ffSpeed = Math.copySign(distanceFromWaypoint / 1.2, ffSpeed);
                 if (Math.abs(ffSpeed) < 0.25) {
                     ffSpeed = Math.copySign(0.25, ffSpeed);
                 }
             }
             if (distanceFromWaypoint < kRadiusCritical || isFinished) {
-                debug = true;
                 ffSpeed = 0.0;
                 if (Utils.withinThreshold(robotPose.heading, curWaypoint.heading, kAngularErrorCritical)) {
                     // at point and heading, we're done
@@ -114,7 +114,6 @@ public class CubicSplineFollower {
             System.out.println("At Waypoint: " + index + " (" + curWaypoint.toString() + ")");
             index++;
             curWaypoint = waypoints.get(index);
-            debug = true;
         }
         // if not in a special case, just run path following
         return pathFollowing(robotPose);
@@ -157,7 +156,7 @@ public class CubicSplineFollower {
         kRadiusPath = Math.abs(deltaX) * UPDATE_RATE * kScaleRadiusPath;
         double dx2 = (3.0 * a * deltaX * deltaX) + (2.0 * b * deltaX);
         double relativeFFAngle = Math.atan(dx2);
-        double omega = relativeFFAngle / UPDATE_RATE;
+        double omega = relativeFFAngle * UPDATE_RATE;
 
         // Convert from derivative to angle
 
@@ -168,9 +167,8 @@ public class CubicSplineFollower {
         else if (robotPose.velocity - desiredSpeed < maxAccel)
             desiredSpeed = robotPose.velocity - maxAccel;
         double lrSpeedDifference = omega * WHEEL_BASE;
-        double leftSpeed = desiredSpeed + (lrSpeedDifference / 2);
-        double rightSpeed = desiredSpeed - (lrSpeedDifference / 2);
-
+        double leftSpeed = desiredSpeed - (lrSpeedDifference / 2);
+        double rightSpeed = desiredSpeed + (lrSpeedDifference / 2);
         return new Tuple(leftSpeed, rightSpeed);
     }
 
@@ -192,8 +190,9 @@ public class CubicSplineFollower {
         double relativeGoalAngle = startPoint.r - goalPoint.r;
         relativeGoalAngle = Utils.limit(relativeGoalAngle, kMaxSplineAngle, -kMaxSplineAngle);
         double relativeGoalDeriv = Math.tan(relativeGoalAngle);
-        if (false)
+        if (debug) {
             System.out.println(relativeAdjacDist + " " + relativeOpposDist + " " + relativeGoalDeriv);
+        }
         return generateSpline(relativeAdjacDist, relativeOpposDist, relativeGoalDeriv);
     }
 

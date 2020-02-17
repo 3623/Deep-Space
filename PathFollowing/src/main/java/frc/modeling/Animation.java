@@ -4,10 +4,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import frc.controls.CubicSplineFollower;
-import frc.controls.DrivetrainControls;
 import frc.controls.CubicSplineFollower.Waypoint;
 import frc.robot.subsystems.DrivetrainModel;
-import frc.util.Pose;
 import frc.util.Tuple;
 
 import java.awt.*;
@@ -73,7 +71,7 @@ public class Animation extends JPanel implements Runnable {
 		y = height - 15; // y offset for drawing objects
 
 		model = new DrivetrainModel();
-		nav = new CubicSplineFollower();
+		nav = new CubicSplineFollower(model.MAX_SPEED, model.WHEEL_BASE);
 
 		this.setWaypoints();
 
@@ -258,9 +256,7 @@ public class Animation extends JPanel implements Runnable {
 			while (!Thread.interrupted()) {
 
 				Tuple output = nav.updatePursuit(model.center);
-				// output = model.limitAcceleration(output);
-				leftVoltage = output.left;
-				rightVoltage = output.right;
+				model.updateSpeed(output.left, output.right, 1.0 / CONTROL_UPDATE_RATE);
 
 				// System.out.println("Left Voltage: " + leftVoltage + ", Right Voltage: " +
 				// rightVoltage);

@@ -1,13 +1,24 @@
 package frc.controls;
 
 import java.io.IOException;
-
-import frc.util.Geometry;
-import frc.util.Pose;
 import frc.util.Tuple;
 import frc.util.Utils;
+import frc.util.Pose;
 
 public class DrivetrainControls {
+
+	double kFF = 12.0 / 3.3;
+	double kP = kFF * 0.3;
+	double kD = kP * 0.3;
+	Tuple setVel = new Tuple(0.0, 0.0);
+
+	public static void velocityControl(Pose robotPose, Tuple newVelocity) {
+		// Tuple pVal = setVel.difference(robot.left.velocity,
+		// robot.right.velocity).scale(kP);
+		// Tuple dVal = new Tuple(robot.left.velocity, robot.right.velocity).sc;
+
+	}
+
 	static double error = 0.0;
 	static double lastHeading = 0.0;
 	static final double ROTATION_kP = 20.0;
